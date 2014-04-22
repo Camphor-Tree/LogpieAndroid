@@ -1,8 +1,6 @@
-#ignore the build folder (all the class files are there)
-build
-#ignore the .classpath
+bin/
+build/
 .classpath
-bin
-.settings
-gen
+.settings/
+gen/
 
