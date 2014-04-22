@@ -1,0 +1,7 @@
+#ignore the build folder (all the class files are there)
+build
+#ignore the .classpath
+.classpath
+bin
+.settings
+gen
