@@ -183,6 +183,4 @@ public class GenericConnection {
 		this.mRequestData = mRequestData;
 	}
 	
-	public void ms(){}
-	
 }

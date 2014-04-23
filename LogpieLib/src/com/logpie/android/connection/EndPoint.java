@@ -30,7 +30,23 @@ public class EndPoint {
     	    mDoInput = doInput;
         }
         
-        public URL getURL()
+        public String getVersion() {
+			return mVersion;
+		}
+
+		public String getEnvironment() {
+			return mEnvironment;
+		}
+
+		public boolean isDoOutput() {
+			return mDoOutput;
+		}
+
+		public boolean isDoInput() {
+			return mDoInput;
+		}
+
+		public URL getURL()
         {
         	try {
 				return new URL(mUrl);
@@ -55,13 +71,38 @@ public class EndPoint {
         {
         	return mServiceName;
         }
+        
+        public boolean equals(ServiceURL serviceURL)
+        {
+        	if(serviceURL.getServiceName().equals(mServiceName)&&serviceURL.getEnvironment().equals(mEnvironment)
+        			&&serviceURL.getURL().equals(this.getURL())&&serviceURL.getVersion().equals(mVersion))
+        	{
+        		return true;
+        	}
+        	else
+        	{
+        		return false;
+        	}
+        }
 	}
 	
+	//Basically the method will only return the first service endpoint satisfy the condition
+	//Nor recommend to use that
     public static ServiceURL getServiceUrlByName(String name)
     {
     	for(ServiceURL serviceUrl : ServiceURL.values())
     	{
     		if(TextUtils.equals(name, serviceUrl.getServiceName()))
+    			return serviceUrl;
+    	}
+    	return null;
+    }
+    
+    public static ServiceURL getServiceUrlByCondition(String name, String environment, String version)
+    {
+    	for(ServiceURL serviceUrl : ServiceURL.values())
+    	{
+    		if(TextUtils.equals(name, serviceUrl.getServiceName())&&TextUtils.equals(environment, serviceUrl.getEnvironment())&&TextUtils.equals(version, serviceUrl.getVersion()))
     			return serviceUrl;
     	}
     	return null;
