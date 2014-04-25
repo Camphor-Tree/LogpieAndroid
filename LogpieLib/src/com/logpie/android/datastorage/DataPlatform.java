@@ -1,6 +1,8 @@
 package com.logpie.android.datastorage;
 
-public class DataPlatform
+import android.os.Binder;
+
+public class DataPlatform extends Binder
 {
     // The only instance;
     private static DataPlatform sDataPlatform;

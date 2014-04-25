@@ -13,7 +13,7 @@ import android.os.Bundle;
 
 import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.util.LogpieLog;
-import com.logpie.android.util.ServiceCallback;
+import com.logpie.android.util.LogpieCallback;
 
 public class GenericConnection {
 	private static final String TAG = GenericConnection.class.getName();
@@ -76,7 +76,7 @@ public class GenericConnection {
     
     public void setPostBody(){}
     
-    public void send(ServiceCallback callback)
+    public void send(LogpieCallback callback)
     {
     	String data = mRequestData.toString();
     	if(data==null)
@@ -129,7 +129,7 @@ public class GenericConnection {
 		}
     }
     
-    private void handleCallback(boolean isSuccess, String message, ServiceCallback callback)
+    private void handleCallback(boolean isSuccess, String message, LogpieCallback callback)
     {
     	Bundle returnMessage= new Bundle();
     	if(isSuccess)
@@ -149,7 +149,7 @@ public class GenericConnection {
     	return new JSONObject();
     }
     
-    public JSONObject sendAndGetResult(ServiceCallback callback)
+    public JSONObject sendAndGetResult(LogpieCallback callback)
     {
     	return new JSONObject();
     }
