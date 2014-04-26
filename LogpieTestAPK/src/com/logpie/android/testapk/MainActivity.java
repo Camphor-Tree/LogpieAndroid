@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.logpie.android.connection.ThreadHelper;
 import com.logpie.android.datastorage.CentralDataService;
 import com.logpie.android.util.LogpieLog;
 
@@ -23,12 +25,24 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d("Main Thread",
+                String.valueOf(ThreadHelper.isRunningOnMainThread()));
+
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment()).commit();
         }
 
+        Thread thread = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                Log.d("New Thread",
+                        String.valueOf(ThreadHelper.isRunningOnMainThread()));
+            }
+        });
+        thread.start();
     }
 
     @Override
@@ -66,7 +80,8 @@ public class MainActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState)
         {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_main, container,
+                    false);
             return rootView;
         }
     }

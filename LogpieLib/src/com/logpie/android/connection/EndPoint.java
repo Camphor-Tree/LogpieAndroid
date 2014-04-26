@@ -87,7 +87,7 @@ public class EndPoint {
 	}
 	
 	//Basically the method will only return the first service endpoint satisfy the condition
-	//Nor recommend to use that
+	//Not recommend to use that
     public static ServiceURL getServiceUrlByName(String name)
     {
     	for(ServiceURL serviceUrl : ServiceURL.values())
