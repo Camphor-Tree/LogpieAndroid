@@ -60,8 +60,8 @@ public class GenericConnection
             // set charset, we should use UTF-8
             mHttpURLConnection.setRequestProperty("Charset", "UTF-8");
             // set Content-Type, logpie's default sending data format is JSON
-            mHttpURLConnection.setRequestProperty("Content-Type",
-                    "application/json");
+
+            mHttpURLConnection.setRequestProperty("Content-Type", "application/json");
 
         } catch (IOException e)
         {
@@ -84,16 +84,15 @@ public class GenericConnection
         try
         {
             OutputStream outputStream = mHttpURLConnection.getOutputStream();
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                    outputStream);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
             writer = new BufferedWriter(outputStreamWriter);
             writer.write(data);
         } catch (IOException e)
         {
             e.printStackTrace();
             LogpieLog.e(TAG, "geOutputStream occured error");
-            handleCallback(false, "IOException when trying to output the data",
-                    callback);
+
+            handleCallback(false, "IOException when trying to output the data", callback);
         } finally
         {
             try
@@ -112,72 +111,59 @@ public class GenericConnection
             int responsecode = mHttpURLConnection.getResponseCode();
             if (responsecode >= 200 && responsecode < 300)
             {
-                handleCallback(true, "succesfully sending data to server",
-                        callback);
-                LogpieLog.i(
-                        TAG,
-                        "successful sending data to: "
-                                + mServiceURL.getServiceName()
-                                + "<--->hitting url:"
-                                + mServiceURL.getURL().toString());
+                handleCallback(true, "succesfully sending data to server", callback);
+                LogpieLog.i(TAG, "successful sending data to: " + mServiceURL.getServiceName()
+                        + "<--->hitting url:" + mServiceURL.getURL().toString());
             }
             else if (responsecode >= 300 && responsecode < 400)
             {
-                handleCallback(false,
-                        "redirection happen when sending data to server. error code:"
-                                + responsecode, callback);
-                LogpieLog.e(TAG,
-                        "redirection happen when sending data to server. error code:"
-                                + responsecode);
+                handleCallback(false, "redirection happen when sending data to server. error code:"
+                        + responsecode, callback);
+                LogpieLog.e(TAG, "redirection happen when sending data to server. error code:"
+                        + responsecode);
             }
             else if (responsecode >= 400 && responsecode < 500)
             {
                 handleCallback(false,
                         "client error happen when sending data to server. error code:"
                                 + responsecode, callback);
-                LogpieLog.e(TAG,
-                        "client error happen when sending data to server. error code:"
-                                + responsecode);
+                LogpieLog.e(TAG, "client error happen when sending data to server. error code:"
+                        + responsecode);
             }
             else if (responsecode >= 500)
             {
-                handleCallback(false,
-                        "server error when sending data to server. error code:"
-                                + responsecode, callback);
-                LogpieLog.e(TAG,
-                        "server error when sending data to server. error code:"
-                                + responsecode);
+                handleCallback(false, "server error when sending data to server. error code:"
+                        + responsecode, callback);
+                LogpieLog.e(TAG, "server error when sending data to server. error code:"
+                        + responsecode);
             }
             else if (responsecode == -1)
             {
                 handleCallback(false,
                         "no valid response code when sending data to server. error code:"
                                 + responsecode, callback);
-                LogpieLog.e(TAG,
-                        "no valid response code when sending data to server. error code:"
-                                + responsecode);
+                LogpieLog.e(TAG, "no valid response code when sending data to server. error code:"
+                        + responsecode);
             }
             else
             {
-                handleCallback(false,
-                        "unknown error when sending data to server. error code:"
-                                + responsecode, callback);
-                LogpieLog.e(TAG,
-                        "unknown error when sending data to server. error code:"
-                                + responsecode);
+                handleCallback(false, "unknown error when sending data to server. error code:"
+                        + responsecode, callback);
+                LogpieLog.e(TAG, "unknown error when sending data to server. error code:"
+                        + responsecode);
             }
         } catch (IOException e)
         {
             Bundle error = new Bundle();
-            error.putString("error",
-                    "IOException when sending data to server and getresponseCode");
+            error.putString("error", "IOException when sending data to server and getresponseCode");
+
             callback.onError(error);
             e.printStackTrace();
         }
     }
 
-    private void handleCallback(boolean isSuccess, String message,
-            LogpieCallback callback)
+    private void handleCallback(boolean isSuccess, String message, LogpieCallback callback)
+
     {
         Bundle returnMessage = new Bundle();
         if (isSuccess)

@@ -1,17 +1,16 @@
 package com.logpie.android.testapk;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.logpie.android.connection.ThreadHelper;
 import com.logpie.android.datastorage.CentralDataService;
+import com.logpie.android.datastorage.DataServiceCaller;
 import com.logpie.android.util.LogpieLog;
 
 public class MainActivity extends ActionBarActivity
@@ -52,20 +51,6 @@ public class MainActivity extends ActionBarActivity
         testBindService();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -88,8 +73,9 @@ public class MainActivity extends ActionBarActivity
 
     private void testBindService()
     {
-        LogpieLog.i(TAG, "try");
-        Intent intent = new Intent(this, CentralDataService.class);
+        LogpieLog.i(TAG, "try DataServiceCaller");
+        DataServiceCaller serviceCaller = new DataServiceCaller(this);
+        serviceCaller.syncGetDataPlatform();
         // bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
