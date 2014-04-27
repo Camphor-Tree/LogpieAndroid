@@ -14,12 +14,11 @@ public class CentralDataService extends Service
     @Override
     public IBinder onBind(Intent intent)
     {
-        LogpieLog.d(TAG, "onBindSuccess");
-        mBinder = DataPlatform.getInstance();
+        LogpieLog.d(TAG, "onBind Logpie Central DataService Success");
+        mBinder = DataPlatform.getInstance(getApplicationContext());
         String packageName = intent.getComponent().getPackageName();
         LogpieLog.i(TAG, "onBindSuccess");
         LogpieLog.i(TAG, packageName);
         return mBinder;
     }
-
 }

@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.logpie.android.datastorage.CentralDataService;
+import com.logpie.android.datastorage.DataLevel;
 import com.logpie.android.datastorage.DataServiceCaller;
+import com.logpie.android.datastorage.KeyValueStorage;
+import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
 public class MainActivity extends ActionBarActivity
@@ -37,6 +40,7 @@ public class MainActivity extends ActionBarActivity
     {
         super.onStart();
         testBindService();
+        testKeyValueDataStorage();
     }
 
     @Override
@@ -78,5 +82,34 @@ public class MainActivity extends ActionBarActivity
         LogpieLog.i(TAG, "onStart try DataServiceCaller");
         mServiceCaller = new DataServiceCaller(this);
         mServiceCaller.asyncConnectDataService();
+    }
+
+    private void testKeyValueDataStorage()
+    {
+        KeyValueStorage storage = KeyValueStorage.getInstance(this);
+        storage.initialize();
+        LogpieLog.d(TAG, storage.mDataMap.size() + "|" + DataLevel.values().length);
+        Bundle data = new Bundle();
+        data.putString(DataLevel.KEY_DATALEVEL, DataLevel.USER_LVL.toString());
+        data.putString("test_key", "test_value");
+        storage.insert(data, new LogpieCallback()
+        {
+            @Override
+            public void onSuccess(Bundle result)
+            {
+                LogpieLog.d(TAG, result.toString());
+            }
+
+            @Override
+            public void onError(Bundle errorMessagge)
+            {
+                LogpieLog.d(TAG, errorMessagge.toString());
+            }
+        });
+        for (DataLevel dataLevel : DataLevel.values())
+        {
+            if (storage.mDataMap.get(dataLevel) != null)
+                LogpieLog.d(TAG, dataLevel.name() + " is not null");
+        }
     }
 }
