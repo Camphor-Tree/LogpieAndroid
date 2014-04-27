@@ -1,13 +1,12 @@
 package com.logpie.android.datastorage;
 
-import java.util.concurrent.CountDownLatch;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.logpie.android.connection.ThreadHelper;
 import com.logpie.android.util.LogpieLog;
 
 public class DataServiceCaller
@@ -21,8 +20,6 @@ public class DataServiceCaller
     private DataPlatform mDataPlatform;
     private Intent mIntent;
 
-    private CountDownLatch mLatch = new CountDownLatch(1);
-
     public DataServiceCaller(Context context)
     {
         this.mContext = context.getApplicationContext();
@@ -31,30 +28,38 @@ public class DataServiceCaller
     /**
      * get the CentralDataService Object
      */
-    public DataPlatform syncGetDataPlatform()
+    public void asyncConnectDataService()
     {
-        Runnable bindRunnable = new Runnable()
+        ThreadHelper.runOffMainThread(new Runnable()
         {
             @Override
             public void run()
             {
                 bindToService();
             }
-        };
+        });
+    }
 
-        try
+    public void asyncDisconnectDataService()
+    {
+        ThreadHelper.runOffMainThread(new Runnable()
         {
-            mLatch.await();
-        } catch (InterruptedException e)
-        {
-            LogpieLog.e(TAG, "InterruptedException when waiting to bind data service");
-            return mDataPlatform;
-        }
+            @Override
+            public void run()
+            {
+                unbindService();
+            }
+        });
+    }
 
+    // get the DataPlatform from data service
+    public DataPlatform getDataPlatform()
+    {
         if (mDataPlatform == null)
-            LogpieLog.e(TAG, "Error happens when binding data service, returning null");
+        {
+            LogpieLog.e(TAG, "The Service haven't been established");
+        }
         return mDataPlatform;
-
     }
 
     private boolean bindToService()
@@ -74,7 +79,6 @@ public class DataServiceCaller
             }
         } catch (SecurityException e)
         {
-            mLatch.countDown();
             LogpieLog.e(TAG, "SecurityExcpetion when try to bind service, please check permission");
             LogpieLog.e(TAG, e.getMessage());
             return false;
@@ -100,7 +104,6 @@ public class DataServiceCaller
                 LogpieLog.d(TAG, "onServiceConnected");
                 LogpieLog.d(TAG, "ComponentName" + className.toString());
                 mDataPlatform = (DataPlatform) service;
-                mLatch.countDown();
             }
 
             @Override
@@ -110,6 +113,13 @@ public class DataServiceCaller
                 mDataPlatform = null;
             }
         };
+    }
 
+    private void unbindService()
+    {
+        if (mContext != null && mConnection != null)
+        {
+            mContext.unbindService(mConnection);
+        }
     }
 }

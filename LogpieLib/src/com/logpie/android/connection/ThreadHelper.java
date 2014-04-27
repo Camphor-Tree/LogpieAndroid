@@ -11,8 +11,7 @@ public final class ThreadHelper
 
     public static boolean isRunningOnMainThread()
     {
-        return Looper.getMainLooper() != null
-                && Looper.myLooper() == Looper.getMainLooper();
+        return Looper.getMainLooper() != null && Looper.myLooper() == Looper.getMainLooper();
     }
 
     public static void throwIfMainThread() throws ThreadException
@@ -30,7 +29,9 @@ public final class ThreadHelper
     public static void runOffMainThread(Runnable runnable)
     {
         if (!isRunningOnMainThread())
+        {
             runnable.run();
+        }
         else
         {
             sThreadPoolManager.execute(runnable);

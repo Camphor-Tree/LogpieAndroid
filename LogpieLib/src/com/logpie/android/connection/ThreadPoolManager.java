@@ -6,7 +6,6 @@ import java.util.concurrent.Executor;
 
 public class ThreadPoolManager implements Executor
 {
-
     private final int maxSize = 15;
     private final Queue<Runnable> mThreadPool;
     private Runnable active;
@@ -19,30 +18,23 @@ public class ThreadPoolManager implements Executor
     @Override
     public void execute(final Runnable command)
     {
-        mThreadPool.offer(new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
-                    command.run();
-                } finally
-                {
-                    scheduleNext();
-                }
-            }
-        });
-        if (active == null)
-        {
-            scheduleNext();
-        }
+        // if (isFull())
+        // return;
+
+        mThreadPool.offer(command);
+        scheduleNext();
+        /*
+         * if (active == null) { scheduleNext(); }
+         */
     }
 
     public void scheduleNext()
     {
-        if ((active = mThreadPool.poll()) != null)
-            this.execute(active);
-
+        while ((active = mThreadPool.poll()) != null)
+        {
+            Thread thread = new Thread(active);
+            thread.start();
+        }
     }
 
     public boolean isFull()
