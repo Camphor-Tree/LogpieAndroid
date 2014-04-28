@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.logpie.android.connection.ThreadHelper;
+import com.logpie.android.exception.ThreadException;
 import com.logpie.android.util.LogpieLog;
 
 public class DataServiceCaller
@@ -27,8 +28,10 @@ public class DataServiceCaller
 
     /**
      * get the CentralDataService Object
+     * 
+     * @throws ThreadException
      */
-    public void asyncConnectDataService()
+    public void asyncConnectDataService() throws ThreadException
     {
         ThreadHelper.runOffMainThread(new Runnable()
         {
@@ -40,9 +43,21 @@ public class DataServiceCaller
         });
     }
 
-    public void asyncDisconnectDataService()
+    public void asyncDisconnectDataService() throws ThreadException
     {
         ThreadHelper.runOffMainThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                unbindService();
+            }
+        });
+    }
+
+    public void syncDisconnectDataService() throws ThreadException
+    {
+        ThreadHelper.runOnMainThread(new Runnable()
         {
             @Override
             public void run()

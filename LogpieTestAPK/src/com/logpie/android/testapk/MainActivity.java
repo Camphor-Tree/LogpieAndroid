@@ -11,6 +11,7 @@ import com.logpie.android.datastorage.CentralDataService;
 import com.logpie.android.datastorage.DataLevel;
 import com.logpie.android.datastorage.DataServiceCaller;
 import com.logpie.android.datastorage.KeyValueStorage;
+import com.logpie.android.exception.ThreadException;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
@@ -54,8 +55,28 @@ public class MainActivity extends ActionBarActivity
     protected void onStop()
     {
         LogpieLog.d(TAG, "onStop");
+        try
+        {
+            mServiceCaller.syncDisconnectDataService();
+        } catch (ThreadException e)
+        {
+            LogpieLog.e(TAG, "cannot bind to save because of thread pool is full");
+        }
         super.onStop();
-        mServiceCaller.asyncConnectDataService();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        LogpieLog.d(TAG, "onPause");
+        try
+        {
+            mServiceCaller.syncDisconnectDataService();
+        } catch (ThreadException e)
+        {
+            LogpieLog.e(TAG, "cannot bind to save because of thread pool is full");
+        }
+        super.onStop();
     }
 
     /**
@@ -81,7 +102,13 @@ public class MainActivity extends ActionBarActivity
     {
         LogpieLog.i(TAG, "onStart try DataServiceCaller");
         mServiceCaller = new DataServiceCaller(this);
-        mServiceCaller.asyncConnectDataService();
+        try
+        {
+            mServiceCaller.asyncConnectDataService();
+        } catch (ThreadException e)
+        {
+            LogpieLog.e(TAG, "cannot bind to save because of thread pool is full");
+        }
     }
 
     private void testKeyValueDataStorage()

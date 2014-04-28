@@ -26,7 +26,7 @@ public final class ThreadHelper
         handler.post(runnable);
     }
 
-    public static void runOffMainThread(Runnable runnable)
+    public static void runOffMainThread(Runnable runnable) throws ThreadException
     {
         if (!isRunningOnMainThread())
         {
@@ -34,7 +34,7 @@ public final class ThreadHelper
         }
         else
         {
-            sThreadPoolManager.execute(runnable);
+            sThreadPoolManager.safeExecute(runnable);
         }
     }
 }
