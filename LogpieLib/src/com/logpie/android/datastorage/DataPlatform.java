@@ -25,4 +25,5 @@ public class DataPlatform extends Binder
         }
         return sDataPlatform;
     }
+
 }
