@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
          <service android:name="com.logpie.android.datastorage.CentralDataService" />
-
+         <service android:name="com.logpie.android.metric.MetricService" />
     </application>
 
 </manifest>

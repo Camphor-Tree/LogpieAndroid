@@ -12,6 +12,7 @@ import com.logpie.android.datastorage.DataLevel;
 import com.logpie.android.datastorage.DataServiceCaller;
 import com.logpie.android.datastorage.KeyValueStorage;
 import com.logpie.android.exception.ThreadException;
+import com.logpie.android.metric.LogpieMetric;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
@@ -48,6 +49,7 @@ public class MainActivity extends ActionBarActivity
     protected void onResume()
     {
         LogpieLog.d(TAG, "onResume");
+        testMetric();
         super.onResume();
     }
 
@@ -139,4 +141,11 @@ public class MainActivity extends ActionBarActivity
                 LogpieLog.d(TAG, dataLevel.name() + " is not null");
         }
     }
+
+    private void testMetric()
+    {
+        LogpieMetric metric = new LogpieMetric("MainActivity", "testMetric", this);
+        metric.stopTimer();
+    }
+
 }

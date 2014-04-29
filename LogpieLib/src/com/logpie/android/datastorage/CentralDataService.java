@@ -21,4 +21,15 @@ public class CentralDataService extends Service
         LogpieLog.i(TAG, packageName);
         return mBinder;
     }
+
+    @Override
+    public boolean onUnbind(Intent intent)
+    {
+        // All clients have unbound with unbindService()
+        mBinder = null;
+        // Return false, next time client bind to dataService will not call
+        // onRebind()
+        // Just call onBind() as a single entrance.
+        return false;
+    }
 }

@@ -97,8 +97,11 @@ public class GenericConnection
         {
             try
             {
-                writer.flush();
-                writer.close();
+                if (writer != null)
+                {
+                    writer.flush();
+                    writer.close();
+                }
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -209,12 +212,12 @@ public class GenericConnection
         mHttpVerb = httpVerb;
     }
 
-    public JSONObject getmRequestData()
+    public JSONObject getRequestData()
     {
         return mRequestData;
     }
 
-    public void setmRequestData(JSONObject mRequestData)
+    public void setRequestData(JSONObject mRequestData)
     {
         this.mRequestData = mRequestData;
     }

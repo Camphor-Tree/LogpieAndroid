@@ -1,11 +1,10 @@
-package com.logpie.android.connection;
+package com.logpie.android.util;
 
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
 
 import com.logpie.android.exception.ThreadException;
-import com.logpie.android.util.LogpieLog;
 
 public class ThreadPoolManager implements Executor
 {

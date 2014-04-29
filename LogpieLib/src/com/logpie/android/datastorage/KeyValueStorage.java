@@ -1,5 +1,6 @@
 package com.logpie.android.datastorage;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ public class KeyValueStorage
 {
     public static final String SUCCESS_KEY = "com.logpie.storage.keyvalue.success";
     public static final String ERROR_KEY = "com.logpie.storage.keyvalue.error";
+
+    private static String sSharedPreferencesPath;
 
     private static KeyValueStorage sKeyValueStorage;
     private static Context mContext;
@@ -30,9 +33,29 @@ public class KeyValueStorage
         {
             mContext = context.getApplicationContext();
             sKeyValueStorage = new KeyValueStorage();
+            sSharedPreferencesPath = "/data/data/" + mContext.getApplicationInfo().packageName
+                    + "/shared_prefs";
         }
         return sKeyValueStorage;
 
+    }
+
+    boolean isSharedPreferencesExist()
+    {
+        for (DataLevel dataLevel : DataLevel.values())
+        {
+            String filePath = sSharedPreferencesPath + "/" + dataLevel.toString() + ".xml";
+            File f = new File(filePath);
+            if (!f.exists())
+                return false;
+        }
+        return true;
+    }
+
+    boolean isDirectoryExist()
+    {
+        File root = new File(sSharedPreferencesPath);
+        return root.isDirectory();
     }
 
     /**
@@ -41,8 +64,9 @@ public class KeyValueStorage
      */
     public void initialize()
     {
-        // If map already contains reference to shared preferences, just return.
-        if (mDataMap.size() == DataLevel.values().length)
+        // If map already contains reference to shared preferences, just
+        // return.
+        if (isSharedPreferencesExist() && mDataMap.size() == DataLevel.values().length)
         {
             return;
         }

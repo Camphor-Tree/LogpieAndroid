@@ -1,14 +1,16 @@
 package com.logpie.android.datastorage;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.logpie.android.connection.ThreadHelper;
 import com.logpie.android.exception.ThreadException;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.android.util.ThreadHelper;
 
 public class DataServiceCaller
 {
@@ -20,6 +22,8 @@ public class DataServiceCaller
     private ServiceConnection mConnection;
     private DataPlatform mDataPlatform;
     private Intent mIntent;
+
+    private AtomicBoolean mConnected = new AtomicBoolean(false);
 
     public DataServiceCaller(Context context)
     {
@@ -45,6 +49,11 @@ public class DataServiceCaller
 
     public void asyncDisconnectDataService() throws ThreadException
     {
+        // if the connection haven't been established, then just return
+        if (!mConnected.get())
+        {
+            return;
+        }
         ThreadHelper.runOffMainThread(new Runnable()
         {
             @Override
@@ -57,6 +66,11 @@ public class DataServiceCaller
 
     public void syncDisconnectDataService() throws ThreadException
     {
+        // if the connection haven't been established, then just return
+        if (!mConnected.get())
+        {
+            return;
+        }
         ThreadHelper.runOnMainThread(new Runnable()
         {
             @Override
@@ -72,7 +86,7 @@ public class DataServiceCaller
     {
         if (mDataPlatform == null)
         {
-            LogpieLog.e(TAG, "The Service haven't been established");
+            LogpieLog.e(TAG, "The Service haven't been established or just dropped the connection");
         }
         return mDataPlatform;
     }
@@ -119,8 +133,13 @@ public class DataServiceCaller
                 LogpieLog.d(TAG, "onServiceConnected");
                 LogpieLog.d(TAG, "ComponentName" + className.toString());
                 mDataPlatform = (DataPlatform) service;
+                mConnected.set(true);
             }
 
+            // this method is not supposed to be raised when you unbind your
+            // service, so don't rely on it. It is supposed to inform you in
+            // case the connection between your Service and ServiceConnection is
+            // dropped.
             @Override
             public void onServiceDisconnected(ComponentName arg0)
             {

@@ -11,7 +11,9 @@ public class KeyValueStorageTests extends AndroidTestCase
     {
         Context context = getContext();
         KeyValueStorage storage = KeyValueStorage.getInstance(context);
+        // Assert.assertFalse(storage.isSharedPreferencesExist());
         storage.initialize();
+
         assertEquals(storage.mDataMap.size(), DataLevel.values().length);
         for (DataLevel dataLevel : DataLevel.values())
         {
@@ -52,6 +54,9 @@ public class KeyValueStorageTests extends AndroidTestCase
 
         Assert.assertEquals("test_user_value1", expect_value3);
         Assert.assertEquals("test_user_value2", expect_value4);
+
+        Assert.assertTrue(storage.isDirectoryExist());
+        Assert.assertTrue(storage.isSharedPreferencesExist());
     }
 
     public void testUpdate()

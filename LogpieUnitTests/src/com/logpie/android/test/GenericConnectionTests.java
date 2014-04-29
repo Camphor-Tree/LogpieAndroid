@@ -21,23 +21,14 @@ public class GenericConnectionTests extends AndroidTestCase
     private final static String TAG = GenericConnectionTests.class.getName();
 
     private String testRocketData = "{\"type\":\"INSERT\",\"requestID\":\"1DEASEWO-2232GDA2\","
-            + "\"company\":\"logpie\",\"platform\":\"java\","
-            + "\"application\":\"logpie\","
-            + "\"software_version\":\"1.01\","
-            + "\"environment\":\"alpha\","
-            + "\"metrics\":[{"
-            + "\"component\":\"loginpage\","
-            + "\"action\":\"register\","
-            + "\"timestamp\":\"9800284756345\","
-            + "\"time\":\"91\"},"
-            + "{\"component\":\"loginpage\","
-            + "\"action\":\"login\","
-            + "\"timestamp\":\"9800284756389\","
-            + "\"time\":\"27\"}],"
-            + "\"mobile_device\":\"true\","
-            + "\"OS_type\":\"android\","
-            + "\"OS_version\":\"4.1\","
-            + "\"device_manufacture\":\"Samsung\","
+            + "\"company\":\"logpie\",\"platform\":\"java\"," + "\"application\":\"logpie\","
+            + "\"software_version\":\"1.01\"," + "\"environment\":\"alpha\"," + "\"metrics\":[{"
+            + "\"component\":\"loginpage\"," + "\"action\":\"register\","
+            + "\"timestamp\":\"9800284756345\"," + "\"time\":\"91\"},"
+            + "{\"component\":\"loginpage\"," + "\"action\":\"login\","
+            + "\"timestamp\":\"9800284756389\"," + "\"time\":\"27\"}],"
+            + "\"mobile_device\":\"true\"," + "\"OS_type\":\"android\","
+            + "\"OS_version\":\"4.1\"," + "\"device_manufacture\":\"Samsung\","
             + "\"device_version\":\"Galaxy S3\"}";
 
     // This is just test single thread
@@ -74,8 +65,7 @@ public class GenericConnectionTests extends AndroidTestCase
             latch.await();
             if (countSuccess.get() != 20)
             {
-                fail("In Multipe Thread Connection Test, only pass+"
-                        + countSuccess.get());
+                fail("In Multipe Thread Connection Test, only pass+" + countSuccess.get());
             }
             else
             {
@@ -96,7 +86,7 @@ public class GenericConnectionTests extends AndroidTestCase
         connection.initialize(ServiceURL.RocektService);
         try
         {
-            connection.setmRequestData(new JSONObject(testRocketData));
+            connection.setRequestData(new JSONObject(testRocketData));
         } catch (JSONException e)
         {
             e.printStackTrace();
@@ -119,14 +109,13 @@ public class GenericConnectionTests extends AndroidTestCase
 
     // using RocketService as test target service
     // test MultiThread
-    private void testRocketService(final CountDownLatch latch,
-            final AtomicInteger countSuccess)
+    private void testRocketService(final CountDownLatch latch, final AtomicInteger countSuccess)
     {
         GenericConnection connection = new GenericConnection();
         connection.initialize(ServiceURL.RocektService);
         try
         {
-            connection.setmRequestData(new JSONObject(testRocketData));
+            connection.setRequestData(new JSONObject(testRocketData));
         } catch (JSONException e)
         {
             e.printStackTrace();

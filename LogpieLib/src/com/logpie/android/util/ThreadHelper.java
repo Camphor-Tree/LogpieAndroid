@@ -1,4 +1,4 @@
-package com.logpie.android.connection;
+package com.logpie.android.util;
 
 import android.os.Handler;
 import android.os.Looper;
