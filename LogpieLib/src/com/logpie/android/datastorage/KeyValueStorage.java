@@ -59,7 +59,7 @@ public class KeyValueStorage
     }
 
     /**
-     * Initilize the key-value storage. All all dataLevel's storage into
+     * Initialize the key-value storage. All all dataLevel's storage into
      * dataMap;
      */
     public void initialize()
