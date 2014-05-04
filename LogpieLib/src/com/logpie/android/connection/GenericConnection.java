@@ -4,8 +4,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.json.JSONObject;
 
@@ -19,7 +29,7 @@ public class GenericConnection
 {
     private static final String TAG = GenericConnection.class.getName();
 
-    private HttpURLConnection mHttpURLConnection;
+    private HttpsURLConnection mHttpURLConnection;
     private ServiceURL mServiceURL;
     private int mTimeout = 10 * 1000;
     // logpie default verb is post
@@ -28,12 +38,14 @@ public class GenericConnection
 
     public void initialize(ServiceURL serviceURL)
     {
+        // TODO: Should turn off when release;
+        disableSSLClientCertificate();
         try
         {
             mServiceURL = serviceURL;
             // initialize the HttpURLConnection based on the url
             URL url = serviceURL.getURL();
-            mHttpURLConnection = (HttpURLConnection) url.openConnection();
+            mHttpURLConnection = (HttpsURLConnection) url.openConnection();
             // check whether need to do input
             if (mServiceURL.needDoOutput())
             {
@@ -220,6 +232,56 @@ public class GenericConnection
     public void setRequestData(JSONObject mRequestData)
     {
         this.mRequestData = mRequestData;
+    }
+
+    private void disableSSLClientCertificate()
+    {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
+        {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers()
+            {
+                return null;
+            }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType)
+                    throws CertificateException
+            {
+
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType)
+                    throws CertificateException
+            {
+
+            }
+        } };
+
+        SSLContext sc;
+        try
+        {
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier()
+            {
+
+                public boolean verify(String hostname, SSLSession session)
+                {
+                    return true;
+                }
+            });
+            sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (KeyManagementException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
 }
