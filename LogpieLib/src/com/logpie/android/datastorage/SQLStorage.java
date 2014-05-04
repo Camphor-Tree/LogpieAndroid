@@ -3,6 +3,7 @@ package com.logpie.android.datastorage;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
@@ -109,49 +110,74 @@ public class SQLStorage
     }
 
     /**
-     * Insert new record
+     * Insert into SQL storage
      * 
-     * @param id
-     * @param uname
-     * @return
+     * @param bundle
+     * @param table
+     * @param callback
+     * 
      */
-    public boolean insert(String uname, LogpieCallback callback)
+    public void insert(Bundle bundle, String table, LogpieCallback callback)
     {
         String sql = "";
+
+        StringBuilder cols = new StringBuilder();
+        StringBuilder values = new StringBuilder();
+        for (String col : bundle.keySet())
+        {
+            cols.append(col + ", ");
+            values.append(bundle.getString("'" + col + "', "));
+        }
+        // delete the last two digits ", " in cols and delete last three
+        // digits "', " in values
+        cols.delete(cols.length() - 2, cols.length());
+        values.delete(values.length() - 3, values.length());
         try
         {
-            sql = "insert into t_user values(null,'" + uname + "')";
+            sql = "insert into " + table + "(" + cols + ") values(" + values + ")";
             mSQLiteDB.execSQL(sql);
-            return true;
-
+            handleSuccessCallback(callback, "Insert successfully");
         } catch (Exception e)
         {
-            LogpieLog.e(TAG, "insert Table user err ,sql: " + sql);
-            return false;
+            LogpieLog.e(TAG, "insert Table " + table + " error, sql: " + sql);
+            handleErrorCallback(callback, "Insert error");
         }
+
     }
 
     /**
-     * Insert new record
+     * Insert into SQL storage
      * 
      * @param id
      * @param uname
      * @return
      */
-    public boolean insert(String uname)
+    public boolean insert(Bundle bundle, String table)
     {
         String sql = "";
+
+        StringBuilder cols = new StringBuilder();
+        StringBuilder values = new StringBuilder();
+        for (String col : bundle.keySet())
+        {
+            cols.append(col + ", ");
+            values.append(bundle.getString("'" + col + "', "));
+        }
+        // delete the last two digits ", " in cols and delete last three
+        // digits "', " in values
+        cols.delete(cols.length() - 2, cols.length());
+        values.delete(values.length() - 3, values.length());
         try
         {
-            sql = "insert into t_user values(null,'" + uname + "')";
+            sql = "insert into " + table + "(" + cols + ") values(" + values + ")";
             mSQLiteDB.execSQL(sql);
             return true;
-
         } catch (Exception e)
         {
-            LogpieLog.e(TAG, "insert Table user err ,sql: " + sql);
-            return false;
+            LogpieLog.e(TAG, "insert Table " + table + " error, sql: " + sql);
         }
+        return false;
+
     }
 
     /**
@@ -159,17 +185,30 @@ public class SQLStorage
      * 
      * @return Cursor
      */
-    public Cursor findAll()
+    public void findAll()
     {
 
         Cursor cur = mSQLiteDB.query("t_user", new String[] { "_ID", "NAME" }, null, null, null,
                 null, null);
 
-        return cur;
     }
 
     public void close()
     {
         mSQLiteDB.close();
+    }
+
+    private void handleErrorCallback(LogpieCallback callback, String message)
+    {
+        Bundle errorBundle = new Bundle();
+        errorBundle.putString(ERROR_KEY, message);
+        callback.onError(errorBundle);
+    }
+
+    private void handleSuccessCallback(LogpieCallback callback, String message)
+    {
+        Bundle successBundle = new Bundle();
+        successBundle.putString(SUCCESS_KEY, message);
+        callback.onError(successBundle);
     }
 }
