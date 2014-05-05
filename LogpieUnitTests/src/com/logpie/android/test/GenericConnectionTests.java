@@ -1,5 +1,6 @@
 package com.logpie.android.test;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,6 +36,8 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testSingleGenericConnection()
     {
         testRocketService();
+        testAuthenticationServiceRegister();
+        testAuthenticationServiceLogin();
     }
 
     // TODO: there's a bug. it is always success, because the main thread just
@@ -137,4 +140,75 @@ public class GenericConnectionTests extends AndroidTestCase
         });
     }
 
+    // using AuthenticationService as test target service
+    private void testAuthenticationServiceRegister()
+    {
+        GenericConnection connection = new GenericConnection();
+        connection.initialize(ServiceURL.AuthenticationService);
+        try
+        {
+            JSONObject testAuthRegData = new JSONObject();
+            testAuthRegData.put("auth_type", "REGISTER");
+            testAuthRegData.put("register_email", UUID.randomUUID().toString().subSequence(0, 10));
+            testAuthRegData.put("register_password", "123456");
+
+            JSONObject testAuthLoginData = new JSONObject();
+            testAuthLoginData.put("auth_type", "AUTHENTICATE");
+            testAuthLoginData.put("login_email", UUID.randomUUID().toString().subSequence(0, 10));
+            testAuthLoginData.put("login_password", "123456");
+
+            connection.setRequestData(testAuthRegData);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        connection.send(new LogpieCallback()
+        {
+            @Override
+            public void onSuccess(Bundle bundle)
+            {
+                LogpieLog.d(TAG, bundle.toString());
+            }
+
+            @Override
+            public void onError(Bundle bundle)
+            {
+                fail();
+            }
+        });
+    }
+
+    // using AuthenticationService as test target service
+    private void testAuthenticationServiceLogin()
+    {
+        GenericConnection connection = new GenericConnection();
+        connection.initialize(ServiceURL.AuthenticationService);
+        try
+        {
+            JSONObject testAuthLoginData = new JSONObject();
+            testAuthLoginData.put("auth_type", "AUTHENTICATE");
+            testAuthLoginData.put("login_email", "testlogpie@aa.com");
+            testAuthLoginData.put("login_password", "123456");
+
+            connection.setRequestData(testAuthLoginData);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        connection.send(new LogpieCallback()
+        {
+            @Override
+            public void onSuccess(Bundle bundle)
+            {
+                LogpieLog.d(TAG, bundle.toString());
+            }
+
+            @Override
+            public void onError(Bundle bundle)
+            {
+                LogpieLog.d(TAG, bundle.toString());
+                fail();
+            }
+        });
+    }
 }

@@ -14,7 +14,10 @@ public class EndPoint
     public enum ServiceURL
     {
         RocektService("RocketService", "https://10.0.0.6:8443/RocketService/servlet", "1.0.0",
-                "test", true, false);
+                "test", true, false),
+
+        AuthenticationService("RocketService",
+                "https://10.0.0.6:8443/AuthenticationService/server", "1.0.0", "test", true, true);
 
         String mServiceName;
         String mUrl;
