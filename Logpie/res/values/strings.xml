@@ -2,10 +2,24 @@
 <resources>
 
     <string name="app_name">Logpie</string>
-    <string name="login_username">Username</string>
-    <string name="login_password">Password</string>
-    <string name="login_register">Register</string>
-    <string name="login_login">Login</string>
+    
+    <string name="welcome_us">Welcome To Logpie</string>
+    <string name="welcome_cn">欢迎来到Logpie</string>
+    <string name="email_us">Email</string>
+    <string name="email_cn">邮箱</string>
+    <string name="password_us">Password</string>
+    <string name="password_cn">密码</string>
+    <string name="confirm_password_us">Confirm Password</string>
+    <string name="confirm_password_cn">确认密码</string>
+    <string name="nickname_us">Nickname</string>
+    <string name="nickname_cn">昵称</string>
+    <string name="register_us">Register</string>
+    <string name="register_cn">注册</string>
+    <string name="login_us">Login</string>
+    <string name="login_cn">登录</string>
+    <string name="back_us">Back</string>
+    <string name="back_cn">返回</string>
+    
     <string name="action_settings">Settings</string>
 
 </resources>

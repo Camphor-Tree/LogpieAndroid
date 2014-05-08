@@ -14,7 +14,7 @@ public class EndPoint
     public enum ServiceURL
     {
         RocektService("RocketService", "https://10.0.0.6:8443/RocketService/servlet", "1.0.0",
-                "test", true, false);
+                "test", true, false),
 
         AuthenticationService("AuthenticationService",
                 "http://10.0.0.6:8080/AuthenticationService/server", "1.0.0", "test", true, true);
@@ -28,7 +28,6 @@ public class EndPoint
 
         ServiceURL(String name, String url, String version, String environment, boolean doOutput,
                 boolean doInput)
-<<<<<<< HEAD
         {
             mServiceName = name;
             mUrl = url;
@@ -71,50 +70,6 @@ public class EndPoint
             return null;
         }
 
-=======
-        {
-            mServiceName = name;
-            mUrl = url;
-            mVersion = version;
-            mEnvironment = environment;
-            mDoOutput = doOutput;
-            mDoInput = doInput;
-        }
-
-        public String getVersion()
-        {
-            return mVersion;
-        }
-
-        public String getEnvironment()
-        {
-            return mEnvironment;
-        }
-
-        public boolean isDoOutput()
-        {
-            return mDoOutput;
-        }
-
-        public boolean isDoInput()
-        {
-            return mDoInput;
-        }
-
-        public URL getURL()
-        {
-            try
-            {
-                return new URL(mUrl);
-            } catch (MalformedURLException e)
-            {
-                e.printStackTrace();
-                LogpieLog.e(TAG, e.getMessage());
-            }
-            return null;
-        }
-
->>>>>>> create new android project of Logpie
         public boolean needDoOutput()
         {
             return mDoOutput;
