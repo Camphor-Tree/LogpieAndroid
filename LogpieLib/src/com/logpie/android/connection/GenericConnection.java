@@ -1,7 +1,10 @@
 package com.logpie.android.connection;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
@@ -9,6 +12,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.UUID;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -17,6 +21,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
@@ -27,6 +32,10 @@ import com.logpie.android.util.LogpieLog;
 
 public class GenericConnection
 {
+    public static final String KEY_RESPONSE_DATA = "com.logpie.connection.response.key";
+    public static final String KEY_REQUEST_ID = "request_id";
+    public static final String STATIC_REQUEST_ID = "5U2VydmljZSRVc2VyU2VydmljZSR";
+
     private static final String TAG = GenericConnection.class.getName();
 
     private HttpsURLConnection mHttpURLConnection;
@@ -81,8 +90,25 @@ public class GenericConnection
         }
     }
 
+    /**
+     * Send data to the server, Based on the DoInput attribute to determine
+     * whether need to return data or data. If need read response data, it will
+     * parse into the callback's onSuccess bundle with Key @link
+     * GenericConnection.KEY_RESPONSE_DATA
+     * 
+     * @param callback
+     *            Logpie callback.
+     */
     public void send(LogpieCallback callback)
     {
+        try
+        {
+            mRequestData.put(KEY_REQUEST_ID, UUID.randomUUID().toString());
+        } catch (JSONException e1)
+        {
+            // Do nothing if cannot add requestID
+            LogpieLog.e(TAG, "JSONException when putting request_id. Putting empty request_id");
+        }
         String data = mRequestData.toString();
         if (data == null)
         {
@@ -126,9 +152,19 @@ public class GenericConnection
             int responsecode = mHttpURLConnection.getResponseCode();
             if (responsecode >= 200 && responsecode < 300)
             {
-                handleCallback(true, "succesfully sending data to server", callback);
-                LogpieLog.i(TAG, "successful sending data to: " + mServiceURL.getServiceName()
-                        + "<--->hitting url:" + mServiceURL.getURL().toString());
+                // Check whether the end point service need read the input
+                if (mServiceURL.isDoInput())
+                {
+                    // read the response data from server.
+                    String responseData = inputStringReader(mHttpURLConnection.getInputStream());
+                    handleCallbackWithResponseData(responseData, callback);
+                }
+                else
+                {
+                    handleCallback(true, "succesfully sending data to server", callback);
+                    LogpieLog.i(TAG, "successful sending data to: " + mServiceURL.getServiceName()
+                            + "<--->hitting url:" + mServiceURL.getURL().toString());
+                }
             }
             else if (responsecode >= 300 && responsecode < 400)
             {
@@ -169,10 +205,8 @@ public class GenericConnection
             }
         } catch (IOException e)
         {
-            Bundle error = new Bundle();
-            error.putString("error", "IOException when sending data to server and getresponseCode");
-
-            callback.onError(error);
+            handleCallback(false, "IOException when sending data to server and getresponseCode",
+                    callback);
             e.printStackTrace();
         }
     }
@@ -192,6 +226,14 @@ public class GenericConnection
             callback.onError(returnMessage);
         }
 
+    }
+
+    private void handleCallbackWithResponseData(String message, LogpieCallback callback)
+
+    {
+        Bundle returnMessage = new Bundle();
+        returnMessage.putString(KEY_RESPONSE_DATA, message);
+        callback.onSuccess(returnMessage);
     }
 
     public JSONObject getResponse()
@@ -281,7 +323,21 @@ public class GenericConnection
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
+    private String inputStringReader(InputStream inputStream) throws IOException
+    {
+        if (inputStream != null)
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                builder.append(line);
+            }
+            return builder.toString();
+        }
+        return null;
+    }
 }
