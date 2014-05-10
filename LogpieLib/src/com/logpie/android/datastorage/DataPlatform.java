@@ -10,21 +10,23 @@ public class DataPlatform extends Binder
     private static String TAG = DataPlatform.class.getName();
     // The only instance;
     private static DataPlatform sDataPlatform;
-    private static Context sContext;
+    private Context mContext;
     private KeyValueStorage mKeyValueStorage;
 
-    private DataPlatform()
+    private DataPlatform(Context context, KeyValueStorage keyValueStorage)
     {
-        mKeyValueStorage = KeyValueStorage.getInstance(sContext);
+        // get the unique Application Context
+        mContext = context.getApplicationContext();
+        mKeyValueStorage = keyValueStorage;
         mKeyValueStorage.initialize();
     }
 
-    public static synchronized DataPlatform getInstance(Context context)
+    public static synchronized DataPlatform getInstance(Context context,
+            KeyValueStorage keyValueStorage)
     {
         if (sDataPlatform == null)
         {
-            sDataPlatform = new DataPlatform();
-            sContext = context.getApplicationContext();
+            sDataPlatform = new DataPlatform(context, keyValueStorage);
         }
         return sDataPlatform;
     }

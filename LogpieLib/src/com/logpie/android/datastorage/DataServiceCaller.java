@@ -59,7 +59,7 @@ public class DataServiceCaller
             @Override
             public void run()
             {
-                unbindService();
+                unbindServiceSafely();
             }
         });
     }
@@ -76,7 +76,7 @@ public class DataServiceCaller
             @Override
             public void run()
             {
-                unbindService();
+                unbindServiceSafely();
             }
         });
     }
@@ -149,11 +149,20 @@ public class DataServiceCaller
         };
     }
 
-    private void unbindService()
+    private void unbindServiceSafely()
     {
         if (mContext != null && mConnection != null)
         {
-            mContext.unbindService(mConnection);
+            // Catch IllegalArgumentException when calling unbindService. This
+            // exception can be thrown when connected to a flaky network
+            // connection because the service has already been disconnected.
+            try
+            {
+                mContext.unbindService(mConnection);
+            } catch (IllegalArgumentException e)
+            {
+                LogpieLog.i(TAG, "Service was already unbound");
+            }
         }
     }
 }

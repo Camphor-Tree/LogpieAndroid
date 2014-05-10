@@ -15,7 +15,9 @@ public class CentralDataService extends Service
     public IBinder onBind(Intent intent)
     {
         LogpieLog.d(TAG, "onBind Logpie Central DataService Success");
-        mBinder = DataPlatform.getInstance(getApplicationContext());
+        KeyValueStorage keyValueStorage = KeyValueStorage.getInstance(this);
+        mBinder = DataPlatform.getInstance(getApplicationContext(), keyValueStorage);
+
         String packageName = intent.getComponent().getPackageName();
         LogpieLog.i(TAG, "onBindSuccess");
         LogpieLog.i(TAG, packageName);
