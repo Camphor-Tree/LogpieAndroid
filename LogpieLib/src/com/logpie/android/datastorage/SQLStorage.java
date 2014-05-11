@@ -1,5 +1,6 @@
 package com.logpie.android.datastorage;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,15 +33,15 @@ public class SQLStorage
     // Table subcategory (ascid, subcategory, pid, category)
     private static String mCreateSubCategoryTableSQL = "CREATE TABLE subcategory "
             + "(ascid INTEGER PRIMARY KEY AUTOINCREMENT, subcategory TEXT NOT NULL, "
-            + "pid INTEGER NOT NULL, category TEXT NOT NULL, (pid) REFERENCES category(amcid))";
+            + "pid INTEGER NOT NULL, category TEXT NOT NULL, FOREIGN KEY (pid) REFERENCES category (amcid))";
     // Table user (uid, email, password, nickname, gender, birthday, cid, city,
     // country, lastupdatedtime, isorganization)
     private static String mCreateUserTableSQL = "CREATE TABLE user "
             + "(uid INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, "
-            + "password TEXT NOT NULL, nickname TEXT NOT NULL, gender INTEGER DEFAULT 1, "
+            + "nickname TEXT NOT NULL, gender INTEGER DEFAULT 1, "
             + "birthday DATE, cid INTEGER, city TEXT, country TEXT, "
             + "lastupdatedtime DATETIME DEFAULE CURRENT_DATETIME, isorganization INTEGER DEFAULT 0, "
-            + "(cid) REFERENCES city(cid))";
+            + "FOREIGN KEY (cid) REFERENCES city (cid))";
     // Table organization (oid, organization, description, grade, isvalid)
     private static String mCreateOrganizationTableSQL = "CREATE TABLE organization "
             + "(oid INTEGER PRIMARY KEY AUTOINCREMENT, organization TEXT NOT NULL, "
@@ -55,7 +56,7 @@ public class SQLStorage
             + "uid INTEGER NOT NULL, creator TEXT NOT NULL, city TEXT NOT NULL, "
             + "country TEXT NOT NULL, category TEXT, subcategory TEXT, countlike INTEGER DEFAULT 0, "
             + "countdislike INTEGER DEFAULT 0, activated INTEGER DEFAULT 0, lati REAL, "
-            + "long REAL, (uid) REFERENCES user(uid))";
+            + "long REAL, FOREIGN KEY (uid) REFERENCES user (uid))";
     // Table comment (acid, activity, uid, user, time, content, replytoid,
     // replytoname, readbyreply, readbycreator)
     private static String mCreateCommentTableSQL = "CREATE TABLE comment "
@@ -63,6 +64,8 @@ public class SQLStorage
             + "uid INTEGER NOT NULL, user TEXT NOT NULL, time DATETIME NOT NULL, "
             + "content TEXT NOT NULL, replytoid INTEGER, replytoname TEXT, readbyreply INTEGER, "
             + "readbycreator INTEGER DEFAULT 0)";
+
+    private boolean testTag = false;
 
     private SQLStorage()
     {
@@ -81,12 +84,13 @@ public class SQLStorage
     }
 
     /**
-     * Initialize the SQLite storage TODO: check whether the table is existed
+     * Initialize the SQLite storage
      */
-    public void initialize()
+    public boolean initialize()
     {
         mSQLiteDB = mContext.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
         createTable();
+        return testTag;
     }
 
     /**
@@ -103,6 +107,7 @@ public class SQLStorage
             mSQLiteDB.execSQL(mCreateOrganizationTableSQL);
             mSQLiteDB.execSQL(mCreateActivityTableSQL);
             mSQLiteDB.execSQL(mCreateCommentTableSQL);
+            testTag = true;
         } catch (Exception e)
         {
             LogpieLog.e(TAG, "Cannot create the table during the initial step.");
@@ -119,30 +124,27 @@ public class SQLStorage
      */
     public void insert(Bundle bundle, String table, LogpieCallback callback)
     {
-        String sql = "";
+        // remove the data level information from bundle
+        bundle.remove(DataLevel.KEY_DATALEVEL);
 
-        StringBuilder cols = new StringBuilder();
-        StringBuilder values = new StringBuilder();
-        for (String col : bundle.keySet())
+        // start read the insert data from bundle
+        ContentValues values = new ContentValues();
+        for (String key : bundle.keySet())
         {
-            cols.append(col + ", ");
-            values.append(bundle.getString("'" + col + "', "));
+            // transfer bundle to contentValues
+            values.put(key, bundle.getString(key));
         }
-        // delete the last two digits ", " in cols and delete last three
-        // digits "', " in values
-        cols.delete(cols.length() - 2, cols.length());
-        values.delete(values.length() - 3, values.length());
-        try
+
+        long res = mSQLiteDB.insert(table, null, values);
+        if (res != -1)
         {
-            sql = "insert into " + table + "(" + cols + ") values(" + values + ")";
-            mSQLiteDB.execSQL(sql);
             handleSuccessCallback(callback, "Insert successfully");
-        } catch (Exception e)
+        }
+        else
         {
-            LogpieLog.e(TAG, "insert Table " + table + " error, sql: " + sql);
+            LogpieLog.e(TAG, "insert Table " + table + " error");
             handleErrorCallback(callback, "Insert error");
         }
-
     }
 
     /**
@@ -154,43 +156,142 @@ public class SQLStorage
      */
     public boolean insert(Bundle bundle, String table)
     {
-        String sql = "";
+        // remove the data level information from bundle
+        bundle.remove(DataLevel.KEY_DATALEVEL);
 
-        StringBuilder cols = new StringBuilder();
-        StringBuilder values = new StringBuilder();
-        for (String col : bundle.keySet())
+        // start read the insert data from bundle
+        ContentValues values = new ContentValues();
+        for (String key : bundle.keySet())
         {
-            cols.append(col + ", ");
-            values.append(bundle.getString("'" + col + "', "));
+            // transfer bundle to contentValues
+            values.put(key, bundle.getString(key));
         }
-        // delete the last two digits ", " in cols and delete last three
-        // digits "', " in values
-        cols.delete(cols.length() - 2, cols.length());
-        values.delete(values.length() - 3, values.length());
-        try
-        {
-            sql = "insert into " + table + "(" + cols + ") values(" + values + ")";
-            mSQLiteDB.execSQL(sql);
-            return true;
-        } catch (Exception e)
-        {
-            LogpieLog.e(TAG, "insert Table " + table + " error, sql: " + sql);
-        }
-        return false;
 
+        long res = mSQLiteDB.insert(table, null, values);
+        return res != -1;
     }
 
     /**
      * Find all records
      * 
+     * @param tableName
+     * @param columnsName
+     * @param selection
+     * @param selectionArgs
+     * @param groupBy
+     * @param having
+     * @param orderBy
+     * 
+     *            All strings should be the same as SQL grammar without key
+     *            words
      * @return Cursor
      */
-    public void findAll()
+    public Bundle query(String table, String[] columns, String selection, String[] selectionArgs,
+            String groupBy, String having, String orderBy)
     {
+        // query the dabatase
+        Cursor result = mSQLiteDB.query(table, columns, selection, selectionArgs, groupBy, having,
+                orderBy);
 
-        Cursor cur = mSQLiteDB.query("t_user", new String[] { "_ID", "NAME" }, null, null, null,
-                null, null);
+        Bundle bundle = new Bundle();
+        int id = 0;
+        // transfer cursor to bundle
+        while (result.moveToNext())
+        {
+            // bundle --> {id:record};
+            // each record is also a bundle --> {column name:value}
+            Bundle record = new Bundle();
+            int len = result.getColumnCount();
+            for (int i = 0; i < len; i++)
+                record.putString(result.getColumnName(i), result.getString(i));
+            bundle.putBundle(String.valueOf(id), record);
+            id++;
+        }
+        return bundle;
+    }
 
+    /**
+     * Update a record
+     * 
+     * @param tableName
+     * @param bundle
+     * @param whereClause
+     * @param whereArgs
+     *            All strings should be the same as SQL grammar without key
+     *            words
+     * @return Cursor
+     */
+    public boolean update(String table, Bundle bundle, String whereClause, String[] whereArgs)
+    {
+        // remove the data level information from bundle
+        bundle.remove(DataLevel.KEY_DATALEVEL);
+
+        ContentValues values = new ContentValues();
+        // start read the insert data from bundle
+        for (String key : bundle.keySet())
+        {
+            values.put(key, bundle.getString(key));
+        }
+        int res = mSQLiteDB.update(table, values, whereClause, whereArgs);
+        return res != 0;
+    }
+
+    /**
+     * Delete records
+     * 
+     * @param tableName
+     * @param callback
+     * @param whereClause
+     * @param whereArgs
+     *            All strings should be the same as SQL grammar without key
+     *            words
+     */
+    public void delete(String table, String whereClause, String[] whereArgs, LogpieCallback callback)
+    {
+        int res = mSQLiteDB.delete(table, whereClause, whereArgs);
+        if (res != 0)
+        {
+            handleSuccessCallback(callback, "Delete successfully");
+        }
+        else
+        {
+            LogpieLog.i(TAG, "delete Table " + table + " error, where " + whereClause);
+            handleErrorCallback(callback, "Delete error");
+        }
+
+    }
+
+    /**
+     * Delete records
+     * 
+     * @param tableName
+     * @param whereClause
+     * @param whereArgs
+     *            All strings should be the same as SQL grammar without key
+     *            words
+     * 
+     * @return true if it delete one or more records, else false
+     */
+    public boolean delete(String table, String whereClause, String[] whereArgs)
+    {
+        int res = mSQLiteDB.delete(table, whereClause, whereArgs);
+        if (res != 0)
+        {
+            return true;
+        }
+        else
+        {
+            LogpieLog.i(TAG, "delete Table " + table + " error, where " + whereClause);
+            return false;
+        }
+    }
+
+    /**
+     * Drop the database
+     */
+    /* packaged private */boolean clearAll()
+    {
+        return mContext.deleteDatabase(DATABASE_NAME);
     }
 
     public void close()
