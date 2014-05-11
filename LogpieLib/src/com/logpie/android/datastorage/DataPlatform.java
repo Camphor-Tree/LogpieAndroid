@@ -39,4 +39,9 @@ public class DataPlatform extends Binder
         }
         return mKeyValueStorage;
     }
+
+    public void setKeyValueStorage(KeyValueStorage keyValueStorage)
+    {
+        mKeyValueStorage = keyValueStorage;
+    }
 }

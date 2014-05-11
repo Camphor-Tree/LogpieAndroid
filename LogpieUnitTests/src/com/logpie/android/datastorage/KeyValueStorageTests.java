@@ -65,11 +65,38 @@ public class KeyValueStorageTests extends AndroidTestCase
         KeyValueStorage storage = KeyValueStorage.getInstance(context);
         storage.initialize();
 
+        // Test for System Level
         storage.insert(DataLevel.SYSTEM_LVL, "test_system_key1", "test_system_value1");
-
         storage.update(DataLevel.SYSTEM_LVL, "test_system_key1", "new_test_system_value1");
-
         Assert.assertEquals("new_test_system_value1",
                 storage.query(DataLevel.SYSTEM_LVL, "test_system_key1"));
+
+        // Test for User Level
+        storage.insert(DataLevel.USER_LVL, "test_user_key1", "test_user_value1");
+        Assert.assertNotSame("new_test_system_value1",
+                storage.query(DataLevel.USER_LVL, "test_user_key1"));
+        storage.update(DataLevel.USER_LVL, "test_user_key1", "new_test_user_value1");
+        Assert.assertEquals("new_test_user_value1",
+                storage.query(DataLevel.USER_LVL, "test_user_key1"));
+    }
+
+    public void testDelete()
+    {
+        Context context = getContext();
+        KeyValueStorage storage = KeyValueStorage.getInstance(context);
+        storage.initialize();
+        // Test for System Level
+        storage.insert(DataLevel.SYSTEM_LVL, "test_system_key1_to_delete",
+                "test_system_value1_to_delete");
+        Assert.assertTrue(storage.delete(DataLevel.SYSTEM_LVL, "test_system_key1_to_delete"));
+        Assert.assertEquals(storage.query(DataLevel.SYSTEM_LVL, "test_system_key1_to_delete"), null);
+
+        // Test for User Level
+        storage.insert(DataLevel.USER_LVL, "test_user_key1_to_delete", "test_user_value1_to_delete");
+        Assert.assertEquals(storage.query(DataLevel.USER_LVL, "test_user_key1_to_delete"),
+                "test_user_value1_to_delete");
+        Assert.assertTrue(storage.delete(DataLevel.USER_LVL, "test_user_key1_to_delete"));
+        Assert.assertEquals(storage.query(DataLevel.USER_LVL, "test_user_key1_to_delete"), null);
+
     }
 }
