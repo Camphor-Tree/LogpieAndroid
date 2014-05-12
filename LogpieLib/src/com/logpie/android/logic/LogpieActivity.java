@@ -12,4 +12,16 @@ public class LogpieActivity
     private String endTime;
     private List<Comment> mComments;
 
+    public LogpieActivity(String id, String description, Location location, String startTime,
+            String endTime, List<Comment> comments)
+    {
+        mID = id;
+        mDescription = description;
+        Location = location;
+        // TODO combine the time into one Period clss
+        startTime = startTime;
+        endTime = endTime;
+        mComments = comments;
+    }
+
 }

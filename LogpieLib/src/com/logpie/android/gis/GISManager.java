@@ -1,7 +1,5 @@
 package com.logpie.android.gis;
 
-import java.util.List;
-
 import android.content.Context;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,6 +17,7 @@ import com.logpie.android.util.LogpieLog;
 public class GISManager
 {
     private static String TAG = GISManager.class.getName();
+    // Singleton GIS Manager
     private static GISManager sGISManager;
 
     private boolean mIsLocationAvailable;
@@ -28,12 +27,13 @@ public class GISManager
 
     private LocationManager mLocationManager;
     private Context mContext;
-    private List<LocationListener> mLocationListenersList;
+    private LogpieLocationListener mLogpieLocationListener;
 
     private GISManager(Context context)
     {
         mContext = context;
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
     }
 
     public static synchronized GISManager getInstance(Context context)
@@ -44,7 +44,18 @@ public class GISManager
 
         }
         return sGISManager;
+    }
 
+    public void initialize()
+    {
+        /**
+         * LogpieLocationListener keep an instance of GISManager. it will update
+         * the Lat/Lng in GISManager.
+         */
+        // create a new listener
+        mLogpieLocationListener = new LogpieLocationListener(this, "LogpieDefaultLocationListener");
+        // add listener.
+        addLocationListener(mLogpieLocationListener);
     }
 
     public boolean isLocationAvailable()
@@ -96,13 +107,44 @@ public class GISManager
         return false;
     }
 
-    public void addLocationListener(LocationListener locationListener)
+    public boolean isNetworkAvailable()
+    {
+        if (mLocationManager == null)
+        {
+            if (mContext != null)
+            {
+                mLocationManager = (LocationManager) mContext
+                        .getSystemService(Context.LOCATION_SERVICE);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addLocationListener(LocationListener locationListener)
     {
         if (isGPSAvailable())
         {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
                     locationListener);
+            return true;
         }
+        else if (isNetworkAvailable())
+        {
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
+                    locationListener);
+            return true;
+        }
+        return false;
+
     }
 
     public Location getCurrentLocation()

@@ -72,8 +72,7 @@ public abstract class User
 
     }
 
-    public void editLogpieActivity(LogpieActivity logpieActivity,
-            LogpieActivityAttributes LogpieActivityAttribute)
+    public void editLogpieActivity(LogpieActivity logpieActivity)
     {
     }
 

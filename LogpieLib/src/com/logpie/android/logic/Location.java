@@ -2,9 +2,26 @@ package com.logpie.android.logic;
 
 public class Location
 {
-    private double mLatitude;
-    private double mLongitude;
+    private Double mLatitude;
+    private Double mLongitude;
     private String mAddress;
+
+    public Location(double lat, double lon)
+    {
+        this(lat, lon, null);
+    }
+
+    public Location(String address)
+    {
+        this(null, null, address);
+    }
+
+    public Location(Double lat, Double lon, String address)
+    {
+        mLatitude = lat;
+        mLongitude = lon;
+        mAddress = address;
+    }
 
     /**
      * @return the latitude
