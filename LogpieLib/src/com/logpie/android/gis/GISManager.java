@@ -147,7 +147,31 @@ public class GISManager
 
     }
 
+    /**
+     * Will check whether the location is available or not. If not available, it
+     * will return null;
+     * 
+     * @return
+     */
     public Location getCurrentLocation()
+    {
+        if (mIsGPSLocationAvailable || mIsNetworkLocationAvailable)
+        {
+            return mCurrentLocation;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Return the mCurrentLocation anyway. Note: this api will not ensure the
+     * Location is currently available
+     * 
+     * @return
+     */
+    public Location getLastKnownLocation()
     {
         return mCurrentLocation;
     }
