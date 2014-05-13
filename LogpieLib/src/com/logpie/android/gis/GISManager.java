@@ -4,7 +4,7 @@ import android.content.Context;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-import com.logpie.android.logic.Location;
+import com.logpie.android.logic.LogpieLocation;
 import com.logpie.android.util.LogpieLog;
 
 /**
@@ -23,17 +23,24 @@ public class GISManager
     private boolean mIsLocationAvailable;
     private boolean mIsGPSLocationAvailable;
     private boolean mIsNetworkLocationAvailable;
-    private Location mCurrentLocation;
+    private LogpieLocation mCurrentLocation;
 
     private LocationManager mLocationManager;
     private Context mContext;
-    private LogpieLocationListener mLogpieLocationListener;
+
+    // private LogpieLocationListener mLogpieLocationListener;
 
     private GISManager(Context context)
     {
         mContext = context;
+        mCurrentLocation = new LogpieLocation(null, null);
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
+        /**
+         * LogpieLocationListener keep an instance of GISManager. it will update
+         * the Lat/Lng in GISManager.
+         */
+        addLocationListener(new LogpieLocationListener(this, "LogpieDefaultLocationListener"));
     }
 
     public static synchronized GISManager getInstance(Context context)
@@ -44,18 +51,6 @@ public class GISManager
 
         }
         return sGISManager;
-    }
-
-    public void initialize()
-    {
-        /**
-         * LogpieLocationListener keep an instance of GISManager. it will update
-         * the Lat/Lng in GISManager.
-         */
-        // create a new listener
-        mLogpieLocationListener = new LogpieLocationListener(this, "LogpieDefaultLocationListener");
-        // add listener.
-        addLocationListener(mLogpieLocationListener);
     }
 
     public boolean isLocationAvailable()
@@ -153,7 +148,8 @@ public class GISManager
      * 
      * @return
      */
-    public Location getCurrentLocation()
+
+    public LogpieLocation getCurrentLocation()
     {
         if (mIsGPSLocationAvailable || mIsNetworkLocationAvailable)
         {
@@ -171,7 +167,7 @@ public class GISManager
      * 
      * @return
      */
-    public Location getLastKnownLocation()
+    public LogpieLocation getLastKnownLocation()
     {
         return mCurrentLocation;
     }
@@ -250,7 +246,7 @@ public class GISManager
      * @param currentLocation
      *            the currentLocation to set
      */
-    public void setCurrentLocation(Location currentLocation)
+    public void setCurrentLocation(LogpieLocation currentLocation)
     {
         mCurrentLocation = currentLocation;
     }

@@ -1,22 +1,22 @@
 package com.logpie.android.logic;
 
-public class Location
+public class LogpieLocation
 {
     private Double mLatitude;
     private Double mLongitude;
     private String mAddress;
 
-    public Location(double lat, double lon)
+    public LogpieLocation(Double lat, Double lon)
     {
         this(lat, lon, null);
     }
 
-    public Location(String address)
+    public LogpieLocation(String address)
     {
         this(null, null, address);
     }
 
-    public Location(Double lat, Double lon, String address)
+    public LogpieLocation(Double lat, Double lon, String address)
     {
         mLatitude = lat;
         mLongitude = lon;
@@ -72,5 +72,11 @@ public class Location
     public void setAddress(String address)
     {
         mAddress = address;
+    }
+
+    public String getCurrentCity()
+    {
+
+        return "";
     }
 }

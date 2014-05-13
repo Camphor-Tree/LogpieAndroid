@@ -11,8 +11,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.logpie.android.exception.ThreadException;
+import com.logpie.android.gis.GISManager;
+import com.logpie.android.logic.LogpieLocation;
+import com.logpie.android.logic.NormalUser;
+import com.logpie.android.util.ThreadHelper;
+
 public class RegisterFragment extends Fragment
 {
+    private static String TAG = RegisterFragment.class.getName();
     private TextView mWelcome;
     private EditText mEmail;
     private EditText mPassword;
@@ -87,7 +94,44 @@ public class RegisterFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                // TODO: store the data
+
+                final NormalUser user = NormalUser.getInstance();
+                final String email = mEmail.getText().toString();
+                final String password = mPassword.getText().toString();
+                final String name = mNickname.getText().toString();
+
+                LogpieLocation location = GISManager.getInstance(getActivity())
+                        .getCurrentLocation();
+                String city = location.getCurrentCity();
+
+                try
+                {
+                    ThreadHelper.runOffMainThread(new Runnable()
+                    {
+                        public void run()
+                        {
+                            user.register(getActivity(), email, password, name);
+                        }
+                    });
+                } catch (ThreadException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                /*
+                 * Bundle bundle = new Bundle(); bundle.putString("email",
+                 * email); bundle.putString("password", password);
+                 * bundle.putString("nickname", name); bundle.putString("city",
+                 * city); SQLStorage.getInstance(getActivity()).insert(bundle,
+                 * "user", new LogpieCallback() {
+                 * 
+                 * @Override public void onSuccess(Bundle bundle) {
+                 * LogpieLog.d(TAG, bundle.toString()); }
+                 * 
+                 * @Override public void onError(Bundle bundle) {
+                 * LogpieLog.e(TAG, "register in front end is error"); } });
+                 */
             }
         });
     }

@@ -113,7 +113,7 @@ public class MetricService extends IntentService
             @Override
             public void onError(Bundle bundle)
             {
-                LogpieLog.e(TAG, "send metrics to RocketService successfully");
+                LogpieLog.e(TAG, "fail to send metrics to RocketService");
             }
         });
     }

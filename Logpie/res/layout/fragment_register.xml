@@ -30,12 +30,14 @@
     	<EditText
         	style="@style/SingleInput"
         	android:id="@+id/register_password"
-        	android:layout_below="@id/register_email" />
+        	android:layout_below="@id/register_email"
+        	android:inputType="textPassword" />
     
     	<EditText
         	style="@style/SingleInput"
         	android:id="@+id/register_comfirm_password"
-        	android:layout_below="@id/register_password" />
+        	android:layout_below="@id/register_password"
+        	android:inputType="textPassword" />
     
     	<EditText
         	style="@style/SingleInput"

@@ -33,15 +33,14 @@ public class SQLStorage
     // Table subcategory (ascid, subcategory, pid, category)
     private static String mCreateSubCategoryTableSQL = "CREATE TABLE subcategory "
             + "(ascid INTEGER PRIMARY KEY AUTOINCREMENT, subcategory TEXT NOT NULL, "
-            + "pid INTEGER NOT NULL, category TEXT NOT NULL, FOREIGN KEY (pid) REFERENCES category (amcid))";
+            + "category TEXT NOT NULL)";
     // Table user (uid, email, password, nickname, gender, birthday, cid, city,
     // country, lastupdatedtime, isorganization)
     private static String mCreateUserTableSQL = "CREATE TABLE user "
             + "(uid INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, "
             + "nickname TEXT NOT NULL, gender INTEGER DEFAULT 1, "
-            + "birthday DATE, cid INTEGER, city TEXT, country TEXT, "
-            + "lastupdatedtime DATETIME DEFAULE CURRENT_DATETIME, isorganization INTEGER DEFAULT 0, "
-            + "FOREIGN KEY (cid) REFERENCES city (cid))";
+            + "birthday DATE, city TEXT, country TEXT, "
+            + "lastupdatedtime DATETIME DEFAULE CURRENT_DATETIME, isorganization INTEGER DEFAULT 0)";
     // Table organization (oid, organization, description, grade, isvalid)
     private static String mCreateOrganizationTableSQL = "CREATE TABLE organization "
             + "(oid INTEGER PRIMARY KEY AUTOINCREMENT, organization TEXT NOT NULL, "
@@ -53,10 +52,8 @@ public class SQLStorage
             + "(aid INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, "
             + "description TEXT NOT NULL, createtime DATETIME DEFAULT CURRENT_DATETIME, "
             + "starttime DATETIME NOT NULL, endtime DATETIME NOT NULL, location TEXT NOT NULL,"
-            + "uid INTEGER NOT NULL, creator TEXT NOT NULL, city TEXT NOT NULL, "
-            + "country TEXT NOT NULL, category TEXT, subcategory TEXT, countlike INTEGER DEFAULT 0, "
-            + "countdislike INTEGER DEFAULT 0, activated INTEGER DEFAULT 0, lati REAL, "
-            + "long REAL, FOREIGN KEY (uid) REFERENCES user (uid))";
+            + "creator TEXT NOT NULL, city TEXT NOT NULL, country TEXT NOT NULL, category TEXT, subcategory TEXT, countlike INTEGER DEFAULT 0, "
+            + "countdislike INTEGER DEFAULT 0, activated INTEGER DEFAULT 0, lati REAL, long REAL";
     // Table comment (acid, activity, uid, user, time, content, replytoid,
     // replytoname, readbyreply, readbycreator)
     private static String mCreateCommentTableSQL = "CREATE TABLE comment "
