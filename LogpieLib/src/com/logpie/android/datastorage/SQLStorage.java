@@ -319,7 +319,7 @@ public class SQLStorage
     
     private synchronized void openDatabase() {
         mOpenCounter++;
-        if(mOpenCounter == 1 && !mSQLiteDB.isOpen()) {
+        if(mOpenCounter == 1 && (mSQLiteDB==null || !mSQLiteDB.isOpen())) {
             // Opening new database
             mSQLiteDB = mContext.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
         }
@@ -330,7 +330,6 @@ public class SQLStorage
         if(mOpenCounter == 0) {
             // Closing database
             mSQLiteDB .close();
-
         }
     }
 
