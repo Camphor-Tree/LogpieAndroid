@@ -56,7 +56,7 @@ public class MetricService extends IntentService
      * "\"OS_version\":\"4.1\"," + "\"device_manufacture\":\"Samsung\"," +
      * "\"device_version\":\"Galaxy S3\"}";
      */
-    public JSONObject buildRocketJSON(Bundle metricBundle)
+    private JSONObject buildRocketJSON(Bundle metricBundle)
     {
         JSONObject metricJSON = new JSONObject();
         try

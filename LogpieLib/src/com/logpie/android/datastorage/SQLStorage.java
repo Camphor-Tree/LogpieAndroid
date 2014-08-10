@@ -21,34 +21,42 @@ public class SQLStorage
 
     // database name
     public static final String DATABASE_NAME = "logpie.db";
+    
+    private static String nameTableCity = "city";
+    private static String nameTableCategory = "category";
+    private static String nameTableSubCategory = "subcategory";
+    private static String nameTableUserTable = "user";
+    private static String nameTableOrganizationTable = "organization";
+    private static String nameTableActivityTable = "activity";
+    private static String nameTableCommentTable = "comment";
 
     // SQL to initial tables
     // Table city (cid, city, level, province)
-    private static String mCreateCityTableSQL = "CREATE TABLE city "
+    private static String mCreateCityTableSQL = "CREATE TABLE if not exists city "
             + "(cid INTEGER PRIMARY KEY AUTOINCREMENT, city TEXT NOT NULL, "
             + "level INTEGER DEFAULT 1, province TEXT NOT NULL)";
     // Table category (amcid, category)
-    private static String mCreateCategoryTableSQL = "CREATE TABLE category "
+    private static String mCreateCategoryTableSQL = "CREATE TABLE if not exists category "
             + "(amcid INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL)";
     // Table subcategory (ascid, subcategory, pid, category)
-    private static String mCreateSubCategoryTableSQL = "CREATE TABLE subcategory "
+    private static String mCreateSubCategoryTableSQL = "CREATE TABLE if not exists subcategory "
             + "(ascid INTEGER PRIMARY KEY AUTOINCREMENT, subcategory TEXT NOT NULL, "
             + "category TEXT NOT NULL)";
     // Table user (uid, email, password, nickname, gender, birthday, cid, city,
     // country, lastupdatedtime, isorganization)
-    private static String mCreateUserTableSQL = "CREATE TABLE user "
+    private static String mCreateUserTableSQL = "CREATE TABLE if not exists user "
             + "(uid INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, "
             + "nickname TEXT NOT NULL, gender INTEGER DEFAULT 1, "
             + "birthday DATE, city TEXT, country TEXT, "
             + "lastupdatedtime DATETIME DEFAULE CURRENT_DATETIME, isorganization INTEGER DEFAULT 0)";
     // Table organization (oid, organization, description, grade, isvalid)
-    private static String mCreateOrganizationTableSQL = "CREATE TABLE organization "
+    private static String mCreateOrganizationTableSQL = "CREATE TABLE if not exists organization "
             + "(oid INTEGER PRIMARY KEY AUTOINCREMENT, organization TEXT NOT NULL, "
             + "description TEXT NOT NULL, grade INTEGER, isvalid INTEGER DEFAULT 0)";
     // Table activity (aid, activity, description, createtime, starttime,
     // endtime, location, uid, creator, city, country, category, subcategory,
     // countlike, countdislike, activated, lati, long)
-    private static String mCreateActivityTableSQL = "CREATE TABLE activity "
+    private static String mCreateActivityTableSQL = "CREATE TABLE if not exists activity "
             + "(aid INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, "
             + "description TEXT NOT NULL, createtime DATETIME DEFAULT CURRENT_DATETIME, "
             + "starttime DATETIME NOT NULL, endtime DATETIME NOT NULL, location TEXT NOT NULL,"
@@ -56,7 +64,7 @@ public class SQLStorage
             + "countdislike INTEGER DEFAULT 0, activated INTEGER DEFAULT 0, lati REAL, long REAL";
     // Table comment (acid, activity, uid, user, time, content, replytoid,
     // replytoname, readbyreply, readbycreator)
-    private static String mCreateCommentTableSQL = "CREATE TABLE comment "
+    private static String mCreateCommentTableSQL = "CREATE TABLE if not exists comment "
             + "(acid INTEGER PRIMARY KEY AUTOINCREMENT, activity INTEGER NOT NULL, "
             + "uid INTEGER NOT NULL, user TEXT NOT NULL, time DATETIME NOT NULL, "
             + "content TEXT NOT NULL, replytoid INTEGER, replytoname TEXT, readbyreply INTEGER, "

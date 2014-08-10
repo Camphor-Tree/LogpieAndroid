@@ -36,8 +36,6 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testSingleGenericConnection()
     {
         testRocketService();
-        testAuthenticationServiceRegister();
-        testAuthenticationServiceLogin();
     }
 
     // TODO: there's a bug. it is always success, because the main thread just
@@ -83,7 +81,7 @@ public class GenericConnectionTests extends AndroidTestCase
     }
 
     // using RocketService as test target service
-    private void testRocketService()
+    public void testRocketService()
     {
         GenericConnection connection = new GenericConnection();
         connection.initialize(ServiceURL.RocektService);
@@ -141,7 +139,7 @@ public class GenericConnectionTests extends AndroidTestCase
     }
 
     // using AuthenticationService as test target service
-    private void testAuthenticationServiceRegister()
+    public void testAuthenticationServiceRegister()
     {
         GenericConnection connection = new GenericConnection();
         connection.initialize(ServiceURL.AuthenticationService);
@@ -149,14 +147,9 @@ public class GenericConnectionTests extends AndroidTestCase
         {
             JSONObject testAuthRegData = new JSONObject();
             testAuthRegData.put("auth_type", "REGISTER");
-            testAuthRegData.put("register_email", UUID.randomUUID().toString().subSequence(0, 10));
+            testAuthRegData.put("register_email", UUID.randomUUID().toString().subSequence(0, 10)+"@gmail.com");
             testAuthRegData.put("register_password", "123456");
-
-            JSONObject testAuthLoginData = new JSONObject();
-            testAuthLoginData.put("auth_type", "AUTHENTICATE");
-            testAuthLoginData.put("login_email", UUID.randomUUID().toString().subSequence(0, 10));
-            testAuthLoginData.put("login_password", "123456");
-
+            testAuthRegData.put("register_nickName", "testUserName");
             connection.setRequestData(testAuthRegData);
         } catch (JSONException e)
         {
@@ -179,7 +172,7 @@ public class GenericConnectionTests extends AndroidTestCase
     }
 
     // using AuthenticationService as test target service
-    private void testAuthenticationServiceLogin()
+    public void testAuthenticationServiceLogin()
     {
         GenericConnection connection = new GenericConnection();
         connection.initialize(ServiceURL.AuthenticationService);

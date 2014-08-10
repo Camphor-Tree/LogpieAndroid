@@ -20,7 +20,7 @@ public class KeyValueStorage
 
     private static KeyValueStorage sKeyValueStorage;
     private static Context mContext;
-    public Map<DataLevel, SharedPreferences> mDataMap = new HashMap<DataLevel, SharedPreferences>();
+    private Map<DataLevel, SharedPreferences> mDataMap = new HashMap<DataLevel, SharedPreferences>();
 
     private KeyValueStorage()
     {
@@ -37,7 +37,6 @@ public class KeyValueStorage
                     + "/shared_prefs";
         }
         return sKeyValueStorage;
-
     }
 
     boolean isSharedPreferencesExist()
@@ -88,7 +87,7 @@ public class KeyValueStorage
      *            callback you need keyValueStorage to execute when finishing
      *            insertion.
      */
-    public void insert(Bundle bundle, LogpieCallback callback)
+    public synchronized void insert(Bundle bundle, LogpieCallback callback)
     {
         // get the data level
         String dataLevel = bundle.getString(DataLevel.KEY_DATALEVEL);
@@ -123,7 +122,7 @@ public class KeyValueStorage
      *            the data you need to insert into keyValueStorage
      * @return insert result
      */
-    public boolean insert(Bundle bundle)
+    public synchronized boolean insert(Bundle bundle)
     {
         // get the data level
         String dataLevel = bundle.getString(DataLevel.KEY_DATALEVEL);
@@ -155,7 +154,7 @@ public class KeyValueStorage
      * @param value
      * @param callback
      */
-    public void insert(DataLevel dataLevel, String key, String value, LogpieCallback callback)
+    public synchronized void insert(DataLevel dataLevel, String key, String value, LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -177,7 +176,7 @@ public class KeyValueStorage
      * @param value
      * @return insert result
      */
-    public boolean insert(DataLevel dataLevel, String key, String value)
+    public synchronized boolean insert(DataLevel dataLevel, String key, String value)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -193,7 +192,7 @@ public class KeyValueStorage
      * @param key
      * @param callback
      */
-    public void query(DataLevel dataLevel, String key, LogpieCallback callback)
+    public synchronized void query(DataLevel dataLevel, String key, LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -220,7 +219,7 @@ public class KeyValueStorage
      * @param key
      * @return result string. If no key find, return null
      */
-    public String query(DataLevel dataLevel, String key)
+    public synchronized String query(DataLevel dataLevel, String key)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -239,7 +238,7 @@ public class KeyValueStorage
      * @param value
      * @param callback
      */
-    public void update(DataLevel dataLevel, String key, String value, LogpieCallback callback)
+    public synchronized void update(DataLevel dataLevel, String key, String value, LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -271,7 +270,7 @@ public class KeyValueStorage
      * @param value
      *            new value you want to update to
      */
-    public boolean update(DataLevel dataLevel, String key, String value)
+    public synchronized boolean update(DataLevel dataLevel, String key, String value)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null && sharedPreferences.contains(key))
@@ -293,7 +292,7 @@ public class KeyValueStorage
      * @param key
      * @param callback
      */
-    public void delete(DataLevel dataLevel, String key, LogpieCallback callback)
+    public synchronized void delete(DataLevel dataLevel, String key, LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -321,7 +320,7 @@ public class KeyValueStorage
      * @param dataLevel
      * @param key
      */
-    public boolean delete(DataLevel dataLevel, String key)
+    public synchronized boolean delete(DataLevel dataLevel, String key)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null && sharedPreferences.contains(key))
@@ -334,7 +333,12 @@ public class KeyValueStorage
             return false;
         }
     }
-
+    
+    public Map<DataLevel, SharedPreferences> getDataMap()
+    {
+        return mDataMap;
+    }
+    
     /* packaged private */void clearAll()
     {
         // Each DataLevel will create a separate file

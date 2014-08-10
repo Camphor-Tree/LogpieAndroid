@@ -14,10 +14,10 @@ public class KeyValueStorageTests extends AndroidTestCase
         // Assert.assertFalse(storage.isSharedPreferencesExist());
         storage.initialize();
 
-        assertEquals(storage.mDataMap.size(), DataLevel.values().length);
+        assertEquals(storage.getDataMap().size(), DataLevel.values().length);
         for (DataLevel dataLevel : DataLevel.values())
         {
-            assertNotNull(storage.mDataMap.get(dataLevel));
+            assertNotNull(storage.getDataMap().get(dataLevel));
         }
     }
 

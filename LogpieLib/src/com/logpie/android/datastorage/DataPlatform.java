@@ -12,21 +12,24 @@ public class DataPlatform extends Binder
     private static DataPlatform sDataPlatform;
     private Context mContext;
     private KeyValueStorage mKeyValueStorage;
+    private SQLStorage mSqlStorage;
 
-    private DataPlatform(Context context, KeyValueStorage keyValueStorage)
+    private DataPlatform(Context context, KeyValueStorage keyValueStorage, SQLStorage sqlStorage)
     {
         // get the unique Application Context
         mContext = context.getApplicationContext();
         mKeyValueStorage = keyValueStorage;
         mKeyValueStorage.initialize();
+        mSqlStorage = sqlStorage;
+        mSqlStorage.initialize();
     }
 
     public static synchronized DataPlatform getInstance(Context context,
-            KeyValueStorage keyValueStorage)
+            KeyValueStorage keyValueStorage, SQLStorage sqlStorage)
     {
         if (sDataPlatform == null)
         {
-            sDataPlatform = new DataPlatform(context, keyValueStorage);
+            sDataPlatform = new DataPlatform(context, keyValueStorage, sqlStorage);
         }
         return sDataPlatform;
     }

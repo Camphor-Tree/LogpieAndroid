@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity
     {
         KeyValueStorage storage = KeyValueStorage.getInstance(this);
         storage.initialize();
-        LogpieLog.d(TAG, storage.mDataMap.size() + "|" + DataLevel.values().length);
+        LogpieLog.d(TAG, storage.getDataMap().size() + "|" + DataLevel.values().length);
         Bundle data = new Bundle();
         data.putString(DataLevel.KEY_DATALEVEL, DataLevel.USER_LVL.toString());
         data.putString("test_key", "test_value");
@@ -137,7 +137,7 @@ public class MainActivity extends ActionBarActivity
         });
         for (DataLevel dataLevel : DataLevel.values())
         {
-            if (storage.mDataMap.get(dataLevel) != null)
+            if (storage.getDataMap().get(dataLevel) != null)
                 LogpieLog.d(TAG, dataLevel.name() + " is not null");
         }
     }
