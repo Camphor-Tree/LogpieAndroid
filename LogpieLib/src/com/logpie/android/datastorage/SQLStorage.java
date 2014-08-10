@@ -18,6 +18,11 @@ public class SQLStorage
     private static SQLStorage sSQLStorage;
     private static Context mContext;
     private SQLiteDatabase mSQLiteDB;
+    
+    // Count the database opened times;
+    // Since we just have one instance for the db connection, we cannot just close it if another thread is still occupying it.
+    // http://stackoverflow.com/questions/2493331/what-are-the-best-practices-for-sqlite-on-android
+    private int mOpenCounter;
 
     // database name
     public static final String DATABASE_NAME = "logpie.db";
@@ -72,17 +77,16 @@ public class SQLStorage
 
     private boolean testTag = false;
 
-    private SQLStorage()
+    private SQLStorage(Context context)
     {
-        initialize();
+        mContext = context.getApplicationContext();
     }
 
     public static synchronized SQLStorage getInstance(Context context)
     {
         if (sSQLStorage == null)
         {
-            mContext = context.getApplicationContext();
-            sSQLStorage = new SQLStorage();
+            sSQLStorage = new SQLStorage(context);
         }
         return sSQLStorage;
 
@@ -91,17 +95,18 @@ public class SQLStorage
     /**
      * Initialize the SQLite storage
      */
-    public boolean initialize()
+    public synchronized boolean initialize()
     {
-        mSQLiteDB = mContext.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
+        openDatabase();
         createTable();
+        closeDatabase();
         return testTag;
     }
 
     /**
      * Create table SQLite 3 TEXT NUMERIC INTEGER REAL NONE
      */
-    private void createTable()
+    private synchronized void createTable()
     {
         try
         {
@@ -129,6 +134,7 @@ public class SQLStorage
      */
     public void insert(Bundle bundle, String table, LogpieCallback callback)
     {
+        openDatabase();
         // remove the data level information from bundle
         bundle.remove(DataLevel.KEY_DATALEVEL);
 
@@ -150,6 +156,7 @@ public class SQLStorage
             LogpieLog.e(TAG, "insert Table " + table + " error");
             handleErrorCallback(callback, "Insert error");
         }
+        closeDatabase();
     }
 
     /**
@@ -161,6 +168,7 @@ public class SQLStorage
      */
     public boolean insert(Bundle bundle, String table)
     {
+        openDatabase();
         // remove the data level information from bundle
         bundle.remove(DataLevel.KEY_DATALEVEL);
 
@@ -173,6 +181,7 @@ public class SQLStorage
         }
 
         long res = mSQLiteDB.insert(table, null, values);
+        closeDatabase();
         return res != -1;
     }
 
@@ -194,6 +203,7 @@ public class SQLStorage
     public Bundle query(String table, String[] columns, String selection, String[] selectionArgs,
             String groupBy, String having, String orderBy)
     {
+        openDatabase();
         // query the dabatase
         Cursor result = mSQLiteDB.query(table, columns, selection, selectionArgs, groupBy, having,
                 orderBy);
@@ -212,6 +222,7 @@ public class SQLStorage
             bundle.putBundle(String.valueOf(id), record);
             id++;
         }
+        closeDatabase();
         return bundle;
     }
 
@@ -228,6 +239,7 @@ public class SQLStorage
      */
     public boolean update(String table, Bundle bundle, String whereClause, String[] whereArgs)
     {
+        openDatabase();
         // remove the data level information from bundle
         bundle.remove(DataLevel.KEY_DATALEVEL);
 
@@ -238,6 +250,7 @@ public class SQLStorage
             values.put(key, bundle.getString(key));
         }
         int res = mSQLiteDB.update(table, values, whereClause, whereArgs);
+        closeDatabase();
         return res != 0;
     }
 
@@ -253,6 +266,7 @@ public class SQLStorage
      */
     public void delete(String table, String whereClause, String[] whereArgs, LogpieCallback callback)
     {
+        openDatabase();
         int res = mSQLiteDB.delete(table, whereClause, whereArgs);
         if (res != 0)
         {
@@ -263,7 +277,7 @@ public class SQLStorage
             LogpieLog.i(TAG, "delete Table " + table + " error, where " + whereClause);
             handleErrorCallback(callback, "Delete error");
         }
-
+        closeDatabase();
     }
 
     /**
@@ -279,7 +293,9 @@ public class SQLStorage
      */
     public boolean delete(String table, String whereClause, String[] whereArgs)
     {
+        openDatabase();
         int res = mSQLiteDB.delete(table, whereClause, whereArgs);
+        closeDatabase();
         if (res != 0)
         {
             return true;
@@ -289,6 +305,7 @@ public class SQLStorage
             LogpieLog.i(TAG, "delete Table " + table + " error, where " + whereClause);
             return false;
         }
+        
     }
 
     /**
@@ -299,9 +316,22 @@ public class SQLStorage
         return mContext.deleteDatabase(DATABASE_NAME);
     }
 
-    public void close()
-    {
-        mSQLiteDB.close();
+    
+    private synchronized void openDatabase() {
+        mOpenCounter++;
+        if(mOpenCounter == 1 && !mSQLiteDB.isOpen()) {
+            // Opening new database
+            mSQLiteDB = mContext.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
+        }
+    }
+
+    private synchronized void closeDatabase() {
+        mOpenCounter--;
+        if(mOpenCounter == 0) {
+            // Closing database
+            mSQLiteDB .close();
+
+        }
     }
 
     private void handleErrorCallback(LogpieCallback callback, String message)
