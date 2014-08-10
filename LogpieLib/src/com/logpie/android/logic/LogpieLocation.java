@@ -1,5 +1,7 @@
 package com.logpie.android.logic;
 
+import com.logpie.android.gis.GisAPIHelper;
+
 public class LogpieLocation
 {
     private Double mLatitude;
@@ -76,7 +78,13 @@ public class LogpieLocation
 
     public String getCurrentCity()
     {
-
-        return "";
+        if(mLatitude!=null&&mLongitude!=null)
+        {
+            return GisAPIHelper.getCityFromLatLon(mLatitude, mLongitude);
+        }
+        else
+        {
+            return null;
+        }
     }
 }

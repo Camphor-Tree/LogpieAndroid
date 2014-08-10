@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
@@ -33,6 +34,10 @@ public abstract class User
 
         LogpieLocation location = GISManager.getInstance(context).getCurrentLocation();
         String city = location.getCurrentCity();
+        if(TextUtils.isEmpty(city))
+        {
+            city = "unknown";
+        }
 
         GenericConnection connection = new GenericConnection();
         connection.initialize(ServiceURL.AuthenticationService);
@@ -41,8 +46,8 @@ public abstract class User
             AuthRegData.put("auth_type", "REGISTER");
             AuthRegData.put("register_email", userEmail);
             AuthRegData.put("register_password", userPassword);
-            // AuthRegData.put("register_username", userName);
-            // AuthRegData.put("register_city", city);
+            AuthRegData.put("register_nickname", userName);
+            AuthRegData.put("register_city", city);
 
             connection.setRequestData(AuthRegData);
         } catch (JSONException e)
