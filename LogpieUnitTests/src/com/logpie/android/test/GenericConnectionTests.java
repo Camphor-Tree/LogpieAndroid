@@ -147,9 +147,11 @@ public class GenericConnectionTests extends AndroidTestCase
         {
             JSONObject testAuthRegData = new JSONObject();
             testAuthRegData.put("auth_type", "REGISTER");
-            testAuthRegData.put("register_email", UUID.randomUUID().toString().subSequence(0, 10)+"@gmail.com");
+            //testAuthRegData.put("register_email", UUID.randomUUID().toString().subSequence(0, 10)+"@gmail.com");
+            testAuthRegData.put("register_email","testlogpie@aa.com");
             testAuthRegData.put("register_password", "123456");
-            testAuthRegData.put("register_nickName", "testUserName");
+            testAuthRegData.put("register_nickname", "testUserName");
+            testAuthRegData.put("register_city", "Seattle");
             connection.setRequestData(testAuthRegData);
         } catch (JSONException e)
         {

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -38,7 +39,8 @@ public class GenericConnection
 
     private static final String TAG = GenericConnection.class.getName();
 
-    private HttpsURLConnection mHttpURLConnection;
+    private HttpURLConnection mHttpURLConnection;
+
     private ServiceURL mServiceURL;
     private int mTimeout = 10 * 1000;
     // logpie default verb is post
@@ -47,14 +49,22 @@ public class GenericConnection
 
     public void initialize(ServiceURL serviceURL)
     {
-        // TODO: Should turn off when release;
-        disableSSLClientCertificate();
         try
         {
             mServiceURL = serviceURL;
             // initialize the HttpURLConnection based on the url
             URL url = serviceURL.getURL();
-            mHttpURLConnection = (HttpsURLConnection) url.openConnection();
+            boolean isUsingSSL = serviceURL.isUsingHttps();
+            if(isUsingSSL)
+            {
+                // TODO: Should turn off when release;
+                disableSSLClientCertificate();
+                mHttpURLConnection = (HttpsURLConnection) url.openConnection();
+            }
+            else
+            {
+                mHttpURLConnection = (HttpURLConnection) url.openConnection();
+            }
             // check whether need to do input
             if (mServiceURL.needDoOutput())
             {

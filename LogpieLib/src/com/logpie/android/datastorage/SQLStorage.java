@@ -75,8 +75,6 @@ public class SQLStorage
             + "content TEXT NOT NULL, replytoid INTEGER, replytoname TEXT, readbyreply INTEGER, "
             + "readbycreator INTEGER DEFAULT 0)";
 
-    private boolean testTag = false;
-
     private SQLStorage(Context context)
     {
         mContext = context.getApplicationContext();
@@ -95,12 +93,11 @@ public class SQLStorage
     /**
      * Initialize the SQLite storage
      */
-    public synchronized boolean initialize()
+    public synchronized void initialize()
     {
         openDatabase();
         createTable();
         closeDatabase();
-        return testTag;
     }
 
     /**
@@ -117,7 +114,6 @@ public class SQLStorage
             mSQLiteDB.execSQL(mCreateOrganizationTableSQL);
             mSQLiteDB.execSQL(mCreateActivityTableSQL);
             mSQLiteDB.execSQL(mCreateCommentTableSQL);
-            testTag = true;
         } catch (Exception e)
         {
             LogpieLog.e(TAG, "Cannot create the table during the initial step.");

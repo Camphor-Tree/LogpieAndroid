@@ -11,8 +11,6 @@ public class SQLStorageTests extends AndroidTestCase
     {
         Context context = getContext();
         SQLStorage storage = SQLStorage.getInstance(context);
-        assertTrue(storage.initialize());
-        assertNotNull("SQLstorage instance should not be null.", storage);
     }
 
     public void test2_Insert()

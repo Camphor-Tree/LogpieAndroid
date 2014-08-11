@@ -13,11 +13,13 @@ public class EndPoint
 
     public enum ServiceURL
     {
-        RocektService("RocketService", "http://localhost:8080/RocketService/servlet", "1.0.0",
-                "test", true, false),
+        RocektService("RocketService", "https://10.0.0.6:8443/RocketService/servlet", "1.0.0",
+                "test", true, false, true),
 
         AuthenticationService("RocketService",
-                "https://10.0.0.6:8443/AuthenticationService/server", "1.0.0", "test", true, true);
+                "http://10.0.0.2:8080/AuthenticationService/server", "1.0.0", "test", true, true, false),
+        
+        CustomerService("CustomerService","http://10.0.0.2:8080/CustomerService/server","1.0.0","test",true,true,false);
 
         String mServiceName;
         String mUrl;
@@ -25,9 +27,10 @@ public class EndPoint
         String mEnvironment;
         boolean mDoOutput;
         boolean mDoInput;
+        boolean mUseSSL;
 
         ServiceURL(String name, String url, String version, String environment, boolean doOutput,
-                boolean doInput)
+                boolean doInput, boolean useSSL)
         {
             mServiceName = name;
             mUrl = url;
@@ -35,6 +38,7 @@ public class EndPoint
             mEnvironment = environment;
             mDoOutput = doOutput;
             mDoInput = doInput;
+            mUseSSL = useSSL;
         }
 
         public String getVersion()
@@ -83,6 +87,11 @@ public class EndPoint
         public String getServiceName()
         {
             return mServiceName;
+        }
+        
+        public boolean isUsingHttps()
+        {
+            return mUseSSL;
         }
 
         public boolean equals(ServiceURL serviceURL)
