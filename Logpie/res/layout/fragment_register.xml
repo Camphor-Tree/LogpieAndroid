@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerFragmentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -30,23 +31,22 @@
     	<EditText
         	style="@style/SingleInput"
         	android:id="@+id/register_password"
-        	android:layout_below="@id/register_email"
-        	android:inputType="textPassword" />
+        	android:layout_below="@id/register_email" />
     
     	<EditText
         	style="@style/SingleInput"
-        	android:id="@+id/register_comfirm_password"
-        	android:layout_below="@id/register_password"
-        	android:inputType="textPassword" />
+        	android:id="@+id/register_confirm_password"
+        	android:layout_below="@id/register_password" />
     
     	<EditText
         	style="@style/SingleInput"
         	android:id="@+id/register_nickname"
-        	android:layout_below="@id/register_comfirm_password" />
+        	android:layout_below="@id/register_confirm_password" />
     
     </RelativeLayout>
     
     <TextView
+        android:contentDescription="registerView_backButton"
         android:id="@+id/register_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +60,7 @@
         android:drawableLeft="@drawable/ic_action_accept"/>
     
     <TextView
+        android:contentDescription="registerView_RegisterButton"
         android:id="@+id/register_register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

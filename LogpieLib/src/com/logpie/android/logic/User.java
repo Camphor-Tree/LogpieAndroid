@@ -28,16 +28,9 @@ public abstract class User
 
     }
 
-    public void register(Context context, String userEmail, String userPassword, String userName)
+    public void register(Context context, String userEmail, String userPassword, String userName, String city, LogpieCallback callback)
     {
         JSONObject AuthRegData = new JSONObject();
-
-        LogpieLocation location = GISManager.getInstance(context).getCurrentLocation();
-        String city = location.getCurrentCity();
-        if(TextUtils.isEmpty(city))
-        {
-            city = "unknown";
-        }
 
         GenericConnection connection = new GenericConnection();
         connection.initialize(ServiceURL.AuthenticationService);
@@ -54,20 +47,7 @@ public abstract class User
         {
             e.printStackTrace();
         }
-        connection.send(new LogpieCallback()
-        {
-            @Override
-            public void onSuccess(Bundle bundle)
-            {
-                LogpieLog.d(TAG, bundle.toString());
-            }
-
-            @Override
-            public void onError(Bundle bundle)
-            {
-                LogpieLog.e(TAG, "register flow error");
-            }
-        });
+        connection.send(callback);
     }
 
     public void changePassword()

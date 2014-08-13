@@ -33,7 +33,8 @@ public class LoginFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-
+        
+        
         mEnglish = (ImageView) getActivity().findViewById(R.id.login_language_us);
         mChinese = (ImageView) getActivity().findViewById(R.id.login_language_cn);
         currentLanguage = getResources().getConfiguration().locale;
@@ -96,10 +97,14 @@ public class LoginFragment extends Fragment
             @Override
             public void onClick(View v)
             {
+            	Bundle bundle = new Bundle();
+            	bundle.putString("Locale", currentLanguage.getCountry());
+            	
                 // Create new fragment and transaction
                 Fragment registerFrag = new RegisterFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
+                registerFrag.setArguments(bundle);
+                
                 // Replace whatever is in the fragment_container view with this
                 // fragment
                 transaction.replace(R.id.container, registerFrag);
