@@ -1,5 +1,7 @@
 package com.logpie.android.gis;
 
+import com.logpie.android.util.LogpieLog;
+
 public class GisAPIHelper
 {
     /**
@@ -8,6 +10,8 @@ public class GisAPIHelper
      * @param lon
      * @return
      */
+	private static String TAG = GisAPIHelper.class.getName();
+			
     public static String getCityFromLatLon(Double lat, Double lon)
     {
         //TODO: figure out a good way to judge whether it is in China or not.
@@ -17,7 +21,9 @@ public class GisAPIHelper
         }
         else
         {
-            return GoogleAPIHelper.getCityFromLatLon(lat, lon);
+        	String city = GoogleAPIHelper.getCityFromLatLon(lat, lon);
+        	LogpieLog.d(TAG, "city is: " + city);
+        	return city;
         }
     }
 

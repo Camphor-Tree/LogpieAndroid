@@ -42,7 +42,7 @@ public class GenericConnection
     private HttpURLConnection mHttpURLConnection;
 
     private ServiceURL mServiceURL;
-    private int mTimeout = 10 * 1000;
+    private int mTimeout = 100 * 1000;
     // logpie default verb is post
     private String mHttpVerb = "POST";
     private JSONObject mRequestData;

@@ -12,6 +12,7 @@ public class ThreadPoolManager implements Executor
     private static final int sMaxSize = 15;
     private final Queue<Runnable> mThreadPool;
     private Runnable mActive;
+    private boolean withLooper;
 
     public ThreadPoolManager()
     {

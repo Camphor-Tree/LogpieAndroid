@@ -26,15 +26,15 @@ public final class ThreadHelper
         handler.post(runnable);
     }
 
-    public static void runOffMainThread(Runnable runnable) throws ThreadException
+    public static void runOffMainThread(boolean withLooper, Runnable runnable) throws ThreadException
     {
         if (!isRunningOnMainThread())
         {
             runnable.run();
         }
         else
-        {
-            sThreadPoolManager.safeExecute(runnable);
+        {        	
+        	sThreadPoolManager.safeExecute(runnable);                  	
         }
     }
 }

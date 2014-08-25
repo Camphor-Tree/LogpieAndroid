@@ -1,7 +1,5 @@
 package com.logpie.android;
 
-import java.util.Locale;
-
 import com.logpie.android.datastorage.SQLStorage;
 import com.logpie.android.exception.ThreadException;
 import com.logpie.android.gis.GISManager;
@@ -12,6 +10,8 @@ import com.logpie.android.util.LogpieLog;
 import com.logpie.android.util.ThreadHelper;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -25,6 +25,7 @@ import android.widget.Toast;
 public class RegisterFragment extends Fragment
 {
     private static String TAG = RegisterFragment.class.getName();
+    
     private TextView mWelcome;
     private EditText mEmail;
     private EditText mPassword;
@@ -33,35 +34,34 @@ public class RegisterFragment extends Fragment
     private TextView mRegister;
     private TextView mBackLogin;
     private String language;
+    private LogpieLocation location;
+    private Thread mThread;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+    	super.onCreate(savedInstanceState);
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_register, container, false);
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-
-        mWelcome = (TextView) getActivity().findViewById(R.id.register_welcome);
-        mEmail = (EditText) getActivity().findViewById(R.id.register_email);
-        mPassword = (EditText) getActivity().findViewById(R.id.register_password);
-        mConfirmPassword = (EditText) getActivity().findViewById(R.id.register_confirm_password);
-        mNickname = (EditText) getActivity().findViewById(R.id.register_nickname);
-        mBackLogin = (TextView) getActivity().findViewById(R.id.register_login_button);
-        mRegister = (TextView) getActivity().findViewById(R.id.register_register_button);
-    LogpieLog.d(TAG, "start...");
-    //TODO: fix the bug
-    	Fragment loginFragment = getFragmentManager().findFragmentByTag("loginFragment");
-    	
-    	Bundle bundle = loginFragment.getArguments();
-        language = bundle.getString("Locale");
-    LogpieLog.d(TAG, language);
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
+        
+        mWelcome = (TextView) v.findViewById(R.id.register_welcome);
+        mEmail = (EditText) v.findViewById(R.id.register_email);
+        mPassword = (EditText) v.findViewById(R.id.register_password);
+        mConfirmPassword = (EditText) v.findViewById(R.id.register_confirm_password);
+        mNickname = (EditText) v.findViewById(R.id.register_nickname);
+        mBackLogin = (TextView) v.findViewById(R.id.register_login_button);
+        mRegister = (TextView) v.findViewById(R.id.register_register_button);
+        
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.container);
+        
         // set language
-        if (language.equals("CHINA"))
+    	Bundle bundle = fragment.getArguments();
+        language = bundle.getString("Locale");       
+        if (language.equals("zh"))
         {
             mWelcome.setText(R.string.welcome_cn);
             mEmail.setHint(R.string.email_cn);
@@ -104,7 +104,8 @@ public class RegisterFragment extends Fragment
         {
             @Override
             public void onClick(View v)
-            {
+            {                
+                /*
                 // check the input are correct or not
                 StringBuffer text = new StringBuffer();
                 if (!isValid(text))
@@ -112,68 +113,14 @@ public class RegisterFragment extends Fragment
                     Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
                 }
                 else
-                {                    
-                     try 
-                     { 
-                    	 ThreadHelper.runOffMainThread(new Runnable() {
-                    		 public void run() { 
-                    			 NormalUser user = NormalUser.getInstance(); 
-                    			 final String email = mEmail.getText().toString();
-                    			 final String password = mPassword.getText().toString();
-                    			 final String name = mNickname.getText().toString();
-                    			 
-                    			 LogpieLocation location = GISManager.getInstance(getActivity()).getCurrentLocation();
-                    			 final String city = location.getCurrentCity(); 
-                    			 final String nonNullCity;
-                    		     if(!TextUtils.isEmpty(city))
-                    		     {
-                    		    	 nonNullCity = "unknown";
-                    		     }else
-                    		     {
-                    		    	 nonNullCity = city;
-                    		     }
-                    		     
-                    			 LogpieCallback callback = new LogpieCallback(){
-									@Override
-									public void onSuccess(Bundle result) {						
-		                    			Bundle bundle = new Bundle();
-		                    			bundle.putString("email", email);
-		                    			bundle.putString("nickname", name);
-		                    			bundle.putString("city", nonNullCity);
-		                    			
-		                    			SQLStorage.getInstance(getActivity()).insert(bundle, "user", new LogpieCallback() {		                     
-		                    				 @Override 
-		                    				 public void onSuccess(Bundle bundle)
-		                    				 {
-		                    					 LogpieLog.d(TAG, bundle.toString()); 
-		                    				 }
-		                      
-		                    				 @Override 
-		                    				 public void onError(Bundle bundle) 
-		                    				 {
-		                    					 LogpieLog.e(TAG, "register in front end is error"); 
-		                    				 } 
-		                    			 });
-									}
-
-									@Override
-									public void onError(Bundle errorMessagge) {
-										// TODO Auto-generated method stub
-										
-									}
-                    				 
-                    			 };
-                    			 user.register(getActivity(), email, password, name, nonNullCity, callback);                   			 
-                      
-                    		 } 
-                    	 }); 
-                     	} catch (ThreadException e) 
-                     	{ 	
-                     		e.printStackTrace(); 
-                     	}
-                     
-
-                    Fragment loginFrag = new LoginFragment();
+                {*/ if(mThread == null) {  
+                    	mThread = new Thread(runnable);  
+                    	mThread.start();
+                	}  
+                	else {  
+                		LogpieLog.d(TAG, "Cannot create a new thread.");
+                	}                                            			                     		                      	
+                    /*Fragment loginFrag = new LoginFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
                     // Replace whatever is in the fragment_container view with
@@ -182,11 +129,66 @@ public class RegisterFragment extends Fragment
 
                     // Commit the transaction
                     transaction.commit();
+                    */
                 }
-            }
+            //}
         });
+        return v;
     }
 
+    Runnable runnable = new Runnable() {          
+        @Override  
+        public void run() {
+        	 location = GISManager.getInstance(getActivity()).getCurrentLocation();
+			 NormalUser user = NormalUser.getInstance(); 
+			 final String email = mEmail.getText().toString();
+			 final String password = mPassword.getText().toString();
+			 final String name = mNickname.getText().toString();                    			 			 
+			 final String city = location.getCurrentCity();
+			 
+			 final String nonNullCity;
+		     if(TextUtils.isEmpty(city))
+		     {
+		    	 nonNullCity = "unknown";
+		     }else
+		     {
+		    	 nonNullCity = city;
+		     }
+
+		     LogpieCallback callback = new LogpieCallback(){
+				@Override
+				public void onSuccess(Bundle result) {						
+       			Bundle bundle = new Bundle();
+       			bundle.putString("email", email);
+       			bundle.putString("nickname", name);
+       			bundle.putString("city", nonNullCity);
+       			
+       			SQLStorage.getInstance(getActivity()).insert(bundle, "user", new LogpieCallback() {		                     
+       				 @Override 
+       				 public void onSuccess(Bundle bundle)
+       				 {
+       					 LogpieLog.d(TAG, bundle.toString()); 
+       				 }
+         
+       				 @Override 
+       				 public void onError(Bundle bundle) 
+       				 {
+       					 LogpieLog.e(TAG, "Failed to register in Android SQLite"); 
+       				 } 
+       			 });
+				}
+
+				@Override
+				public void onError(Bundle errorMessagge) {
+					// TODO Auto-generated method stub
+				}
+				 
+			 };
+			 user.register(getActivity(), email, password, name, nonNullCity, callback);
+        }
+    };
+    
+    
     private boolean isValid(StringBuffer text)
     {
         boolean tag = true;

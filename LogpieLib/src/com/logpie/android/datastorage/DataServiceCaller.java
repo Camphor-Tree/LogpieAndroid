@@ -37,7 +37,7 @@ public class DataServiceCaller
      */
     public void asyncConnectDataService() throws ThreadException
     {
-        ThreadHelper.runOffMainThread(new Runnable()
+        ThreadHelper.runOffMainThread(false, new Runnable()
         {
             @Override
             public void run()
@@ -54,7 +54,7 @@ public class DataServiceCaller
         {
             return;
         }
-        ThreadHelper.runOffMainThread(new Runnable()
+        ThreadHelper.runOffMainThread(false, new Runnable()
         {
             @Override
             public void run()

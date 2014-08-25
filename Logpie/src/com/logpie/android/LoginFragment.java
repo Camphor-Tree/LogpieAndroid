@@ -2,6 +2,8 @@ package com.logpie.android;
 
 import java.util.Locale;
 
+import com.logpie.android.util.LogpieLog;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 public class LoginFragment extends Fragment
 {
+	private static String TAG = LoginFragment.class.getName();
     private ImageView mChinese;
     private ImageView mEnglish;
     private EditText mEmail;
@@ -21,28 +24,26 @@ public class LoginFragment extends Fragment
     private TextView mRegister;
     private TextView mLogin;
     private Locale currentLanguage;
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+    	super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
+        View v = inflater.inflate(R.layout.fragment_login, container, false);
         
-        
-        mEnglish = (ImageView) getActivity().findViewById(R.id.login_language_us);
-        mChinese = (ImageView) getActivity().findViewById(R.id.login_language_cn);
+        mEnglish = (ImageView) v.findViewById(R.id.login_language_us);
+        mChinese = (ImageView) v.findViewById(R.id.login_language_cn);
         currentLanguage = getResources().getConfiguration().locale;
         // TODO: store to the key-value storage
-        mEmail = (EditText) getActivity().findViewById(R.id.login_email);
-        mPassword = (EditText) getActivity().findViewById(R.id.login_password);
-        mLogin = (TextView) getActivity().findViewById(R.id.login_login_button);
-        mRegister = (TextView) getActivity().findViewById(R.id.login_register_button);
+        mEmail = (EditText) v.findViewById(R.id.login_email);
+        mPassword = (EditText) v.findViewById(R.id.login_password);
+        mLogin = (TextView) v.findViewById(R.id.login_login_button);
+        mRegister = (TextView) v.findViewById(R.id.login_register_button);
 
         // initialize
         if (currentLanguage.equals(Locale.CHINA) || currentLanguage.equals(Locale.CHINESE))
@@ -98,21 +99,22 @@ public class LoginFragment extends Fragment
             public void onClick(View v)
             {
             	Bundle bundle = new Bundle();
-            	bundle.putString("Locale", currentLanguage.getCountry());
+            	bundle.putString("Locale", currentLanguage.getLanguage());
             	
                 // Create new fragment and transaction
-                Fragment registerFrag = new RegisterFragment();
+                Fragment fragment = new RegisterFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                registerFrag.setArguments(bundle);
+                fragment.setArguments(bundle);
                 
                 // Replace whatever is in the fragment_container view with this
                 // fragment
-                transaction.replace(R.id.container, registerFrag);
+                transaction.replace(R.id.container, fragment);
 
                 // Commit the transaction
                 transaction.commit();
             }
         });
+        return v;
     }
 
     private void changeLanguage(Locale lan)

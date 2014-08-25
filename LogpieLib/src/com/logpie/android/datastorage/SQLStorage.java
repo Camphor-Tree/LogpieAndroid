@@ -133,7 +133,6 @@ public class SQLStorage
      */
     public synchronized void initialize()
     {
-       
     }
 
     /**

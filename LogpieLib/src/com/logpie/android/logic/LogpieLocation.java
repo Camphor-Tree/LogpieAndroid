@@ -1,9 +1,11 @@
 package com.logpie.android.logic;
 
 import com.logpie.android.gis.GisAPIHelper;
+import com.logpie.android.util.LogpieLog;
 
 public class LogpieLocation
 {
+	private static String TAG = LogpieLocation.class.getName();
     private Double mLatitude;
     private Double mLongitude;
     private String mAddress;
@@ -80,6 +82,7 @@ public class LogpieLocation
     {
         if(mLatitude!=null&&mLongitude!=null)
         {
+        	LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", " + "mLongitude");
             return GisAPIHelper.getCityFromLatLon(mLatitude, mLongitude);
         }
         else

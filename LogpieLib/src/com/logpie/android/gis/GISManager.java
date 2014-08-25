@@ -1,10 +1,12 @@
 package com.logpie.android.gis;
 
 import android.content.Context;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
 import com.logpie.android.logic.LogpieLocation;
+import com.logpie.android.util.LocationThread;
 import com.logpie.android.util.LogpieLog;
 
 /**
@@ -40,7 +42,9 @@ public class GISManager
          * LogpieLocationListener keep an instance of GISManager. it will update
          * the Lat/Lng in GISManager.
          */
-        addLocationListener(new LogpieLocationListener(this, "LogpieDefaultLocationListener"));
+        LogpieLocationListener locationListener = new LogpieLocationListener(this, "LogpieDefaultLocationListener");
+        LogpieLog.d(TAG, "location listener is instantiated.");
+        addLocationListener(locationListener);
     }
 
     public static synchronized GISManager getInstance(Context context)
@@ -53,10 +57,12 @@ public class GISManager
         return sGISManager;
     }
 
-    public boolean isLocationAvailable()
+    public void checkLocationAvailable()
     {
+    	LogpieLog.d(TAG, "Checking location availability...");
         if (mLocationManager == null)
         {
+        	LogpieLog.d(TAG, "mLocationManager is null...");
             if (mContext != null)
             {
                 mLocationManager = (LocationManager) mContext
@@ -67,17 +73,19 @@ public class GISManager
                 mIsLocationAvailable = false;
                 LogpieLog.e(TAG,
                         "mLocationManger is null & mContext is also null! This should be a bug.");
-                return false;
+                return;
             }
         }
         if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
         {
+        	LogpieLog.d(TAG, "Setting mIsLocationAvailable as true...");
             mIsLocationAvailable = true;
-            return true;
+            return;
         }
+        LogpieLog.d(TAG, "mIsLocationAvailable is false...");
         mIsLocationAvailable = false;
-        return false;
+        return;
     }
 
     public boolean isGPSAvailable()
@@ -97,7 +105,7 @@ public class GISManager
 
         if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
-            return true;
+        	return true;
         }
         return false;
     }
@@ -124,22 +132,30 @@ public class GISManager
         return false;
     }
 
-    public boolean addLocationListener(LocationListener locationListener)
+    public void addLocationListener(LocationListener locationListener)
     {
         if (isGPSAvailable())
         {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                    locationListener);
-            return true;
+        	LogpieLog.d(TAG, "GPS is enabled. Android Location Manager is starting to request location update...");
+            new LocationThread(locationListener, mLocationManager, true);            
         }
         else if (isNetworkAvailable())
         {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
-                    locationListener);
-            return true;
+        	LogpieLog.d(TAG, "Network is enabled. Android Location Manager is starting to request location update...");
+        	new LocationThread(locationListener, mLocationManager, false);            
         }
-        return false;
-
+        LogpieLog.d(TAG, "Finished call addLocationListerner().");
+        
+    }
+    
+    public void updateGPSCoordinates(Location location)
+    {
+        if (location != null)
+        {
+            mCurrentLocation.setLatitude(location.getLatitude());
+            mCurrentLocation.setLongitude(location.getLongitude());
+            LogpieLog.d(TAG, location.getLatitude()+", "+location.getLongitude());
+        }
     }
 
     /**
@@ -151,9 +167,24 @@ public class GISManager
 
     public LogpieLocation getCurrentLocation()
     {
-        if (mIsGPSLocationAvailable || mIsNetworkLocationAvailable)
-        {
-            return mCurrentLocation;
+    	LogpieLog.d(TAG, "Getting current location... ");
+    	checkLocationAvailable();
+        if (mIsLocationAvailable)
+        {   
+        	if (isGPSAvailable())
+        	{
+        		LogpieLog.d(TAG, "getting city from gps...");        		
+        		Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        		LogpieLog.d(TAG, "get location instance...");
+        		updateGPSCoordinates(location);
+        		LogpieLog.d(TAG, "finished update the coordinates.");
+        	}else
+        	{
+        		LogpieLog.d(TAG, "getting city from network...");
+        		Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                updateGPSCoordinates(location);                
+        	}        
+        	return mCurrentLocation;
         }
         else
         {
@@ -250,4 +281,5 @@ public class GISManager
     {
         mCurrentLocation = currentLocation;
     }
+    
 }
