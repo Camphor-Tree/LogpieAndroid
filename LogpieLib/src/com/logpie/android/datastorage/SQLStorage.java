@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 
 import com.logpie.android.util.LogpieCallback;
@@ -11,21 +13,56 @@ import com.logpie.android.util.LogpieLog;
 
 public class SQLStorage
 {
+   public static final class LogpieSQLiteOpenHelper extends SQLiteOpenHelper
+   {
+        private static final int LOGPIE_DB_VERSION = 1;
+
+        public LogpieSQLiteOpenHelper(Context context, String name, CursorFactory factory)
+        {
+            super(context, name, factory, LOGPIE_DB_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db)
+        {
+            try
+            {
+                db.execSQL(mCreateCityTableSQL);
+                db.execSQL(mCreateCategoryTableSQL);
+                db.execSQL(mCreateSubCategoryTableSQL);
+                db.execSQL(mCreateUserTableSQL);
+                db.execSQL(mCreateOrganizationTableSQL);
+                db.execSQL(mCreateActivityTableSQL);
+                db.execSQL(mCreateCommentTableSQL);
+            } catch (Exception e)
+            {
+                LogpieLog.e(TAG, "Cannot create the table during the SQLiteOpenHelper onCreate()");
+            }
+        }
+    
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+        {
+           // This is first version of Logpie, won't upgrate
+            throw new IllegalArgumentException("Not supported");
+        } 
+   }
+   
     private static final String TAG = SQLStorage.class.getName();
     public static final String SUCCESS_KEY = "com.logpie.storage.sql.success";
     public static final String ERROR_KEY = "com.logpie.storage.sql.error";
 
     private static SQLStorage sSQLStorage;
     private static Context mContext;
-    private SQLiteDatabase mSQLiteDB;
     
     // Count the database opened times;
     // Since we just have one instance for the db connection, we cannot just close it if another thread is still occupying it.
     // http://stackoverflow.com/questions/2493331/what-are-the-best-practices-for-sqlite-on-android
-    private int mOpenCounter;
+    private volatile int mOpenCounter;
+    private LogpieSQLiteOpenHelper mSQLiteOpenHelper;
 
     // database name
-    public static final String DATABASE_NAME = "logpie.db";
+    private final String DATABASE_NAME = "logpie.db";
     
     private static String nameTableCity = "city";
     private static String nameTableCategory = "category";
@@ -37,31 +74,31 @@ public class SQLStorage
 
     // SQL to initial tables
     // Table city (cid, city, level, province)
-    private static String mCreateCityTableSQL = "CREATE TABLE if not exists city "
+    private static String mCreateCityTableSQL = "CREATE TABLE if not exists " + nameTableCity
             + "(cid INTEGER PRIMARY KEY AUTOINCREMENT, city TEXT NOT NULL, "
             + "level INTEGER DEFAULT 1, province TEXT NOT NULL)";
     // Table category (amcid, category)
-    private static String mCreateCategoryTableSQL = "CREATE TABLE if not exists category "
+    private static String mCreateCategoryTableSQL = "CREATE TABLE if not exists " + nameTableCategory
             + "(amcid INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL)";
     // Table subcategory (ascid, subcategory, pid, category)
-    private static String mCreateSubCategoryTableSQL = "CREATE TABLE if not exists subcategory "
+    private static String mCreateSubCategoryTableSQL = "CREATE TABLE if not exists " + nameTableSubCategory
             + "(ascid INTEGER PRIMARY KEY AUTOINCREMENT, subcategory TEXT NOT NULL, "
             + "category TEXT NOT NULL)";
     // Table user (uid, email, password, nickname, gender, birthday, cid, city,
     // country, lastupdatedtime, isorganization)
-    private static String mCreateUserTableSQL = "CREATE TABLE if not exists user "
+    private static String mCreateUserTableSQL = "CREATE TABLE if not exists " + nameTableUserTable
             + "(uid INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, "
             + "nickname TEXT NOT NULL, gender INTEGER DEFAULT 1, "
             + "birthday DATE, city TEXT, country TEXT, "
             + "lastupdatedtime DATETIME DEFAULE CURRENT_DATETIME, isorganization INTEGER DEFAULT 0)";
     // Table organization (oid, organization, description, grade, isvalid)
-    private static String mCreateOrganizationTableSQL = "CREATE TABLE if not exists organization "
+    private static String mCreateOrganizationTableSQL = "CREATE TABLE if not exists " + nameTableOrganizationTable
             + "(oid INTEGER PRIMARY KEY AUTOINCREMENT, organization TEXT NOT NULL, "
             + "description TEXT NOT NULL, grade INTEGER, isvalid INTEGER DEFAULT 0)";
     // Table activity (aid, activity, description, createtime, starttime,
     // endtime, location, uid, creator, city, country, category, subcategory,
     // countlike, countdislike, activated, lati, long)
-    private static String mCreateActivityTableSQL = "CREATE TABLE if not exists activity "
+    private static String mCreateActivityTableSQL = "CREATE TABLE if not exists " + nameTableActivityTable
             + "(aid INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, "
             + "description TEXT NOT NULL, createtime DATETIME DEFAULT CURRENT_DATETIME, "
             + "starttime DATETIME NOT NULL, endtime DATETIME NOT NULL, location TEXT NOT NULL,"
@@ -69,7 +106,7 @@ public class SQLStorage
             + "countdislike INTEGER DEFAULT 0, activated INTEGER DEFAULT 0, lati REAL, long REAL";
     // Table comment (acid, activity, uid, user, time, content, replytoid,
     // replytoname, readbyreply, readbycreator)
-    private static String mCreateCommentTableSQL = "CREATE TABLE if not exists comment "
+    private static String mCreateCommentTableSQL = "CREATE TABLE if not exists " + nameTableCommentTable
             + "(acid INTEGER PRIMARY KEY AUTOINCREMENT, activity INTEGER NOT NULL, "
             + "uid INTEGER NOT NULL, user TEXT NOT NULL, time DATETIME NOT NULL, "
             + "content TEXT NOT NULL, replytoid INTEGER, replytoname TEXT, readbyreply INTEGER, "
@@ -78,6 +115,7 @@ public class SQLStorage
     private SQLStorage(Context context)
     {
         mContext = context.getApplicationContext();
+        mSQLiteOpenHelper = new LogpieSQLiteOpenHelper(mContext,DATABASE_NAME,null);
     }
 
     public static synchronized SQLStorage getInstance(Context context)
@@ -95,29 +133,7 @@ public class SQLStorage
      */
     public synchronized void initialize()
     {
-        openDatabase();
-        createTable();
-        closeDatabase();
-    }
-
-    /**
-     * Create table SQLite 3 TEXT NUMERIC INTEGER REAL NONE
-     */
-    private synchronized void createTable()
-    {
-        try
-        {
-            mSQLiteDB.execSQL(mCreateCityTableSQL);
-            mSQLiteDB.execSQL(mCreateCategoryTableSQL);
-            mSQLiteDB.execSQL(mCreateSubCategoryTableSQL);
-            mSQLiteDB.execSQL(mCreateUserTableSQL);
-            mSQLiteDB.execSQL(mCreateOrganizationTableSQL);
-            mSQLiteDB.execSQL(mCreateActivityTableSQL);
-            mSQLiteDB.execSQL(mCreateCommentTableSQL);
-        } catch (Exception e)
-        {
-            LogpieLog.e(TAG, "Cannot create the table during the initial step.");
-        }
+       
     }
 
     /**
@@ -130,7 +146,7 @@ public class SQLStorage
      */
     public void insert(Bundle bundle, String table, LogpieCallback callback)
     {
-        openDatabase();
+        SQLiteDatabase db = openDatabase();
         // remove the data level information from bundle
         bundle.remove(DataLevel.KEY_DATALEVEL);
 
@@ -142,7 +158,7 @@ public class SQLStorage
             values.put(key, bundle.getString(key));
         }
 
-        long res = mSQLiteDB.insert(table, null, values);
+        long res = db.insert(table, null, values);
         if (res != -1)
         {
             handleSuccessCallback(callback, "Insert successfully");
@@ -164,7 +180,8 @@ public class SQLStorage
      */
     public boolean insert(Bundle bundle, String table)
     {
-        openDatabase();
+        SQLiteDatabase db = openDatabase();
+        
         // remove the data level information from bundle
         bundle.remove(DataLevel.KEY_DATALEVEL);
 
@@ -176,7 +193,7 @@ public class SQLStorage
             values.put(key, bundle.getString(key));
         }
 
-        long res = mSQLiteDB.insert(table, null, values);
+        long res = db.insert(table, null, values);
         closeDatabase();
         return res != -1;
     }
@@ -199,9 +216,9 @@ public class SQLStorage
     public Bundle query(String table, String[] columns, String selection, String[] selectionArgs,
             String groupBy, String having, String orderBy)
     {
-        openDatabase();
+        SQLiteDatabase db = openDatabase();
         // query the dabatase
-        Cursor result = mSQLiteDB.query(table, columns, selection, selectionArgs, groupBy, having,
+        Cursor result = db.query(table, columns, selection, selectionArgs, groupBy, having,
                 orderBy);
 
         Bundle bundle = new Bundle();
@@ -235,7 +252,7 @@ public class SQLStorage
      */
     public boolean update(String table, Bundle bundle, String whereClause, String[] whereArgs)
     {
-        openDatabase();
+        SQLiteDatabase db = openDatabase();
         // remove the data level information from bundle
         bundle.remove(DataLevel.KEY_DATALEVEL);
 
@@ -245,7 +262,7 @@ public class SQLStorage
         {
             values.put(key, bundle.getString(key));
         }
-        int res = mSQLiteDB.update(table, values, whereClause, whereArgs);
+        int res = db.update(table, values, whereClause, whereArgs);
         closeDatabase();
         return res != 0;
     }
@@ -262,8 +279,8 @@ public class SQLStorage
      */
     public void delete(String table, String whereClause, String[] whereArgs, LogpieCallback callback)
     {
-        openDatabase();
-        int res = mSQLiteDB.delete(table, whereClause, whereArgs);
+        SQLiteDatabase db = openDatabase();
+        int res = db.delete(table, whereClause, whereArgs);
         if (res != 0)
         {
             handleSuccessCallback(callback, "Delete successfully");
@@ -289,8 +306,8 @@ public class SQLStorage
      */
     public boolean delete(String table, String whereClause, String[] whereArgs)
     {
-        openDatabase();
-        int res = mSQLiteDB.delete(table, whereClause, whereArgs);
+        SQLiteDatabase db = openDatabase();
+        int res = db.delete(table, whereClause, whereArgs);
         closeDatabase();
         if (res != 0)
         {
@@ -313,19 +330,16 @@ public class SQLStorage
     }
 
     
-    private synchronized void openDatabase() {
+    private synchronized SQLiteDatabase openDatabase() {
         mOpenCounter++;
-        if(mOpenCounter == 1 && (mSQLiteDB==null || !mSQLiteDB.isOpen())) {
-            // Opening new database
-            mSQLiteDB = mContext.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
-        }
+        return mSQLiteOpenHelper.getWritableDatabase();
     }
 
     private synchronized void closeDatabase() {
         mOpenCounter--;
         if(mOpenCounter == 0) {
             // Closing database
-            mSQLiteDB .close();
+            mSQLiteOpenHelper.close();
         }
     }
 
