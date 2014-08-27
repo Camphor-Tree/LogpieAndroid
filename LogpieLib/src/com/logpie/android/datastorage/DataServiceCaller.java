@@ -1,5 +1,7 @@
 package com.logpie.android.datastorage;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.content.ComponentName;
@@ -22,6 +24,7 @@ public class DataServiceCaller
     private ServiceConnection mConnection;
     private DataPlatform mDataPlatform;
     private Intent mIntent;
+    private CountDownLatch mLatch;
 
     private AtomicBoolean mConnected = new AtomicBoolean(false);
 
@@ -35,14 +38,17 @@ public class DataServiceCaller
      * 
      * @throws ThreadException
      */
-    public void asyncConnectDataService() throws ThreadException
+    public synchronized void asyncConnectDataService() throws ThreadException
     {
+        mLatch = new CountDownLatch(1);
         ThreadHelper.runOffMainThread(false, new Runnable()
         {
             @Override
             public void run()
             {
                 bindToService();
+                // when finishing binding to service, unlock the latch no matter whether bind success or not.
+                mLatch.countDown();
             }
         });
     }
@@ -84,11 +90,19 @@ public class DataServiceCaller
     // get the DataPlatform from data service
     public DataPlatform getDataPlatform()
     {
-        if (mDataPlatform == null)
+        try
+        {
+            mLatch.await(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e)
+        {
+            return null;
+        }
+        if (mDataPlatform != null && mConnected.get())
         {
             LogpieLog.e(TAG, "The Service haven't been established or just dropped the connection");
+            return mDataPlatform;
         }
-        return mDataPlatform;
+        return null;
     }
 
     private boolean bindToService()
