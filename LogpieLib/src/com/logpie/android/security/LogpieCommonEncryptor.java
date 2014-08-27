@@ -20,7 +20,7 @@ public class LogpieCommonEncryptor extends AbstractDataEncryptor
     private static final String sAlgorithm = "PBKDF2WithHmacSHA1";
     private static final int sEncryptionKeyLength = 128;
     private static final int sIterationNum = 1000;
-    LogpieCommonEncryptor()
+    public LogpieCommonEncryptor()
     {
         super();
     }
