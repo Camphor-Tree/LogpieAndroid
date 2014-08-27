@@ -56,7 +56,7 @@ public class DataServiceCaller
     public void asyncDisconnectDataService() throws ThreadException
     {
         // if the connection haven't been established, then just return
-        if (!mConnected.get())
+        if (!mConnected.get() ||  mDataPlatform==null)
         {
             return;
         }
@@ -73,18 +73,13 @@ public class DataServiceCaller
     public void syncDisconnectDataService() throws ThreadException
     {
         // if the connection haven't been established, then just return
-        if (!mConnected.get())
+        if (!mConnected.get() ||  mDataPlatform==null)
         {
             return;
         }
-        ThreadHelper.runOnMainThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                unbindServiceSafely();
-            }
-        });
+
+        unbindServiceSafely();
+
     }
 
     // get the DataPlatform from data service
@@ -159,6 +154,7 @@ public class DataServiceCaller
             {
                 LogpieLog.d(TAG, "onServiceDisconnected");
                 mDataPlatform = null;
+                mConnected.set(false);
             }
         };
     }
@@ -173,6 +169,8 @@ public class DataServiceCaller
             try
             {
                 mContext.unbindService(mConnection);
+                mConnected.set(false);
+                mDataPlatform = null;
             } catch (IllegalArgumentException e)
             {
                 LogpieLog.i(TAG, "Service was already unbound");
