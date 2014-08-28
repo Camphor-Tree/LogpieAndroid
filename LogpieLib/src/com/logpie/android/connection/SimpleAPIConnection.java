@@ -22,6 +22,7 @@ public class SimpleAPIConnection
             URL url = new URL(stringUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+            connection.setRequestProperty("Charset", "UTF-8");  
 
             int responsecode = connection.getResponseCode();
             if (responsecode >= 200 && responsecode < 300)

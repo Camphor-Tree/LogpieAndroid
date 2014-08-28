@@ -9,24 +9,40 @@ public class LogpieLocation
     private Double mLatitude;
     private Double mLongitude;
     private String mAddress;
+    private String mCity;
 
     public LogpieLocation(Double lat, Double lon)
     {
-        this(lat, lon, null);
+        this(lat, lon, null, null);
     }
 
     public LogpieLocation(String address)
     {
-        this(null, null, address);
+        this(null, null, address, null);
+    }
+    
+    public LogpieLocation(Double lat, Double lon, String address)
+    {
+        this(lat,lon,address,null);
     }
 
-    public LogpieLocation(Double lat, Double lon, String address)
+    public LogpieLocation(Double lat, Double lon, String address, String city)
     {
         mLatitude = lat;
         mLongitude = lon;
         mAddress = address;
+        mCity = city;
     }
 
+    public void setCity(String city)
+    {
+        mCity = city;
+    }
+    
+    public String getCity()
+    {
+        return mCity;
+    }
     /**
      * @return the latitude
      */

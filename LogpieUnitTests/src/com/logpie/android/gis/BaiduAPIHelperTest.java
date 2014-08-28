@@ -1,5 +1,7 @@
 package com.logpie.android.gis;
 
+import com.logpie.android.logic.LogpieLocation;
+
 import junit.framework.Assert;
 import android.test.AndroidTestCase;
 
@@ -18,5 +20,17 @@ public class BaiduAPIHelperTest extends AndroidTestCase
         Double lon2 = -122.3453397;
         String city2 = BaiduAPIHelper.getCityFromLatLon(lat2, lon2);
         Assert.assertNull(city2);
+    }
+    
+    public void testGetLatLonFromAddressAndCity()
+    {
+        String address = "苏州中学";
+        String city = "苏州";
+        LogpieLocation location = BaiduAPIHelper.getLatLonFromAddressAndCity(address, city);
+        assertNotNull(location);
+        assertEquals(location.getLongitude(),120.62989618293);
+        assertEquals(location.getLatitude(),31.302686885837);
+        assertEquals(location.getCity(),city);
+        assertEquals(location.getAddress(),address);
     }
 }
