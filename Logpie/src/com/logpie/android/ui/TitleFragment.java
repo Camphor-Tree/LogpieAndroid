@@ -1,13 +1,13 @@
 package com.logpie.android.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.logpie.android.R;
 import com.logpie.android.model.Title;
+import com.logpie.android.ui.base.LogpieBaseFragment;
 
 /**
  * Show the title part of the Square Page.
@@ -15,19 +15,19 @@ import com.logpie.android.model.Title;
  * @author yilei
  * 
  */
-public class TitleFragment extends Fragment
+public class TitleFragment extends LogpieBaseFragment
 {
     private Title mTitle;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void handleOnCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
         mTitle = new Title();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflator, ViewGroup parent, Bundle savedInstanceState)
+    public View handleOnCreateView(LayoutInflater inflator, ViewGroup parent,
+            Bundle savedInstanceState)
     {
         View v = inflator.inflate(R.layout.fragment_title, parent, false);
         return v;
