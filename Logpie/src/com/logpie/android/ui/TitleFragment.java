@@ -26,10 +26,10 @@ public class TitleFragment extends LogpieBaseFragment
     }
 
     @Override
-    public View handleOnCreateView(LayoutInflater inflator, ViewGroup parent,
+    public View handleOnCreateView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState)
     {
-        View v = inflator.inflate(R.layout.fragment_title, parent, false);
+        View v = inflater.inflate(R.layout.fragment_title, parent, false);
         return v;
     }
 }

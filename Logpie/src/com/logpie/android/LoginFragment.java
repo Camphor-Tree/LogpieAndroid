@@ -15,9 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.logpie.android.ui.SquareActivity;
+import com.logpie.android.ui.base.LogpieBaseFragment;
 import com.logpie.android.ui.helper.ActivityOpenHelper;
 
-public class LoginFragment extends Fragment
+public class LoginFragment extends LogpieBaseFragment
 {
     private final static String TAG = LoginFragment.class.getName();
     private ImageView mChinese;
@@ -29,17 +30,47 @@ public class LoginFragment extends Fragment
     private Locale mCurrentLanguage;
     private Activity mActivity;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState)
+    @SuppressLint("NewApi")
+    private void changeLanguage(Locale lan)
     {
-        super.onCreate(savedInstanceState);
-        mActivity = getActivity();
+        if (lan.equals(mCurrentLanguage))
+        {
+            return;
+        }
+        mCurrentLanguage = lan;
+        if (lan.equals(Locale.CHINA) || lan.equals(Locale.CHINESE))
+        {
+            mEnglish.setAlpha(0.3f);
+            mChinese.setAlpha(1.0f);
+            mEmail.setHint(R.string.email_cn);
+            mPassword.setHint(R.string.password_cn);
+            mLogin.setText(R.string.login_cn);
+            mRegister.setText(R.string.register_cn);
+            // TODO: store
+        }
+        else
+        {
+            mEnglish.setAlpha(1.0f);
+            mChinese.setAlpha(0.3f);
+            mEmail.setHint(R.string.email_us);
+            mPassword.setHint(R.string.password_us);
+            mLogin.setText(R.string.login_us);
+            mRegister.setText(R.string.register_us);
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public void handleOnCreate(Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        mActivity = getActivity();
+
+    }
+
+    @Override
+    public View handleOnCreateView(LayoutInflater inflater, ViewGroup parent,
+            Bundle savedInstanceState)
+    {
+        View v = inflater.inflate(R.layout.fragment_login, parent, false);
 
         mEnglish = (ImageView) v.findViewById(R.id.login_language_us);
         mChinese = (ImageView) v.findViewById(R.id.login_language_cn);
@@ -123,34 +154,5 @@ public class LoginFragment extends Fragment
             }
         });
         return v;
-    }
-
-    @SuppressLint("NewApi")
-    private void changeLanguage(Locale lan)
-    {
-        if (lan.equals(mCurrentLanguage))
-        {
-            return;
-        }
-        mCurrentLanguage = lan;
-        if (lan.equals(Locale.CHINA) || lan.equals(Locale.CHINESE))
-        {
-            mEnglish.setAlpha(0.3f);
-            mChinese.setAlpha(1.0f);
-            mEmail.setHint(R.string.email_cn);
-            mPassword.setHint(R.string.password_cn);
-            mLogin.setText(R.string.login_cn);
-            mRegister.setText(R.string.register_cn);
-            // TODO: store
-        }
-        else
-        {
-            mEnglish.setAlpha(1.0f);
-            mChinese.setAlpha(0.3f);
-            mEmail.setHint(R.string.email_us);
-            mPassword.setHint(R.string.password_us);
-            mLogin.setText(R.string.login_us);
-            mRegister.setText(R.string.register_us);
-        }
     }
 }

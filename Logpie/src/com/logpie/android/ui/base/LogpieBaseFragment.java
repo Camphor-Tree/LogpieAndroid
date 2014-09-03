@@ -28,15 +28,15 @@ public abstract class LogpieBaseFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflator, ViewGroup parent, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
     {
-        if (inflator == null || parent == null)
+        if (inflater == null || parent == null)
         {
             LogpieLog.e(TAG, "Inflator or ViewGroup is null! It is impossible.");
             return null;
         }
         // Safely call subclass' implementation
-        return handleOnCreateView(inflator, parent, savedInstanceState);
+        return handleOnCreateView(inflater, parent, savedInstanceState);
     }
 
     /**
@@ -54,7 +54,7 @@ public abstract class LogpieBaseFragment extends Fragment
      * @param savedInstanceState
      * @return
      */
-    public abstract View handleOnCreateView(LayoutInflater inflator, ViewGroup parent,
+    public abstract View handleOnCreateView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState);
 
 }
