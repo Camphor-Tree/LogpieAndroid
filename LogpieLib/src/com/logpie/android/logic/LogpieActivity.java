@@ -79,8 +79,8 @@ public class LogpieActivity
         mDescription = description;
         Location = location;
         // TODO combine the time into one Period clss
-        startTime = startTime;
-        endTime = endTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
         mComments = comments;
     }
 

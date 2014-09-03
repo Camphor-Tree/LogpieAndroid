@@ -2,3 +2,5 @@ bin/
 build/
 .settings/
 gen/
+*/.classpath
+*/.project
