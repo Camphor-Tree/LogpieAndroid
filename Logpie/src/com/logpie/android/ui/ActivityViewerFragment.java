@@ -15,7 +15,7 @@ import com.logpie.android.ui.base.LogpieBaseFragment;
  * @author yilei
  * 
  */
-public class TitleFragment extends LogpieBaseFragment
+public class ActivityViewerFragment extends LogpieBaseFragment
 {
     private Title mTitle;
 
@@ -29,7 +29,7 @@ public class TitleFragment extends LogpieBaseFragment
     public View handleOnCreateView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.fragment_title, parent, false);
+        View v = inflater.inflate(R.layout.fragment_activity_viewer, parent, false);
         return v;
     }
 }

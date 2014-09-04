@@ -9,6 +9,11 @@
     <style name="LoginTheme" parent="AppBaseTheme">
         <item name="android:windowNoTitle">true</item>
     </style>
+    
+    <!-- Title page theme. -->
+    <style name="TitleTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <!-- Single line input style -->
     <style name="SingleInput">

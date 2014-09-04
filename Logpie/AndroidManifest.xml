@@ -29,7 +29,7 @@
         </activity>
         <activity
             android:name="com.logpie.android.ui.SquareActivity"
-            android:label="@string/title_activity_square" >
+            android:theme="@style/Theme.AppCompat.Light" >
         </activity>
     </application>
 
