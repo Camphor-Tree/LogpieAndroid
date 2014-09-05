@@ -1,5 +1,6 @@
-package com.logpie.android;
+package com.logpie.android.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.logpie.android.R;
 import com.logpie.android.datastorage.SQLStorage;
 import com.logpie.android.gis.GISManager;
 import com.logpie.android.logic.LogpieLocation;
 import com.logpie.android.logic.NormalUser;
+import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
@@ -29,14 +33,16 @@ public class RegisterFragment extends Fragment
 	private EditText mNickname;
 	private TextView mRegister;
 	private TextView mBackLogin;
-	private String language;
 	private LogpieLocation location;
 	private Thread mThread;
+
+	private Activity mActivity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		mActivity = getActivity();
 	}
 
 	@Override
@@ -64,39 +70,39 @@ public class RegisterFragment extends Fragment
 		mRegister = (TextView) v
 				.findViewById(R.id.register_register_button);
 
-		Fragment fragment = getFragmentManager()
-				.findFragmentById(R.id.container);
-
-		// set language
-		Bundle bundle = fragment.getArguments();
-		language = bundle.getString("Locale");
-		if (language.equals("zh"))
-		{
-			mWelcome.setText(R.string.welcome_cn);
-			mEmail.setHint(R.string.email_cn);
-			mPassword
-					.setHint(R.string.password_cn);
-			mConfirmPassword
-					.setHint(R.string.confirm_password_cn);
-			mNickname
-					.setHint(R.string.nickname_cn);
-			mBackLogin.setText(R.string.back_cn);
-			mRegister
-					.setText(R.string.register_cn);
-		} else
-		{
-			mWelcome.setText(R.string.welcome_us);
-			mEmail.setHint(R.string.email_us);
-			mPassword
-					.setHint(R.string.password_us);
-			mConfirmPassword
-					.setHint(R.string.confirm_password_us);
-			mNickname
-					.setHint(R.string.nickname_us);
-			mBackLogin.setText(R.string.back_us);
-			mRegister
-					.setText(R.string.register_us);
-		}
+		mWelcome.setText(LanguageHelper
+				.getId(LanguageHelper.KEY_WELCOME,
+						mActivity
+								.getApplicationContext()));
+		mEmail.setHint(LanguageHelper
+				.getId(LanguageHelper.KEY_EMAIL,
+						mActivity
+								.getApplicationContext()));
+		mPassword
+				.setHint(LanguageHelper
+						.getId(LanguageHelper.KEY_PASSWORD,
+								mActivity
+										.getApplicationContext()));
+		mConfirmPassword
+				.setHint(LanguageHelper
+						.getId(LanguageHelper.KEY_CONFIRM_PASSWORD,
+								mActivity
+										.getApplicationContext()));
+		mNickname
+				.setHint(LanguageHelper
+						.getId(LanguageHelper.KEY_NICKNAME,
+								mActivity
+										.getApplicationContext()));
+		mBackLogin
+				.setText(LanguageHelper
+						.getId(LanguageHelper.KEY_BACK,
+								mActivity
+										.getApplicationContext()));
+		mRegister
+				.setText(LanguageHelper
+						.getId(LanguageHelper.KEY_REGISTER,
+								mActivity
+										.getApplicationContext()));
 
 		mBackLogin
 				.setOnClickListener(new View.OnClickListener()
@@ -110,8 +116,7 @@ public class RegisterFragment extends Fragment
 								.beginTransaction();
 
 						// Replace whatever is in the fragment_container view
-						// with this
-						// fragment
+						// with this fragment
 						transaction.replace(
 								R.id.container,
 								loginFrag,
@@ -128,35 +133,41 @@ public class RegisterFragment extends Fragment
 					@Override
 					public void onClick(View v)
 					{
-						/*
-						 * // check the input are correct or not StringBuffer
-						 * text = new StringBuffer(); if (!isValid(text)) {
-						 * Toast.makeText(getActivity(), text,
-						 * Toast.LENGTH_SHORT).show(); } else {
-						 */if (mThread == null)
+						// check the input are correct or not StringBuffer
+						StringBuffer text = new StringBuffer();
+						if (!isValid(text))
 						{
-							mThread = new Thread(
-									runnable);
-							mThread.start();
+							Toast.makeText(
+									getActivity(),
+									text,
+									Toast.LENGTH_SHORT)
+									.show();
 						} else
 						{
-							LogpieLog
-									.d(TAG,
-											"Cannot create a new thread.");
+							if (mThread == null)
+							{
+								mThread = new Thread(
+										runnable);
+								mThread.start();
+							} else
+							{
+								LogpieLog
+										.d(TAG,
+												"Cannot create a new thread.");
+							}
+							/*
+							 * Fragment loginFrag = new LoginFragment();
+							 * FragmentTransaction transaction =
+							 * getFragmentManager().beginTransaction();
+							 * 
+							 * // Replace whatever is in the fragment_container
+							 * view with // this fragment
+							 * transaction.replace(R.id.container, loginFrag);
+							 * 
+							 * // Commit the transaction transaction.commit();
+							 */
 						}
-						/*
-						 * Fragment loginFrag = new LoginFragment();
-						 * FragmentTransaction transaction =
-						 * getFragmentManager().beginTransaction();
-						 * 
-						 * // Replace whatever is in the fragment_container view
-						 * with // this fragment
-						 * transaction.replace(R.id.container, loginFrag);
-						 * 
-						 * // Commit the transaction transaction.commit();
-						 */
 					}
-					// }
 				});
 		return v;
 	}
