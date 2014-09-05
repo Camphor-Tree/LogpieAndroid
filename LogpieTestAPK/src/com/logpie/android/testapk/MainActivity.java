@@ -2,26 +2,20 @@ package com.logpie.android.testapk;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.logpie.android.datastorage.CentralDataService;
 import com.logpie.android.datastorage.DataLevel;
-import com.logpie.android.datastorage.DataServiceCaller;
 import com.logpie.android.datastorage.KeyValueStorage;
-import com.logpie.android.exception.ThreadException;
 import com.logpie.android.metric.LogpieMetric;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends FragmentActivity
 {
     private static final String TAG = MainActivity.class.getName();
-    CentralDataService mDataService;
-
-    DataServiceCaller mServiceCaller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,7 +35,6 @@ public class MainActivity extends ActionBarActivity
     protected void onStart()
     {
         super.onStart();
-        testBindService();
         testKeyValueDataStorage();
     }
 
@@ -57,13 +50,6 @@ public class MainActivity extends ActionBarActivity
     protected void onStop()
     {
         LogpieLog.d(TAG, "onStop");
-        try
-        {
-            mServiceCaller.syncDisconnectDataService();
-        } catch (ThreadException e)
-        {
-            LogpieLog.e(TAG, "cannot bind to save because of thread pool is full");
-        }
         super.onStop();
     }
 
@@ -71,13 +57,7 @@ public class MainActivity extends ActionBarActivity
     protected void onPause()
     {
         LogpieLog.d(TAG, "onPause");
-        try
-        {
-            mServiceCaller.syncDisconnectDataService();
-        } catch (ThreadException e)
-        {
-            LogpieLog.e(TAG, "cannot bind to save because of thread pool is full");
-        }
+
         super.onStop();
     }
 
@@ -97,19 +77,6 @@ public class MainActivity extends ActionBarActivity
         {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
-        }
-    }
-
-    private void testBindService()
-    {
-        LogpieLog.i(TAG, "onStart try DataServiceCaller");
-        mServiceCaller = new DataServiceCaller(this);
-        try
-        {
-            mServiceCaller.asyncConnectDataService();
-        } catch (ThreadException e)
-        {
-            LogpieLog.e(TAG, "cannot bind to save because of thread pool is full");
         }
     }
 

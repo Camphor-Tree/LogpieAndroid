@@ -3,6 +3,7 @@ package com.logpie.android.datastorage;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,12 +11,14 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
 import com.logpie.android.util.LogpieCallback;
+import com.logpie.android.util.LogpieLog;
 
 public class KeyValueStorage
 {
     public static final String SUCCESS_KEY = "com.logpie.storage.keyvalue.success";
     public static final String ERROR_KEY = "com.logpie.storage.keyvalue.error";
 
+    private static final String TAG = KeyValueStorage.class.getName();
     private static String sSharedPreferencesPath;
 
     private static KeyValueStorage sKeyValueStorage;
@@ -154,7 +157,8 @@ public class KeyValueStorage
      * @param value
      * @param callback
      */
-    public synchronized void insert(DataLevel dataLevel, String key, String value, LogpieCallback callback)
+    public synchronized void insert(DataLevel dataLevel, String key, String value,
+            LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -230,6 +234,30 @@ public class KeyValueStorage
         return null;
     }
 
+    public synchronized ConcurrentHashMap<String, String> queryAll(DataLevel dataLevel)
+    {
+        ConcurrentHashMap<String, String> entryMap = new ConcurrentHashMap<String, String>();
+        SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
+        Map<String, ?> keys = sharedPreferences.getAll();
+
+        for (Map.Entry<String, ?> entry : keys.entrySet())
+        {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value instanceof String)
+            {
+                entryMap.put(key, (String) value);
+            }
+            else
+            {
+                LogpieLog.e(TAG,
+                        "The key corresponding value is not String! It is a bug! The key is: "
+                                + key);
+            }
+        }
+        return entryMap;
+    }
+
     /**
      * update the key-value pair if the key exist.
      * 
@@ -238,7 +266,8 @@ public class KeyValueStorage
      * @param value
      * @param callback
      */
-    public synchronized void update(DataLevel dataLevel, String key, String value, LogpieCallback callback)
+    public synchronized void update(DataLevel dataLevel, String key, String value,
+            LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -333,12 +362,12 @@ public class KeyValueStorage
             return false;
         }
     }
-    
+
     public Map<DataLevel, SharedPreferences> getDataMap()
     {
         return mDataMap;
     }
-    
+
     /* packaged private */void clearAll()
     {
         // Each DataLevel will create a separate file

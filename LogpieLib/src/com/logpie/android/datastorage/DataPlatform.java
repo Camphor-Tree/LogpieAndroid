@@ -3,13 +3,12 @@ package com.logpie.android.datastorage;
 import java.io.UnsupportedEncodingException;
 
 import android.content.Context;
-import android.os.Binder;
 
 import com.logpie.android.security.AbstractDataEncryptor;
 import com.logpie.android.security.LogpieCommonEncryptor;
 import com.logpie.android.util.LogpieLog;
 
-public class DataPlatform extends Binder
+public class DataPlatform
 {
     private static String TAG = DataPlatform.class.getName();
     // The only instance;
@@ -19,23 +18,22 @@ public class DataPlatform extends Binder
     private SQLStorage mSqlStorage;
     private AbstractDataEncryptor mEncryptor;
 
-    private DataPlatform(Context context, KeyValueStorage keyValueStorage, SQLStorage sqlStorage)
+    private DataPlatform(Context context)
     {
         // get the unique Application Context
         mContext = context.getApplicationContext();
-        mKeyValueStorage = keyValueStorage;
+        mKeyValueStorage = KeyValueStorage.getInstance(context);
         mKeyValueStorage.initialize();
-        mSqlStorage = sqlStorage;
+        mSqlStorage = SQLStorage.getInstance(context);
         mSqlStorage.initialize();
         mEncryptor = new LogpieCommonEncryptor();
     }
 
-    public static synchronized DataPlatform getInstance(Context context,
-            KeyValueStorage keyValueStorage, SQLStorage sqlStorage)
+    public static synchronized DataPlatform getInstance(Context context)
     {
         if (sDataPlatform == null)
         {
-            sDataPlatform = new DataPlatform(context, keyValueStorage, sqlStorage);
+            sDataPlatform = new DataPlatform(context);
         }
         return sDataPlatform;
     }
@@ -53,7 +51,7 @@ public class DataPlatform extends Binder
     {
         mKeyValueStorage = keyValueStorage;
     }
-    
+
     public String getSystemSettingValue(final String key)
     {
         String value = null;
@@ -67,15 +65,15 @@ public class DataPlatform extends Binder
             e.printStackTrace();
         }
         return value;
-        
+
     }
-    
+
     public boolean setSystemSettingValue(final String key, final String value)
     {
         String encryptionValue;
         try
         {
-            encryptionValue = new String(mEncryptor.encryptData(value),"UTF-8");
+            encryptionValue = new String(mEncryptor.encryptData(value), "UTF-8");
         } catch (UnsupportedEncodingException e)
         {
             LogpieLog.e(TAG, "Not support UTF-8, it is impossible");
