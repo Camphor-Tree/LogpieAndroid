@@ -4,14 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
-import com.logpie.android.gis.GISManager;
 import com.logpie.android.util.LogpieCallback;
-import com.logpie.android.util.LogpieLog;
 
 /**
  * Central User, abstract user's behavior.
@@ -28,7 +24,8 @@ public abstract class User
 
     }
 
-    public void register(Context context, String userEmail, String userPassword, String userName, String city, LogpieCallback callback)
+    public void register(Context context, String userEmail, String userPassword,
+            String userName, String city, LogpieCallback callback)
     {
         JSONObject AuthRegData = new JSONObject();
 
@@ -111,6 +108,7 @@ public abstract class User
 
     public void getLogpieActivityList(LogpieLocation location)
     {
+
     }
 
     public void getCreatedLogpieActivityList()

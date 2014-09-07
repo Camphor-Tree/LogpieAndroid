@@ -7,31 +7,26 @@ import android.support.v4.app.FragmentManager;
 
 import com.logpie.android.R;
 
-public class AuthActivity extends
-		FragmentActivity
+public class AuthActivity extends FragmentActivity
 {
-	private static final String TAG = AuthActivity.class
-			.getName();
+    private static final String TAG = AuthActivity.class.getName();
 
-	@Override
-	protected void onCreate(
-			Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-		FragmentManager fm = getSupportFragmentManager();
-		Fragment fragment = fm
-				.findFragmentById(R.id.container);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.container);
 
-		if (fragment == null)
-		{
-			fragment = new LoginFragment();
-			fm.beginTransaction()
-					.add(R.id.container, fragment)
-					.commit();
-		}
-	}
+        if (fragment == null)
+        {
+            fragment = new LoginFragment();
+            fm.beginTransaction().add(R.id.container, fragment).commit();
+        }
+
+    }
 
 }

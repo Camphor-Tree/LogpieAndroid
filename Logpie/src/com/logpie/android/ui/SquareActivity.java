@@ -12,10 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.logpie.android.R;
+import com.logpie.android.logic.AuthManager;
+import com.logpie.android.logic.LogpieAccount;
+import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.operation.BaseSquareMode;
 import com.logpie.android.ui.operation.CategoryMode;
 import com.logpie.android.ui.operation.CityMode;
 import com.logpie.android.ui.operation.NearbyMode;
+import com.logpie.android.util.LogpieLog;
 
 /**
  * This activity shows the main Square page.
@@ -25,6 +29,7 @@ import com.logpie.android.ui.operation.NearbyMode;
  */
 public class SquareActivity extends ActionBarActivity
 {
+    private final static String TAG = SquareActivity.class.getName();
     private BaseSquareMode mCurrentMode;
     private ActionBar mActionBar;
 
@@ -32,6 +37,20 @@ public class SquareActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        /**
+         * Call AuthManager to check if it already exists an account on Logpie
+         */
+        LogpieAccount account = AuthManager.getInstance(getApplicationContext())
+                .getCurrentAccount();
+
+        if (account == null)
+        {
+            ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
+                    AuthActivity.class);
+            return;
+        }
+
         mActionBar = getSupportActionBar();
 
         // Setup the navigation.
@@ -44,6 +63,7 @@ public class SquareActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        LogpieLog.d(TAG, "Call onCreateOptionsMenu!");
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.squre, menu);
@@ -56,7 +76,7 @@ public class SquareActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
+        LogpieLog.d(TAG, "Call onOptionsItemSelected!");
         switch (item.getItemId())
         {
         case R.id.action_create_activity:
@@ -97,7 +117,8 @@ public class SquareActivity extends ActionBarActivity
         squareMode.setupTab();
     }
 
-    public static class LogpieBaseTabListener<T extends Fragment> implements ActionBar.TabListener
+    public static class LogpieBaseTabListener<T extends Fragment> implements
+            ActionBar.TabListener
     {
         private Fragment mFragment;
         private final Activity mActivity;

@@ -6,27 +6,34 @@ import android.content.Context;
 import com.logpie.android.datastorage.DataPlatform;
 import com.logpie.android.ui.helper.LanguageHelper;
 
-public class LogpieApplication extends
-		Application
+public class LogpieApplication extends Application
 {
-	Context mContext;
+    Context mContext;
 
-	@Override
-	public void onCreate()
-	{
-		super.onCreate();
-		mContext = getApplicationContext();
-		logpieInit();
-	}
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        mContext = getApplicationContext();
+        logpieInit();
+    }
 
-	private void logpieInit()
-	{
-		DataPlatform dataPlatform = DataPlatform
-				.getInstance(mContext);
-		LogpieSystemSetting setting = LogpieSystemSetting
-				.getInstance(mContext);
-		setting.initialize();
-		LanguageHelper
-				.initialSystemLocale(mContext);
-	}
+    private void logpieInit()
+    {
+        /**
+         * Initialize data platform on device
+         */
+        DataPlatform dataPlatform = DataPlatform.getInstance(mContext);
+
+        /**
+         * Initialized system setting on Logpie
+         */
+        LogpieSystemSetting setting = LogpieSystemSetting.getInstance(mContext);
+        setting.initialize();
+
+        /**
+         * Initialized default language on Logpie
+         */
+        LanguageHelper.initialSystemLocale(mContext);
+    }
 }

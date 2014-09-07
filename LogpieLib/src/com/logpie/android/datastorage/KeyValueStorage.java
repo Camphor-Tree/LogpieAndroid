@@ -36,8 +36,8 @@ public class KeyValueStorage
         {
             mContext = context.getApplicationContext();
             sKeyValueStorage = new KeyValueStorage();
-            sSharedPreferencesPath = "/data/data/" + mContext.getApplicationInfo().packageName
-                    + "/shared_prefs";
+            sSharedPreferencesPath = "/data/data/"
+                    + mContext.getApplicationInfo().packageName + "/shared_prefs";
         }
         return sKeyValueStorage;
     }
@@ -46,7 +46,8 @@ public class KeyValueStorage
     {
         for (DataLevel dataLevel : DataLevel.values())
         {
-            String filePath = sSharedPreferencesPath + "/" + dataLevel.toString() + ".xml";
+            String filePath = sSharedPreferencesPath + "/" + dataLevel.toString()
+                    + ".xml";
             File f = new File(filePath);
             if (!f.exists())
                 return false;
@@ -99,7 +100,8 @@ public class KeyValueStorage
         // start read the insert data from bundle
         if (dataLevel != null)
         {
-            SharedPreferences sharedPreferences = mDataMap.get(DataLevel.valueOf(dataLevel));
+            SharedPreferences sharedPreferences = mDataMap.get(DataLevel
+                    .valueOf(dataLevel));
 
             Editor editor = sharedPreferences.edit();
             for (String key : bundle.keySet())
@@ -134,7 +136,8 @@ public class KeyValueStorage
         // start read the insert data from bundle
         if (dataLevel != null)
         {
-            SharedPreferences sharedPreferences = mDataMap.get(DataLevel.valueOf(dataLevel));
+            SharedPreferences sharedPreferences = mDataMap.get(DataLevel
+                    .valueOf(dataLevel));
 
             Editor editor = sharedPreferences.edit();
             for (String key : bundle.keySet())
@@ -196,7 +199,8 @@ public class KeyValueStorage
      * @param key
      * @param callback
      */
-    public synchronized void query(DataLevel dataLevel, String key, LogpieCallback callback)
+    public synchronized void query(DataLevel dataLevel, String key,
+            LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -279,7 +283,8 @@ public class KeyValueStorage
             }
             else
             {
-                handleErrorCallback(callback, "Update fail, because no such key in storage");
+                handleErrorCallback(callback,
+                        "Update fail, because no such key in storage");
             }
 
         }
@@ -321,7 +326,8 @@ public class KeyValueStorage
      * @param key
      * @param callback
      */
-    public synchronized void delete(DataLevel dataLevel, String key, LogpieCallback callback)
+    public synchronized void delete(DataLevel dataLevel, String key,
+            LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
