@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.logpie.android.datastorage.DataLevel;
-import com.logpie.android.datastorage.KeyValueStorage;
 import com.logpie.android.metric.LogpieMetric;
-import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
 public class MainActivity extends FragmentActivity
@@ -35,7 +32,6 @@ public class MainActivity extends FragmentActivity
     protected void onStart()
     {
         super.onStart();
-        testKeyValueDataStorage();
     }
 
     @Override
@@ -77,35 +73,6 @@ public class MainActivity extends FragmentActivity
         {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
-        }
-    }
-
-    private void testKeyValueDataStorage()
-    {
-        KeyValueStorage storage = KeyValueStorage.getInstance(this);
-        storage.initialize();
-        LogpieLog.d(TAG, storage.getDataMap().size() + "|" + DataLevel.values().length);
-        Bundle data = new Bundle();
-        data.putString(DataLevel.KEY_DATALEVEL, DataLevel.USER_LVL.toString());
-        data.putString("test_key", "test_value");
-        storage.insert(data, new LogpieCallback()
-        {
-            @Override
-            public void onSuccess(Bundle result)
-            {
-                LogpieLog.d(TAG, result.toString());
-            }
-
-            @Override
-            public void onError(Bundle errorMessagge)
-            {
-                LogpieLog.d(TAG, errorMessagge.toString());
-            }
-        });
-        for (DataLevel dataLevel : DataLevel.values())
-        {
-            if (storage.getDataMap().get(dataLevel) != null)
-                LogpieLog.d(TAG, dataLevel.name() + " is not null");
         }
     }
 

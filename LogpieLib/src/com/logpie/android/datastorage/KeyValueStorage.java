@@ -13,7 +13,7 @@ import android.os.Bundle;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
-public class KeyValueStorage
+/*package-private*/class KeyValueStorage
 {
     public static final String SUCCESS_KEY = "com.logpie.storage.keyvalue.success";
     public static final String ERROR_KEY = "com.logpie.storage.keyvalue.error";
