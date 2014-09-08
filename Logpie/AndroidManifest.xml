@@ -21,7 +21,7 @@
 		android:theme="@style/AppBaseTheme" >
 		<activity
 			android:name="com.logpie.android.ui.SquareActivity"
-			android:theme="@style/LoginTheme" >
+			android:theme="@style/Theme.AppCompat.Light" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +30,7 @@
 		</activity>
 		<activity
 			android:name="com.logpie.android.ui.AuthActivity"
-			android:theme="@style/Theme.AppCompat.Light" >
+			android:theme="@style/LoginTheme" >
 		</activity>
 	</application>
 

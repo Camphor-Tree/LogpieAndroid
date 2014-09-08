@@ -48,16 +48,20 @@ public class SquareActivity extends ActionBarActivity
         {
             ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
                     AuthActivity.class);
-            return;
         }
+        else
 
-        mActionBar = getSupportActionBar();
+        {
+            LogpieLog.d(TAG, "Getting the action bar...");
+            mActionBar = getSupportActionBar();
 
-        // Setup the navigation.
-        setUpNavigationTab(mActionBar);
+            // Setup the navigation.
+            setUpNavigationTab(mActionBar);
+            LogpieLog.d(TAG, "Finished setting navigation bar.");
 
-        // Notice that setContentView() is not used, because we use the root
-        // android.R.id.content as the container for each fragment
+            // Notice that setContentView() is not used, because we use the root
+            // android.R.id.content as the container for each fragment
+        }
     }
 
     @Override
