@@ -88,6 +88,10 @@ public class DataEncryptionStorage
     {
         String value = null;
         String rawValue = mKeyValueStorage.query(DataLevel.SYSTEM_LVL, key);
+        if (rawValue == null)
+        {
+            return null;
+        }
         try
         {
             value = mEncryptor.decryptData(rawValue.getBytes("UTF-8"));
@@ -131,5 +135,10 @@ public class DataEncryptionStorage
         }
 
         return entryMap;
+    }
+
+    public boolean delete(final DataLevel dataLevel, final String key)
+    {
+        return mKeyValueStorage.delete(dataLevel, key);
     }
 }
