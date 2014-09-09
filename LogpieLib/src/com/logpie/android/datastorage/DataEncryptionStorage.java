@@ -1,6 +1,5 @@
 package com.logpie.android.datastorage;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,15 +47,7 @@ public class DataEncryptionStorage
     public boolean setKeyValue(final DataLevel datalevel, final String key, final String value)
     {
         String encryptionValue;
-        try
-        {
-            encryptionValue = new String(mEncryptor.encryptData(value), "UTF-8");
-        } catch (UnsupportedEncodingException e)
-        {
-            LogpieLog.e(TAG, "Not support UTF-8, it is impossible");
-            e.printStackTrace();
-            return false;
-        }
+        encryptionValue = mEncryptor.encryptData(value);
         return mKeyValueStorage.insert(datalevel, key, encryptionValue);
     }
 
@@ -69,15 +60,7 @@ public class DataEncryptionStorage
             {
                 String value = entryBundle.getString(key);
                 String encryptionValue;
-                try
-                {
-                    encryptionValue = new String(mEncryptor.encryptData(value), "UTF-8");
-                } catch (UnsupportedEncodingException e)
-                {
-                    LogpieLog.e(TAG, "Not support UTF-8, it is impossible");
-                    e.printStackTrace();
-                    return false;
-                }
+                encryptionValue = mEncryptor.encryptData(value);
                 entryBundle.putString(key, encryptionValue);
             }
         }
@@ -92,14 +75,7 @@ public class DataEncryptionStorage
         {
             return null;
         }
-        try
-        {
-            value = mEncryptor.decryptData(rawValue.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e)
-        {
-            LogpieLog.e(TAG, "Not support UTF-8, it is impossible");
-            e.printStackTrace();
-        }
+        value = mEncryptor.decryptData(rawValue);
         return value;
     }
 
@@ -115,15 +91,7 @@ public class DataEncryptionStorage
             String key = entry.getKey();
             String rawValue = entry.getValue();
             String plainValue = null;
-            try
-            {
-                plainValue = mEncryptor.decryptData(rawValue.getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e)
-            {
-                LogpieLog.e(TAG, "Not support UTF-8, it is impossible");
-                e.printStackTrace();
-                return null;
-            }
+            plainValue = mEncryptor.decryptData(rawValue);
             if (plainValue == null)
             {
                 LogpieLog

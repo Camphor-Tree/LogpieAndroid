@@ -3,9 +3,8 @@ package com.logpie.android.logic;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.logpie.android.datastorage.DataEncryptionStorage;
 import com.logpie.android.datastorage.DataLevel;
-import com.logpie.android.datastorage.DataPlatform;
-import com.logpie.android.datastorage.KeyValueStorage;
 import com.logpie.android.util.LogpieLog;
 
 public class AuthManager
@@ -19,11 +18,13 @@ public class AuthManager
 
     private static AuthManager sAuthManager;
     private LogpieAccount mAccount;
+    private DataEncryptionStorage mStorage;
     private Context mContext;
 
     private AuthManager(Context context)
     {
         mContext = context;
+        mStorage = DataEncryptionStorage.getInstance(context);
     }
 
     public synchronized static AuthManager getInstance(Context context)
@@ -39,19 +40,17 @@ public class AuthManager
     {
         if (mAccount == null)
         {
-            KeyValueStorage storage = DataPlatform.getInstance(mContext)
-                    .getKeyValueStorage();
-            String userId = storage.query(DataLevel.USER_LVL, AuthManager.KEY_UID);
+            String userId = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_UID);
             if (userId == null)
             {
                 return null;
             }
             int uid = Integer.valueOf(userId);
-            String email = storage.query(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
-            String nickname = storage.query(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
-            String accessToken = storage.query(DataLevel.USER_LVL,
-                    AuthManager.KEY_ACCESS_TOKEN);
-            String refreshToken = storage.query(DataLevel.USER_LVL,
+            String email = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
+            String nickname = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
+            String accessToken = mStorage
+                    .getValue(DataLevel.USER_LVL, AuthManager.KEY_ACCESS_TOKEN);
+            String refreshToken = mStorage.getValue(DataLevel.USER_LVL,
                     AuthManager.KEY_REFRESH_TOKEN);
             mAccount = new LogpieAccount(uid, email, nickname, accessToken, refreshToken);
         }
@@ -80,7 +79,6 @@ public class AuthManager
             return false;
         }
 
-        KeyValueStorage storage = DataPlatform.getInstance(mContext).getKeyValueStorage();
         Bundle bundle = new Bundle();
         bundle.putString(DataLevel.KEY_DATALEVEL, DataLevel.USER_LVL.toString());
         bundle.putString(AuthManager.KEY_UID, uid);
@@ -88,7 +86,7 @@ public class AuthManager
         bundle.putString(AuthManager.KEY_NICKNAME, nickname);
         bundle.putString(AuthManager.KEY_ACCESS_TOKEN, accessToken);
         bundle.putString(AuthManager.KEY_REFRESH_TOKEN, refreshToken);
-        if (storage.insert(bundle))
+        if (mStorage.setKeyValueBundle(bundle))
         {
             mAccount = account;
             return true;
@@ -106,7 +104,7 @@ public class AuthManager
         if (mAccount == null)
             return;
 
-        KeyValueStorage storage = DataPlatform.getInstance(mContext).getKeyValueStorage();
+        DataEncryptionStorage storage = DataEncryptionStorage.getInstance(mContext);
         storage.delete(DataLevel.USER_LVL, AuthManager.KEY_UID);
         storage.delete(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
         storage.delete(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);

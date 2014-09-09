@@ -36,8 +36,8 @@ import com.logpie.android.util.LogpieLog;
         {
             mContext = context.getApplicationContext();
             sKeyValueStorage = new KeyValueStorage();
-            sSharedPreferencesPath = "/data/data/"
-                    + mContext.getApplicationInfo().packageName + "/shared_prefs";
+            sSharedPreferencesPath = "/data/data/" + mContext.getApplicationInfo().packageName
+                    + "/shared_prefs";
         }
         return sKeyValueStorage;
     }
@@ -46,8 +46,7 @@ import com.logpie.android.util.LogpieLog;
     {
         for (DataLevel dataLevel : DataLevel.values())
         {
-            String filePath = sSharedPreferencesPath + "/" + dataLevel.toString()
-                    + ".xml";
+            String filePath = sSharedPreferencesPath + "/" + dataLevel.toString() + ".xml";
             File f = new File(filePath);
             if (!f.exists())
                 return false;
@@ -100,8 +99,7 @@ import com.logpie.android.util.LogpieLog;
         // start read the insert data from bundle
         if (dataLevel != null)
         {
-            SharedPreferences sharedPreferences = mDataMap.get(DataLevel
-                    .valueOf(dataLevel));
+            SharedPreferences sharedPreferences = mDataMap.get(DataLevel.valueOf(dataLevel));
 
             Editor editor = sharedPreferences.edit();
             for (String key : bundle.keySet())
@@ -136,8 +134,7 @@ import com.logpie.android.util.LogpieLog;
         // start read the insert data from bundle
         if (dataLevel != null)
         {
-            SharedPreferences sharedPreferences = mDataMap.get(DataLevel
-                    .valueOf(dataLevel));
+            SharedPreferences sharedPreferences = mDataMap.get(DataLevel.valueOf(dataLevel));
 
             Editor editor = sharedPreferences.edit();
             for (String key : bundle.keySet())
@@ -199,8 +196,7 @@ import com.logpie.android.util.LogpieLog;
      * @param key
      * @param callback
      */
-    public synchronized void query(DataLevel dataLevel, String key,
-            LogpieCallback callback)
+    public synchronized void query(DataLevel dataLevel, String key, LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
@@ -283,8 +279,7 @@ import com.logpie.android.util.LogpieLog;
             }
             else
             {
-                handleErrorCallback(callback,
-                        "Update fail, because no such key in storage");
+                handleErrorCallback(callback, "Update fail, because no such key in storage");
             }
 
         }
@@ -326,8 +321,7 @@ import com.logpie.android.util.LogpieLog;
      * @param key
      * @param callback
      */
-    public synchronized void delete(DataLevel dataLevel, String key,
-            LogpieCallback callback)
+    public synchronized void delete(DataLevel dataLevel, String key, LogpieCallback callback)
     {
         SharedPreferences sharedPreferences = mDataMap.get(dataLevel);
         if (sharedPreferences != null)
