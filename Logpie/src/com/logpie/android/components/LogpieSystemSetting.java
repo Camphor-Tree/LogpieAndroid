@@ -7,8 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.logpie.android.datastorage.DataEncryptionStorage;
 import com.logpie.android.datastorage.DataLevel;
+import com.logpie.android.datastorage.EncryptedDataStorage;
 import com.logpie.android.util.LogpieLog;
 
 /**
@@ -22,12 +22,12 @@ public class LogpieSystemSetting
     private static LogpieSystemSetting sSingletonSetting;
     private static final String TAG = LogpieSystemSetting.class.getName();
 
-    private DataEncryptionStorage mDataEncryptionStorage;
+    private EncryptedDataStorage mEncryptedDataStorage;
     private ConcurrentHashMap<String, String> mSettingsMap;
 
     private LogpieSystemSetting(Context context)
     {
-        mDataEncryptionStorage = DataEncryptionStorage.getInstance(context);
+        mEncryptedDataStorage = EncryptedDataStorage.getInstance(context);
     }
 
     public synchronized static LogpieSystemSetting getInstance(Context context)
@@ -71,12 +71,14 @@ public class LogpieSystemSetting
      */
     public boolean setSystemSetting(final String key, final String value)
     {
-        if (mSettingsMap.containsKey(key) && TextUtils.equals(mSettingsMap.get(key), value))
+        if (mSettingsMap.containsKey(key)
+                && TextUtils.equals(mSettingsMap.get(key), value))
         {
             // If the cache key,value already exist, then just return;
             return true;
         }
-        boolean success = mDataEncryptionStorage.setKeyValue(DataLevel.SYSTEM_LVL, key, value);
+        boolean success = mEncryptedDataStorage.setKeyValue(DataLevel.SYSTEM_LVL, key,
+                value);
         if (success)
         {
             mSettingsMap.put(key, value);
@@ -109,7 +111,7 @@ public class LogpieSystemSetting
         }
         // Add datalevel into the bundle
         settings.putString(DataLevel.KEY_DATALEVEL, DataLevel.SYSTEM_LVL.toString());
-        boolean success = mDataEncryptionStorage.setKeyValueBundle(settings);
+        boolean success = mEncryptedDataStorage.setKeyValueBundle(settings);
         if (success)
         {
             for (String key : keySet)
@@ -131,7 +133,7 @@ public class LogpieSystemSetting
     {
         if (mSettingsMap == null)
         {
-            mSettingsMap = mDataEncryptionStorage.getAll(DataLevel.SYSTEM_LVL);
+            mSettingsMap = mEncryptedDataStorage.getAll(DataLevel.SYSTEM_LVL);
         }
     }
 }

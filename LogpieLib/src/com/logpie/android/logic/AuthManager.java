@@ -3,8 +3,8 @@ package com.logpie.android.logic;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.logpie.android.datastorage.DataEncryptionStorage;
 import com.logpie.android.datastorage.DataLevel;
+import com.logpie.android.datastorage.EncryptedDataStorage;
 import com.logpie.android.util.LogpieLog;
 
 public class AuthManager
@@ -18,13 +18,13 @@ public class AuthManager
 
     private static AuthManager sAuthManager;
     private LogpieAccount mAccount;
-    private DataEncryptionStorage mStorage;
+    private EncryptedDataStorage mStorage;
     private Context mContext;
 
     private AuthManager(Context context)
     {
         mContext = context;
-        mStorage = DataEncryptionStorage.getInstance(context);
+        mStorage = EncryptedDataStorage.getInstance(context);
     }
 
     public synchronized static AuthManager getInstance(Context context)
@@ -47,9 +47,10 @@ public class AuthManager
             }
             int uid = Integer.valueOf(userId);
             String email = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
-            String nickname = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
-            String accessToken = mStorage
-                    .getValue(DataLevel.USER_LVL, AuthManager.KEY_ACCESS_TOKEN);
+            String nickname = mStorage.getValue(DataLevel.USER_LVL,
+                    AuthManager.KEY_NICKNAME);
+            String accessToken = mStorage.getValue(DataLevel.USER_LVL,
+                    AuthManager.KEY_ACCESS_TOKEN);
             String refreshToken = mStorage.getValue(DataLevel.USER_LVL,
                     AuthManager.KEY_REFRESH_TOKEN);
             mAccount = new LogpieAccount(uid, email, nickname, accessToken, refreshToken);
@@ -104,12 +105,11 @@ public class AuthManager
         if (mAccount == null)
             return;
 
-        DataEncryptionStorage storage = DataEncryptionStorage.getInstance(mContext);
-        storage.delete(DataLevel.USER_LVL, AuthManager.KEY_UID);
-        storage.delete(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
-        storage.delete(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
-        storage.delete(DataLevel.USER_LVL, AuthManager.KEY_ACCESS_TOKEN);
-        storage.delete(DataLevel.USER_LVL, AuthManager.KEY_REFRESH_TOKEN);
+        mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_UID);
+        mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
+        mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
+        mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_ACCESS_TOKEN);
+        mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_REFRESH_TOKEN);
 
         mAccount = null;
     }

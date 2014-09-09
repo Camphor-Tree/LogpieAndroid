@@ -19,15 +19,15 @@ import com.logpie.android.util.LogpieLog;
  * @author yilei
  * 
  */
-public class DataEncryptionStorage
+public class EncryptedDataStorage
 {
-    private static String TAG = DataEncryptionStorage.class.getName();
+    private static String TAG = EncryptedDataStorage.class.getName();
     // The only instance;
-    private static DataEncryptionStorage sDataPlatform;
+    private static EncryptedDataStorage sDataPlatform;
     private KeyValueStorage mKeyValueStorage;
     private AbstractDataEncryptor mEncryptor;
 
-    private DataEncryptionStorage(final Context context)
+    private EncryptedDataStorage(final Context context)
     {
         Context applicationContext = context.getApplicationContext();
         mKeyValueStorage = KeyValueStorage.getInstance(applicationContext);
@@ -35,11 +35,11 @@ public class DataEncryptionStorage
         mEncryptor = new LogpieCommonEncryptor();
     }
 
-    public static synchronized DataEncryptionStorage getInstance(final Context context)
+    public static synchronized EncryptedDataStorage getInstance(final Context context)
     {
         if (sDataPlatform == null)
         {
-            sDataPlatform = new DataEncryptionStorage(context);
+            sDataPlatform = new EncryptedDataStorage(context);
         }
         return sDataPlatform;
     }

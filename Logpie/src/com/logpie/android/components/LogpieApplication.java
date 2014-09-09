@@ -3,8 +3,8 @@ package com.logpie.android.components;
 import android.app.Application;
 import android.content.Context;
 
-import com.logpie.android.datastorage.DataEncryptionStorage;
-import com.logpie.android.datastorage.SQLStorage;
+import com.logpie.android.datastorage.DataStorage;
+import com.logpie.android.datastorage.EncryptedDataStorage;
 import com.logpie.android.ui.helper.LanguageHelper;
 
 public class LogpieApplication extends Application
@@ -21,8 +21,9 @@ public class LogpieApplication extends Application
 
     private void logpieInit()
     {
-        DataEncryptionStorage encryptionStorage = DataEncryptionStorage.getInstance(mContext);
-        SQLStorage sqlStorage = SQLStorage.getInstance(mContext);
+        EncryptedDataStorage encryptionStorage = EncryptedDataStorage
+                .getInstance(mContext);
+        DataStorage Storage = DataStorage.getInstance(mContext);
         /**
          * Initialized system setting on Logpie
          */
