@@ -1,9 +1,11 @@
 package com.logpie.android.ui.operation;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 
+import com.logpie.android.ui.ActivityListFragment;
 import com.logpie.android.ui.SquareActivity.LogpieBaseTabListener;
 
 /**
@@ -15,54 +17,54 @@ import com.logpie.android.ui.SquareActivity.LogpieBaseTabListener;
  */
 public abstract class BaseSquareMode
 {
-	protected String mTabIdentifier;
-	protected ActionBar mActionBar;
-	protected Class mFragmentClass;
-	protected Tab mTab;
-	protected ActionBarActivity mActivity;
+    protected String mTabIdentifier;
+    protected ActionBar mActionBar;
+    protected Class<? extends Fragment> mFragmentClass;
+    protected Tab mTab;
+    protected ActionBarActivity mActivity;
 
-	// High-level algorithm. This is template pattern.
-	public void switchToCurrentMode()
-	{
-		popupWindowIfNecessary();
-		changeTitleIcon();
-		refreshListView();
-	}
+    // High-level algorithm. This is template pattern.
+    public void switchToCurrentMode()
+    {
+        popupWindowIfNecessary();
+        changeTitleIcon();
+        refreshListView();
+        mFragmentClass = ActivityListFragment.class;
+    }
 
-	protected abstract void popupWindowIfNecessary();
+    protected abstract void popupWindowIfNecessary();
 
-	protected abstract void changeTitleIcon();
+    protected abstract void changeTitleIcon();
 
-	protected abstract void refreshListView();
+    protected abstract void refreshListView();
 
-	/**
-	 * Return the resource text to set to the corresponding tab
-	 */
-	public abstract int getTabStringResource();
+    /**
+     * Return the resource text to set to the corresponding tab
+     */
+    public abstract int getTabStringResource();
 
-	protected ActionBar getActionBar()
-	{
-		return mActionBar;
-	}
+    protected ActionBar getActionBar()
+    {
+        return mActionBar;
+    }
 
-	public String getTabIdentifier()
-	{
-		return mTabIdentifier;
-	}
+    public String getTabIdentifier()
+    {
+        return mTabIdentifier;
+    }
 
-	public Class getFragmentClass()
-	{
-		return mFragmentClass;
-	}
+    public Class getFragmentClass()
+    {
+        return mFragmentClass;
+    }
 
-	public void setupTab()
-	{
-		mTab = mActionBar.newTab();
-		mTab.setTabListener(new LogpieBaseTabListener(
-				mActivity, getTabIdentifier(),
-				getFragmentClass()));
-		mTab.setText(getTabStringResource());
-		mActionBar.addTab(mTab);
-	}
+    public void setupTab()
+    {
+        mTab = mActionBar.newTab();
+        mTab.setTabListener(new LogpieBaseTabListener(mActivity, getTabIdentifier(),
+                getFragmentClass()));
+        mTab.setText(getTabStringResource());
+        mActionBar.addTab(mTab);
+    }
 
 }

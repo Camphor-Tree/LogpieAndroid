@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import com.logpie.android.R;
 import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.LogpieAccount;
-import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.operation.BaseSquareMode;
 import com.logpie.android.ui.operation.CategoryMode;
 import com.logpie.android.ui.operation.CityMode;
@@ -44,24 +43,24 @@ public class SquareActivity extends ActionBarActivity
         LogpieAccount account = AuthManager.getInstance(getApplicationContext())
                 .getCurrentAccount();
 
-        if (account == null)
-        {
-            ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
-                    AuthActivity.class);
-        }
-        else
+        // if (account == null)
+        // {
+        // ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
+        // AuthActivity.class);
+        // }
+        // else
+        //
+        // {
+        LogpieLog.d(TAG, "Getting the action bar...");
+        mActionBar = getSupportActionBar();
 
-        {
-            LogpieLog.d(TAG, "Getting the action bar...");
-            mActionBar = getSupportActionBar();
+        // Setup the navigation.
+        setUpNavigationTab(mActionBar);
+        LogpieLog.d(TAG, "Finished setting navigation bar.");
 
-            // Setup the navigation.
-            setUpNavigationTab(mActionBar);
-            LogpieLog.d(TAG, "Finished setting navigation bar.");
-
-            // Notice that setContentView() is not used, because we use the root
-            // android.R.id.content as the container for each fragment
-        }
+        // Notice that setContentView() is not used, because we use the root
+        // android.R.id.content as the container for each fragment
+        // }
     }
 
     @Override
@@ -121,8 +120,7 @@ public class SquareActivity extends ActionBarActivity
         squareMode.setupTab();
     }
 
-    public static class LogpieBaseTabListener<T extends Fragment> implements
-            ActionBar.TabListener
+    public static class LogpieBaseTabListener<T extends Fragment> implements ActionBar.TabListener
     {
         private Fragment mFragment;
         private final Activity mActivity;

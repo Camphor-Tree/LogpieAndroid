@@ -8,5 +8,16 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.logpie.android.ui.SqureActivity$PlaceholderFragment" >
+    
+    <com.logpie.android.ui.layout.LogpieRefreshLayout
+        android:id="@+id/refreshable_view"  
+        android:layout_width="fill_parent"  
+        android:layout_height="fill_parent" >  
+        <ListView  
+            android:id="@+id/list_view"  
+            android:layout_width="fill_parent"  
+            android:layout_height="fill_parent" >  
+        </ListView>  
+  	</com.logpie.android.ui.layout.LogpieRefreshLayout>  
 
 </RelativeLayout>
