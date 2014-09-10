@@ -20,6 +20,9 @@ class SQLStorage
         public LogpieSQLiteOpenHelper(Context context, String name, CursorFactory factory)
         {
             super(context, name, factory, LOGPIE_DB_VERSION);
+
+            LogpieLog.d(TAG, "SQLiteOpenHelper is trying to get the database...");
+            getWritableDatabase();
         }
 
         @Override
@@ -27,18 +30,27 @@ class SQLStorage
         {
             try
             {
+                LogpieLog
+                        .d(TAG,
+                                "Database is not found. SQLiteOpenHelper starts to initialize the database...");
                 if (!isTableExists(db, SQLiteConfig.NAME_CITY_TABLE))
                 {
-                    db.execSQL(SQLiteConfig.SQL_INIT_CITY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_CREATE_CITY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_INSERT_PART_1_CITY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_INSERT_PART_2_CITY_TABLE);
                 }
                 if (!isTableExists(db, SQLiteConfig.NAME_CATEGORY_TABLE))
                 {
-                    db.execSQL(SQLiteConfig.SQL_INIT_CATEGORY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_CREATE_CATEGORY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_CREATE_SUBCATEGORY_TABLE);
                 }
                 db.execSQL(SQLiteConfig.SQL_INIT_USER_TABLE);
                 db.execSQL(SQLiteConfig.SQL_INIT_ORGANIZATION_TABLE);
                 db.execSQL(SQLiteConfig.SQL_INIT_ACTIVITY_TABLE);
                 db.execSQL(SQLiteConfig.SQL_INIT_COMMENT_TABLE);
+
+                LogpieLog.d(TAG, "SQLiteOpenHelper finished database initialization.");
+
             } catch (Exception e)
             {
                 LogpieLog.e(TAG,
@@ -55,29 +67,22 @@ class SQLStorage
 
         private boolean isTableExists(SQLiteDatabase db, String tableName)
         {
-            if (db == null || !db.isOpen())
-            {
-                db = getReadableDatabase();
-            }
-
-            if (!db.isReadOnly())
-            {
-                db.close();
-                db = getReadableDatabase();
-            }
-
+            LogpieLog.d(TAG, "Check the table '" + tableName + "' is existed or not...");
             Cursor cursor = db.rawQuery(
-                    "select DISTINCT tbl_name from sqlite_master where tbl_name = '"
-                            + tableName + "'", null);
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='"
+                            + tableName + "';", null);
             if (cursor != null)
             {
                 if (cursor.getCount() > 0)
                 {
+                    LogpieLog.d(TAG, "The table '" + tableName + "' already exists.");
                     cursor.close();
                     return true;
                 }
                 cursor.close();
             }
+            LogpieLog.d(TAG, "The table '" + tableName
+                    + "' does not exist. Need to create...");
             return false;
         }
     }

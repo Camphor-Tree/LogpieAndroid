@@ -6,9 +6,11 @@ import android.content.Context;
 import com.logpie.android.datastorage.DataStorage;
 import com.logpie.android.datastorage.EncryptedDataStorage;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.util.LogpieLog;
 
 public class LogpieApplication extends Application
 {
+    private static final String TAG = LogpieApplication.class.getName();
     Context mContext;
 
     @Override
@@ -21,6 +23,7 @@ public class LogpieApplication extends Application
 
     private void logpieInit()
     {
+        LogpieLog.d(TAG, "Logpie starts to initialize database and language...");
         EncryptedDataStorage encryptionStorage = EncryptedDataStorage
                 .getInstance(mContext);
         DataStorage Storage = DataStorage.getInstance(mContext);
