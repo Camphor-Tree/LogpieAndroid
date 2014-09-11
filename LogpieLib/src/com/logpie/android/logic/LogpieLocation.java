@@ -1,11 +1,20 @@
 package com.logpie.android.logic;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.logpie.android.gis.GisAPIHelper;
 import com.logpie.android.util.LogpieLog;
 
-public class LogpieLocation
+/**
+ * Make LogpieLocation parcelable, so that it can be pass in the intent.
+ * 
+ * @author yilei
+ * 
+ */
+public class LogpieLocation implements Parcelable
 {
-	private static String TAG = LogpieLocation.class.getName();
+    private static String TAG = LogpieLocation.class.getName();
     private Double mLatitude;
     private Double mLongitude;
     private String mAddress;
@@ -20,10 +29,10 @@ public class LogpieLocation
     {
         this(null, null, address, null);
     }
-    
+
     public LogpieLocation(Double lat, Double lon, String address)
     {
-        this(lat,lon,address,null);
+        this(lat, lon, address, null);
     }
 
     public LogpieLocation(Double lat, Double lon, String address, String city)
@@ -38,11 +47,12 @@ public class LogpieLocation
     {
         mCity = city;
     }
-    
+
     public String getCity()
     {
         return mCity;
     }
+
     /**
      * @return the latitude
      */
@@ -96,14 +106,50 @@ public class LogpieLocation
 
     public String getCurrentCity()
     {
-        if(mLatitude!=null&&mLongitude!=null)
+        if (mLatitude != null && mLongitude != null)
         {
-        	LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", " + "mLongitude");
+            LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", " + "mLongitude");
             return GisAPIHelper.getCityFromLatLon(mLatitude, mLongitude);
         }
         else
         {
             return null;
         }
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    public static final Parcelable.Creator<LogpieLocation> CREATOR = new Parcelable.Creator<LogpieLocation>()
+    {
+        public LogpieLocation createFromParcel(Parcel in)
+        {
+            return new LogpieLocation(in);
+        }
+
+        public LogpieLocation[] newArray(int size)
+        {
+            return new LogpieLocation[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeDouble(mLatitude.doubleValue());
+        dest.writeDouble(mLongitude.doubleValue());
+        dest.writeString(mAddress);
+        dest.writeString(mCity);
+    }
+
+    private LogpieLocation(Parcel in)
+    {
+        mLatitude = Double.valueOf(in.readDouble());
+        mLongitude = Double.valueOf(in.readDouble());
+        mAddress = in.readString();
+        mCity = in.readString();
     }
 }
