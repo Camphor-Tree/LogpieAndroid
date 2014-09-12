@@ -1,20 +1,4 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Logpie applicationh theme. -->
-    <style name="AppBaseTheme" parent="android:style/Theme.Light">
-        
-    </style>
-
-    <!-- Login page theme. -->
-    <style name="LoginTheme" parent="AppBaseTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-    
-    <!-- Title page theme. -->
-    <style name="TitleTheme" parent="AppBaseTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <!-- Single line input style -->
     <style name="SingleInput">
         <item name="android:layout_width">match_parent</item>

@@ -34,6 +34,10 @@
     <string name="navigation_city_mode_cn">同城</string>
     <string name="navigation_city_mode_us">City</string>
     
+    <!-- ActionBar in Activity Detail Page -->
+    <string name="action_bar_string_activity_detail_cn">活动详情</string>
+    <string name="action_bar_string_activity_detail_us">Activty Detail</string>
+    
     <!-- Listview Pull-to-Refresh Header -->
     <string name="pull_to_refresh_cn">下拉可以刷新</string>
     <string name="pull_to_refresh_us">Pull to refresh</string>

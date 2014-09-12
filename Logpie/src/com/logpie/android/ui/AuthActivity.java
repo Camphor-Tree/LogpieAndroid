@@ -14,4 +14,11 @@ public class AuthActivity extends LogpieSingleFragmentActivity
         return new LoginFragment();
     }
 
+    // Auth activity is full screen activity
+    @Override
+    protected String getTitleBarString()
+    {
+        return null;
+    }
+
 }

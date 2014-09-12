@@ -49,6 +49,9 @@ public class LanguageHelper
     public final static String KEY_MONTH = "month";
     public final static String KEY_YEAR = "year";
 
+    // ActionBar String
+    public final static String KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL = "action_bar_string_activity_detail";
+
     /**
      * Initialize the language of Logpie
      */
@@ -109,7 +112,7 @@ public class LanguageHelper
         case KEY_NEARBY:
             return switchLanguage(R.string.navigation_nearby_mode_cn,
                     R.string.navigation_nearby_mode_us);
-            // Header
+            // Pull to refresh Header
         case KEY_PULL_TO_REFRESH:
             return switchLanguage(R.string.pull_to_refresh_cn, R.string.pull_to_refresh_us);
         case KEY_RELEASE_TO_REFRESH:
@@ -134,6 +137,11 @@ public class LanguageHelper
             return switchLanguage(R.string.month_cn, R.string.month_us);
         case KEY_YEAR:
             return switchLanguage(R.string.year_cn, R.string.year_us);
+            // Action Bar String
+            // LogpieActivityDetailActivity
+        case KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL:
+            return switchLanguage(R.string.action_bar_string_activity_detail_cn,
+                    R.string.action_bar_string_activity_detail_us);
         default:
             LogpieLog.d(TAG, "Failed to find the key when setting the language.");
             return -1;

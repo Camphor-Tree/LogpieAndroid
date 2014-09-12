@@ -1,0 +1,245 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityDetailFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.logpie.android.LogpieActivityDetailActivity$LogpieActivityDetailFragment" >
+
+<ScrollView
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_below="@+id/ll_header_detail"
+    android:layout_above="@+id/ll_delete_tag">
+<LinearLayout
+    android:id="@+id/ll_activity_detail"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+	<LinearLayout
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">	
+	    <LinearLayout 
+	        android:orientation="horizontal"
+	        android:layout_width="fill_parent"
+	        android:layout_height="60dp"
+	        android:baselineAligned="false">
+	        <TextView
+	            android:id="@+id/empty"
+	            android:layout_width="15dp"
+	            android:layout_height="40dp"
+	            android:layout_marginTop="20dp"
+	            android:gravity="center"
+	            android:fontFamily="微软雅黑"
+	            android:textSize="16sp"
+	            android:background="@color/Beige"/>
+	        <ImageView 
+	            android:id="@+id/iv_creater_icon"
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_gravity="center"
+	            />
+	        <TextView 
+	            android:id="@+id/tv_creater_name" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="40dp"
+	            android:layout_marginTop="20dp"
+	            android:paddingLeft="5dp"
+	            android:gravity="center_vertical|left"
+	            android:fontFamily="微软雅黑" 
+	            android:text="我来测试7个字" 
+	            android:background="@color/Beige" 
+	            android:textSize="18sp"/>
+	        
+	        <TextView
+	            android:id="@+id/tv_creater_level"
+	            android:layout_width="0dip"
+	            android:layout_weight="1"
+	            android:layout_height="40dp"
+	            android:layout_marginTop="20dp"
+	            android:gravity="left|center_vertical"
+	            android:paddingLeft="10dp"
+	            android:fontFamily="微软雅黑"
+	            android:textSize="16sp"
+	            android:text="Lv.8"
+	            android:textColor="@color/Gold"
+	            android:background="@color/Beige"/>   
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:orientation="horizontal"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content">
+
+	        <TextView 
+	            android:id="@+id/tv_a_description" 
+	            android:layout_width="0dip"
+	            android:layout_weight="1"
+	            android:layout_height="wrap_content"
+	            android:paddingLeft="15dp"
+	            android:paddingTop="5dp"
+	            android:paddingRight="15dp"
+	            android:paddingBottom="5dp"
+	            android:gravity="center_vertical"
+	            android:minLines="3"
+	            android:maxLines="7"
+	            android:fontFamily="微软雅黑" 
+	            android:text="今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧" 
+	            android:background="@color/Beige" 
+	            android:textColor="@color/Gray"
+	            android:textSize="18sp"
+	            android:baselineAligned="false"/>
+	    </LinearLayout>
+	    <LinearLayout 
+	        android:orientation="horizontal"
+	        android:layout_width="fill_parent"
+	        android:layout_height="28dp"
+	        android:baselineAligned="false">
+			<ImageView 
+	            android:layout_width="28dp"
+	            android:layout_height="28dp"
+	            android:layout_gravity="center"
+	            android:layout_marginLeft="5dp"
+	            />
+	        <TextView 
+	            android:id="@+id/tv_a_time" 
+	            android:layout_width="0dip"
+	            android:layout_weight="1"
+	            android:layout_height="28dp"
+	            android:paddingLeft="10dp"
+	            android:gravity="center_vertical|left"
+	            android:lines="1"
+	            android:fontFamily="微软雅黑" 
+	            android:text="2013-06-07 ~ 2013-08-21" 
+	            android:textSize="16sp"/>
+	    </LinearLayout>
+	    <LinearLayout 
+	        android:orientation="horizontal"
+	        android:layout_width="fill_parent"
+	        android:layout_height="28dp">
+			<ImageView 
+	            android:layout_width="28dp"
+	            android:layout_height="28dp"
+	            android:layout_gravity="center"
+	            android:layout_marginLeft="5dp"
+	            />
+	        <TextView 
+	            android:id="@+id/tv_a_location" 
+	            android:layout_width="0dip"
+	            android:layout_weight="1"
+	            android:gravity="center_vertical|left"
+	            android:layout_height="28dp"
+	            android:paddingLeft="10dp"
+	            android:lines="1"
+	            android:fontFamily="微软雅黑" 
+	            android:text="森林公园" 
+	            android:textSize="16sp"/>
+	    </LinearLayout>
+	    <LinearLayout 
+	        android:orientation="horizontal"
+	        android:layout_width="fill_parent"
+	        android:gravity="center_vertical|center_horizontal"
+	        android:paddingLeft="5dp"
+	        android:layout_height="wrap_content">
+
+			<ImageView
+			    android:layout_width="28dp"
+			    android:layout_height="28dp"
+			    android:layout_gravity="center"
+			    android:layout_marginBottom="1dp"
+			    android:layout_marginTop="1dp"/>
+
+	        <TextView 
+	            android:id="@+id/tv_count_people" 
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            android:gravity="center"
+	            android:layout_weight="1"
+	            android:lines="1"
+	            android:fontFamily="微软雅黑" 
+	            android:text="50/70" 
+	            android:textSize="16sp"/>
+
+	        <ImageButton
+	            android:id="@+id/ib_like"
+	            android:layout_width="50dp"
+	            android:layout_height="30dp"
+	            android:layout_weight="1"
+	            android:alpha="0.5"
+	            android:background="@null"
+	            android:layout_gravity="center"/>
+
+	        <TextView
+	            android:id="@+id/tv_count_like"
+	            android:layout_width="wrap_content"
+	            android:layout_weight="1"
+	            android:layout_height="fill_parent"
+	            android:fontFamily="微软雅黑"
+	            android:gravity="center"
+	            android:lines="1"
+	            android:text="50"
+	            android:textSize="16sp" />
+	        
+	        <ImageButton
+	            android:id="@+id/ib_join_activity"
+	            android:layout_width="80dp"
+	            android:layout_height="35dp"
+	            android:layout_weight="1"
+	            android:background="@null"
+	            android:alpha="0.5"
+	            android:layout_gravity="right"
+	             />
+	    </LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout
+	    android:id="@+id/ll_comments"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+
+		<ProgressBar
+		    android:id="@+id/pb_comment"
+		    style="?android:attr/progressBarStyleLarge"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center" />
+
+	</LinearLayout>
+</LinearLayout>
+
+	
+</ScrollView>
+    <LinearLayout
+        android:id="@+id/ll_delete_tag"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:padding="5dp"
+		android:layout_alignParentBottom="true"
+		android:gravity="center"
+        android:orientation="horizontal" >
+
+ 		<EditText
+ 		    android:id="@+id/et_comment"
+ 		    android:layout_width="0dip"
+ 		    android:layout_weight="1"
+ 		    android:layout_height="45dp"
+ 		    android:paddingLeft="7dp"
+ 		    android:hint="请输入您的评论"
+ 		    android:maxLines="1"
+ 		    android:scrollHorizontally="true" />
+
+
+ 		<Button 
+ 		    android:id="@+id/btn_comment"
+ 		    android:layout_width="70dp"
+ 		    android:layout_height="45dp" 
+ 		    android:background="@null"
+ 		    android:textSize="21sp"
+ 		    android:text="评论"
+ 		    android:textColor="#565656"
+ 		    />
+    </LinearLayout>
+</RelativeLayout>
+
+
