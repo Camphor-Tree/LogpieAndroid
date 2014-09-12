@@ -1,0 +1,12 @@
+Unstaged changes after reset:
+M	Logpie/.classpath
+M	Logpie/res/layout/activity_auth.xml
+D	Logpie/res/layout/activity_main.xml
+M	Logpie/src/com/logpie/android/ui/ActivityListFragment.java
+M	Logpie/src/com/logpie/android/ui/base/LogpieSingleFragmentActivity.java
+M	Logpie/src/com/logpie/android/ui/layout/LogpieRefreshLayout.java
+M	LogpieLib/src/com/logpie/android/connection/EndPoint.java
+M	LogpieLib/src/com/logpie/android/connection/GenericConnection.java
+M	LogpieLib/src/com/logpie/android/datastorage/SQLiteConfig.java
+M	LogpieTestAPK/.classpath
+M	LogpieUnitTests/.classpath

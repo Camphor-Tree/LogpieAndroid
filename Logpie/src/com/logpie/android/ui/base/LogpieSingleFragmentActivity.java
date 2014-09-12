@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 
-import com.logpie.android.R;
 import com.logpie.android.util.LogpieLog;
 
 public abstract class LogpieSingleFragmentActivity extends ActionBarActivity
@@ -29,18 +28,17 @@ public abstract class LogpieSingleFragmentActivity extends ActionBarActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        // Set the title bar string
         handleTitleBarString();
-        setContentView(R.layout.activity_main);
+        // setContentView(R.layout.activity_auth);
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.container);
+        // Fragment fragment = fm.findFragmentById(R.id.container);
 
-        if (fragment == null)
-        {
-            fragment = createFragment();
-            fm.beginTransaction().add(R.id.container, fragment).commit();
-        }
+        // if (fragment == null)
+        // {
+        // fragment = createFragment();
+        // fm.beginTransaction().add(R.id.container, fragment).commit();
+        // }
     }
 
     private void handleTitleBarString()

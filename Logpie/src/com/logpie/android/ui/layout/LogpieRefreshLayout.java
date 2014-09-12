@@ -55,18 +55,25 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     public static final int INIT_SCROLL_SPEED = 0;
 
     /**
-     * ��ʼ���ٶ� The initial accelerate speed;
+     * <<<<<<< HEAD ��ʼ���ٶ� The initial accelerate speed; ======= 初始加速度 The
+     * initial accelerate speed; >>>>>>> add activity list fragment but still
+     * has some bugs in R file
      */
     public static final int INIT_ACCELERATE_SPEED = 8;
 
     /**
-     * �ϴθ���ʱ����ַ�����������ΪSharedPreferences�ļ�ֵ
+     * <<<<<<< HEAD �ϴθ���ʱ����ַ�����������ΪSharedPreferences�ļ�ֵ =======
+     * 上次更新时间的字符串常量，用于作为SharedPreferences的键值 >>>>>>> add activity list fragment
+     * but still has some bugs in R file
      */
     private static final String UPDATED_AT = "updated_at";
 
     /**
-     * ����ˢ�µļ�������ʹ������ˢ�µĵط�Ӧ��ע��˼���������ȡˢ�»ص��� The callback to be
-     * called when doing refresh.
+     * <<<<<<< HEAD ����ˢ�µļ�������ʹ������ˢ�µĵط�Ӧ��ע��˼���������ȡˢ�»ص��� The
+     * callback to be called when doing refresh. =======
+     * 下拉刷新的监听器，使用下拉刷新的地方应该注册此监听器来获取刷新回调。 The callback to be called when doing
+     * refresh. >>>>>>> add activity list fragment but still has some bugs in R
+     * file
      */
     public interface PullToRefreshCallback
     {
@@ -80,93 +87,117 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ����ˢ�µĻص��ӿ�
+     * <<<<<<< HEAD ����ˢ�µĻص��ӿ� ======= 下拉刷新的回调接口 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private PullToRefreshCallback mRefreshCallback;
 
     /**
-     * ���ڴ洢�ϴθ���ʱ��
+     * <<<<<<< HEAD ���ڴ洢�ϴθ���ʱ�� ======= 用于存储上次更新时间 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private LogpieSystemSetting mSystemSetting;
 
     /**
-     * ����ͷ��View
+     * <<<<<<< HEAD ����ͷ��View ======= 下拉头的View >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private View mHeader;
 
     /**
-     * ��Ҫȥ����ˢ�µ�ListView
+     * <<<<<<< HEAD ��Ҫȥ����ˢ�µ�ListView ======= 需要去下拉刷新的ListView >>>>>>> add
+     * activity list fragment but still has some bugs in R file
      */
     private ListView mListView;
 
     /**
-     * ˢ��ʱ��ʾ�Ľ����
+     * <<<<<<< HEAD ˢ��ʱ��ʾ�Ľ���� ======= 刷新时显示的进度条 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private ProgressBar mProgressBar;
 
     /**
-     * ָʾ�������ͷŵļ�ͷ
+     * <<<<<<< HEAD ָʾ�������ͷŵļ�ͷ ======= 指示下拉和释放的箭头 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private ImageView mArrow;
 
     /**
-     * ָʾ�������ͷŵ���������
+     * <<<<<<< HEAD ָʾ�������ͷŵ��������� ======= 指示下拉和释放的文字描述 >>>>>>> add
+     * activity list fragment but still has some bugs in R file
      */
     private TextView mDescriptionTextView;
 
     /**
-     * �ϴθ���ʱ�����������
+     * <<<<<<< HEAD �ϴθ���ʱ����������� ======= 上次更新时间的文字描述 >>>>>>> add activity
+     * list fragment but still has some bugs in R file
      */
     private TextView mUpdateAtTextView;
 
     /**
-     * ����ͷ�Ĳ��ֲ���
+     * <<<<<<< HEAD ����ͷ�Ĳ��ֲ��� ======= 下拉头的布局参数 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private MarginLayoutParams mHeaderLayoutParams;
 
     /**
-     * �ϴθ���ʱ��ĺ���ֵ
+     * <<<<<<< HEAD �ϴθ���ʱ��ĺ���ֵ ======= 上次更新时间的毫秒值 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private long mLastUpdateTime;
 
     /**
-     * Ϊ�˷�ֹ��ͬ���������ˢ�����ϴθ���ʱ���ϻ����г�ͻ��ʹ��id�������
+     * <<<<<<< HEAD Ϊ�˷�ֹ��ͬ���������ˢ�����ϴθ���ʱ���ϻ����г�ͻ��ʹ��id�������
+     * ======= 为了防止不同界面的下拉刷新在上次更新时间上互相有冲突，使用id来做区分 >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private int mId = -1;
 
     /**
-     * ����ͷ�ĸ߶�
+     * <<<<<<< HEAD ����ͷ�ĸ߶� ======= 下拉头的高度 >>>>>>> add activity list fragment
+     * but still has some bugs in R file
      */
     private int mHideHeaderHeight;
 
     /**
-     * ��ǰ����ʲô״̬����ѡֵ��STATUS_PULL_TO_REFRESH, STATUS_RELEASE_TO_REFRESH,
-     * STATUS_REFRESHING �� STATUS_REFRESH_FINISHED
+     * <<<<<<< HEAD ��ǰ����ʲô״̬����ѡֵ��STATUS_PULL_TO_REFRESH,
+     * STATUS_RELEASE_TO_REFRESH, STATUS_REFRESHING �� STATUS_REFRESH_FINISHED
+     * ======= 当前处理什么状态，可选值有STATUS_PULL_TO_REFRESH, STATUS_RELEASE_TO_REFRESH,
+     * STATUS_REFRESHING 和 STATUS_REFRESH_FINISHED >>>>>>> add activity list
+     * fragment but still has some bugs in R file
      */
     private int currentStatus = STATUS_REFRESH_FINISHED;;
 
     /**
-     * ��¼��һ�ε�״̬��ʲô����������ظ�����
+     * <<<<<<< HEAD ��¼��һ�ε�״̬��ʲô����������ظ����� ======= 记录上一次的状态是什么，避免进行重复操作
+     * >>>>>>> add activity list fragment but still has some bugs in R file
      */
     private int mLastStatus = currentStatus;
 
     /**
-     * ��ָ����ʱ����Ļ�����
+     * <<<<<<< HEAD ��ָ����ʱ����Ļ����� ======= 手指按下时的屏幕纵坐标 >>>>>>> add activity
+     * list fragment but still has some bugs in R file
      */
     private float mYwhenClickDown;
 
     /**
-     * �ڱ��ж�Ϊ����֮ǰ�û���ָ�����ƶ������ֵ��
+     * <<<<<<< HEAD �ڱ��ж�Ϊ����֮ǰ�û���ָ�����ƶ������ֵ�� =======
+     * 在被判定为滚动之前用户手指可以移动的最大值。 >>>>>>> add activity list fragment but still has
+     * some bugs in R file
      */
     private int mTouchSlop;
 
     /**
-     * �Ƿ��Ѽ��ع�һ��layout������onLayout�еĳ�ʼ��ֻ�����һ��
+     * <<<<<<< HEAD �Ƿ��Ѽ��ع�һ��layout������onLayout�еĳ�ʼ��ֻ�����һ�� =======
+     * 是否已加载过一次layout，这里onLayout中的初始化只需加载一次 >>>>>>> add activity list fragment
+     * but still has some bugs in R file
      */
     private boolean mLoadOnce;
 
     /**
-     * ��ǰ�Ƿ����������ֻ��ListView������ͷ��ʱ�����������
+     * <<<<<<< HEAD ��ǰ�Ƿ����������ֻ��ListView������ͷ��ʱ����������� =======
+     * 当前是否可以下拉，只有ListView滚动到头的时候才允许下拉 >>>>>>> add activity list fragment but
+     * still has some bugs in R file
      */
     private boolean mAbleToPull;
 
@@ -179,7 +210,10 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
+     * <<<<<<< HEAD
      * ����һЩ�ؼ��Եĳ�ʼ�����������磺������ͷ����ƫ�ƽ������أ���ListViewע��touch�¼���
+     * ======= 进行一些关键性的初始化操作，比如：将下拉头向上偏移进行隐藏，给ListView注册touch事件。 >>>>>>> add
+     * activity list fragment but still has some bugs in R file
      * 
      * Do the init operation, such as: hide the Header view, register the
      * onTouchListener()
@@ -205,8 +239,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ��ListView������ʱ���ã����д����˸�������ˢ�µľ����߼��� Triggered when the
-     * ListView is touched. This method will handle all the detail logic.
+     * 当ListView被触摸时调用，其中处理了各种下拉刷新的具体逻辑。 Triggered when the ListView is touched.
+     * This method will handle all the detail logic.
      */
     @Override
     public boolean onTouch(View v, MotionEvent event)
@@ -223,7 +257,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             case MotionEvent.ACTION_MOVE:
                 float yMove = event.getRawY();
                 int distance = (int) (yMove - mYwhenClickDown);
-                // �����ָ���»�״̬����������ͷ����ȫ���صģ������������¼�
+                // 如果手指是下滑状态，并且下拉头是完全隐藏的，就屏蔽下拉事件
                 // If the finger is dragging down and the header is totally
                 // hidden, then just ignore the drag down event
                 if (distance <= 0 && mHeaderLayoutParams.topMargin <= mHideHeaderHeight)
@@ -250,7 +284,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                         // drag down more.
                         currentStatus = STATUS_PULL_TO_REFRESH;
                     }
-                    // ͨ��ƫ������ͷ��topMarginֵ����ʵ������Ч��
+                    // 通过偏移下拉头的topMargin值，来实现下拉效果
                     // set the drag distance as 1/2 to achieve the dragging
                     // effect.
                     mHeaderLayoutParams.topMargin = (distance / 2) + mHideHeaderHeight;
@@ -262,7 +296,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             default:
                 if (currentStatus == STATUS_RELEASE_TO_REFRESH)
                 {
-                    // ����ʱ������ͷ�����ˢ��״̬����ȥ��������ˢ�µ�����
+                    // 松手时如果是释放立即刷新状态，就去调用正在刷新的任务
                     // If the current status is "Release to refresh", then try
                     // to call refreshTask.
                     // TODO: Add refersh Task
@@ -271,21 +305,21 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 }
                 else if (currentStatus == STATUS_PULL_TO_REFRESH)
                 {
-                    // ����ʱ���������״̬����ȥ������������ͷ������
+                    // 松手时如果是下拉状态，就去调用隐藏下拉头的任务
                     // If the current status is "Pull to refresh", then try to
                     // just hide the header
                     new HideHeaderTask().execute();
                 }
                 break;
             }
-            // ʱ�̼ǵø�������ͷ�е���Ϣ
+            // 时刻记得更新下拉头中的信息
             // Always remember to update the header view (switch down the arrow,
             // etc)
             if (currentStatus == STATUS_PULL_TO_REFRESH
                     || currentStatus == STATUS_RELEASE_TO_REFRESH)
             {
                 updateHeaderView();
-                // ��ǰ�����������ͷ�״̬��Ҫ��ListViewʧȥ���㣬���򱻵������һ���һֱ����ѡ��״̬
+                // 当前正处于下拉或释放状态，要让ListView失去焦点，否则被点击的那一项会一直处于选中状态
                 // If the current status is pull to refresh or release to
                 // refresh, need to let ListView loss the focus, otherwise, the
                 // item will be always in chosen state.
@@ -293,7 +327,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 mListView.setFocusable(false);
                 mListView.setFocusableInTouchMode(false);
                 mLastStatus = currentStatus;
-                // ��ǰ�����������ͷ�״̬��ͨ���true���ε�ListView�Ĺ����¼�
+
+                // 当前正处于下拉或释放状态，通过返回true屏蔽掉ListView的滚动事件
                 // Should return true to ignore the ListView's scroll event.
                 return true;
             }
@@ -302,15 +337,15 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ������ˢ�¿ؼ�ע��һ���������� Set the pullToRefresh callback.
+     * 给下拉刷新控件注册一个监听器。 Set the pullToRefresh callback.
      * 
      * @param listener
-     *            ��������ʵ�֡� Implementation of the calbackk
+     *            监听器的实现。 Implementation of the calbackk
      * @param id
-     *            Ϊ�˷�ֹ��ͬ���������ˢ�����ϴθ���ʱ���ϻ����г�ͻ��
-     *            �벻ͬ������ע������ˢ�¼�����ʱһ��Ҫ���벻ͬ��id�� To avoid multiple
-     *            refresh layout's updateAtTimes' confliction, set the different
-     *            id. The id is used to build the key of the storage.
+     *            为了防止不同界面的下拉刷新在上次更新时间上互相有冲突， 请不同界面在注册下拉刷新监听器时一定要传入不同的id。 To
+     *            avoid multiple refresh layout's updateAtTimes' confliction,
+     *            set the different id. The id is used to build the key of the
+     *            storage.
      */
     public void setPullToRefreshCallback(PullToRefreshCallback callback, int id)
     {
@@ -319,7 +354,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * �����е�ˢ���߼���ɺ󣬼�¼����һ�£��������ListView��һֱ��������ˢ��״̬��
+     * 当所有的刷新逻辑完成后，记录调用一下，否则你的ListView将一直处于正在刷新状态。
      * 
      * When finish the refresh logic, should call this to set back the status
      * and record the last refresh time
@@ -333,9 +368,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ��ݵ�ǰListView�Ĺ���״̬���趨 {@link #ableToPull}
-     * ��ֵ��ÿ�ζ���Ҫ��onTouch�е�һ��ִ�У���������жϳ���ǰӦ���ǹ���ListView������Ӧ�ý���
-     * ������
+     * 根据当前ListView的滚动状态来设定 {@link #ableToPull}
+     * 的值，每次都需要在onTouch中第一个执行，这样可以判断出当前应该是滚动ListView，还是应该进行下拉。
      * 
      * According to current ListView's state to set the mAbleToPull. This should
      * be called firstly in callback method onTouch(), then it can judge it
@@ -355,7 +389,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 {
                     mYwhenClickDown = event.getRawY();
                 }
-                // ����׸�Ԫ�ص��ϱ�Ե�����븸����ֵΪ0����˵��ListView���������������ʱӦ����������ˢ��
+
+                // 如果首个元素的上边缘，距离父布局值为0，就说明ListView滚动到了最顶部，此时应该允许下拉刷新
                 // If the first element's top margin is 0 distance to the parent
                 // layout, then it means that the ListView is scroll to the top.
                 // Current state should be able to pull to refresh.
@@ -373,13 +408,13 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
         }
         else
         {
-            // ���ListView��û��Ԫ�أ�ҲӦ����������ˢ��
+            // 如果ListView中没有元素，也应该允许下拉刷新
             mAbleToPull = true;
         }
     }
 
     /**
-     * ��������ͷ�е���Ϣ�� Refresh the header information.
+     * 更新下拉头中的信息。 Refresh the header information.
      */
     private void updateHeaderView()
     {
@@ -403,8 +438,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             }
             else if (currentStatus == STATUS_REFRESHING)
             {
-                mDescriptionTextView.setText(LanguageHelper.getId(LanguageHelper.KEY_REFRESHING,
-                        getContext()));
+                mDescriptionTextView.setText(LanguageHelper.getId(
+                        LanguageHelper.KEY_REFRESHING, getContext()));
                 mProgressBar.setVisibility(View.VISIBLE);
                 mArrow.clearAnimation();
                 mArrow.setVisibility(View.GONE);
@@ -414,8 +449,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ��ݵ�ǰ��״̬����ת��ͷ�� Based ont the current state to determine how to
-     * switch down the arrow.
+     * 根据当前的状态来旋转箭头。 Based ont the current state to determine how to switch down
+     * the arrow.
      */
     private void rotateArrow()
     {
@@ -433,7 +468,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             fromDegrees = 0f;
             toDegrees = 180f;
         }
-        RotateAnimation animation = new RotateAnimation(fromDegrees, toDegrees, pivotX, pivotY);
+        RotateAnimation animation = new RotateAnimation(fromDegrees, toDegrees, pivotX,
+                pivotY);
         animation.setDuration(100);
         animation.setFillAfter(true);
         mArrow.startAnimation(animation);
@@ -443,7 +479,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     {
         mSystemSetting = LogpieSystemSetting.getInstance(context);
         // Attach the refresh header into the view.
-        mHeader = LayoutInflater.from(context).inflate(R.layout.layout_refresh_header, null, true);
+        mHeader = LayoutInflater.from(context).inflate(R.layout.layout_refresh_header,
+                null, true);
         mProgressBar = (ProgressBar) mHeader.findViewById(R.id.progress_bar);
         mArrow = (ImageView) mHeader.findViewById(R.id.arrow);
         mDescriptionTextView = (TextView) mHeader.findViewById(R.id.description);
@@ -458,8 +495,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     private void setUpUpdateAtTextView(Context context)
     {
         long lastUpdateTime;
-        String lastUpdateTimeString = LogpieSystemSetting.getInstance(context).getSystemSetting(
-                UPDATED_AT + mId);
+        String lastUpdateTimeString = LogpieSystemSetting.getInstance(context)
+                .getSystemSetting(UPDATED_AT + mId);
         // If never update, set default to -1
         if (lastUpdateTimeString == null)
         {
@@ -469,7 +506,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
         {
             lastUpdateTime = Long.valueOf(lastUpdateTimeString);
         }
-        mUpdateAtTextView.setText(TimeHelper.getElapsedTimeString(lastUpdateTime, context));
+        mUpdateAtTextView.setText(TimeHelper
+                .getElapsedTimeString(lastUpdateTime, context));
     }
 
     class HideHeaderTask extends AsyncTask<Void, Integer, Integer>
@@ -518,7 +556,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ����ˢ�µ������ڴ������л�ȥ�ص�ע�����������ˢ�¼�������
+     * 正在刷新的任务，在此任务中会去回调注册进来的下拉刷新监听器。
      * 
      * The refreshing task. This task will call the callback registered in this
      * layout.
@@ -544,7 +582,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 // More approaching the top margin, then reduce the
                 // accelerate_speed, but the speed should still increase.
                 // Note: the speed is negative number
-                speed = speed - (mHeaderLayoutParams.topMargin / topMargin) * INIT_ACCELERATE_SPEED;
+                speed = speed - (mHeaderLayoutParams.topMargin / topMargin)
+                        * INIT_ACCELERATE_SPEED;
                 sleep(10);
             }
             currentStatus = STATUS_REFRESHING;
@@ -574,12 +613,12 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ʹ��ǰ�߳�˯��ָ���ĺ�����
+     * 使当前线程睡眠指定的毫秒数。
      * 
      * Make the current thread to sleep, the time unit is milli-second
      * 
      * @param time
-     *            ָ����ǰ�߳�˯�߶�ã��Ժ���Ϊ��λ
+     *            指定当前线程睡眠多久，以毫秒为单位
      */
     private void sleep(int time)
     {

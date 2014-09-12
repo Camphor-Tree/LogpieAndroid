@@ -141,14 +141,16 @@ public class GenericConnection
         } catch (ThreadException e)
         {
             LogpieLog.e(TAG, "Thread Exception when make service call");
-            handleCallback(false, "Thread Exception when make service call", callbackFuture);
+            handleCallback(false, "Thread Exception when make service call",
+                    callbackFuture);
             e.printStackTrace();
         }
 
         return callbackFuture;
     }
 
-    private LogpieCallbackFuture syncSendDataAndGetResult(LogpieCallbackFuture callbackFuture)
+    private LogpieCallbackFuture syncSendDataAndGetResult(
+            LogpieCallbackFuture callbackFuture)
     {
         try
         {
@@ -156,7 +158,8 @@ public class GenericConnection
         } catch (JSONException e1)
         {
             // Do nothing if cannot add requestID
-            LogpieLog.e(TAG, "JSONException when putting request_id. Putting empty request_id");
+            LogpieLog.e(TAG,
+                    "JSONException when putting request_id. Putting empty request_id");
         }
         String data = mRequestData.toString();
         if (data == null)
@@ -179,7 +182,8 @@ public class GenericConnection
             e.printStackTrace();
             LogpieLog.e(TAG, "geOutputStream occured error");
 
-            handleCallback(false, "IOException when trying to output the data", callbackFuture);
+            handleCallback(false, "IOException when trying to output the data",
+                    callbackFuture);
             return callbackFuture;
         } finally
         {
@@ -206,37 +210,45 @@ public class GenericConnection
                 if (mServiceURL.isDoInput())
                 {
                     // read the response data from server.
-                    mResponseString = inputStringReader(mHttpURLConnection.getInputStream());
-                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.mUrl + " is: "
-                            + mResponseString);
+                    mResponseString = inputStringReader(mHttpURLConnection
+                            .getInputStream());
+                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.mUrl
+                            + " is: " + mResponseString);
                     handleCallbackWithResponseData(mResponseString, callbackFuture);
                 }
                 else
                 {
-                    handleCallback(true, "succesfully sending data to server", callbackFuture);
-                    LogpieLog.i(TAG, "successful sending data to: " + mServiceURL.getServiceName()
-                            + "<--->hitting url:" + mServiceURL.getURL().toString());
+                    handleCallback(true, "succesfully sending data to server",
+                            callbackFuture);
+                    LogpieLog.i(TAG,
+                            "successful sending data to: " + mServiceURL.getServiceName()
+                                    + "<--->hitting url:"
+                                    + mServiceURL.getURL().toString());
                 }
             }
             else if (responsecode >= 300 && responsecode < 400)
             {
-                handleCallback(false, "redirection happen when sending data to server. error code:"
-                        + responsecode, callbackFuture);
-                LogpieLog.e(TAG, "redirection happen when sending data to server. error code:"
-                        + responsecode);
+                handleCallback(false,
+                        "redirection happen when sending data to server. error code:"
+                                + responsecode, callbackFuture);
+                LogpieLog.e(TAG,
+                        "redirection happen when sending data to server. error code:"
+                                + responsecode);
             }
             else if (responsecode >= 400 && responsecode < 500)
             {
                 handleCallback(false,
                         "client error happen when sending data to server. error code:"
                                 + responsecode, callbackFuture);
-                LogpieLog.e(TAG, "client error happen when sending data to server. error code:"
-                        + responsecode);
+                LogpieLog.e(TAG,
+                        "client error happen when sending data to server. error code:"
+                                + responsecode);
             }
             else if (responsecode >= 500)
             {
-                handleCallback(false, "server error when sending data to server. error code:"
-                        + responsecode, callbackFuture);
+                handleCallback(false,
+                        "server error when sending data to server. error code:"
+                                + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "server error when sending data to server. error code:"
                         + responsecode);
             }
@@ -245,19 +257,22 @@ public class GenericConnection
                 handleCallback(false,
                         "no valid response code when sending data to server. error code:"
                                 + responsecode, callbackFuture);
-                LogpieLog.e(TAG, "no valid response code when sending data to server. error code:"
-                        + responsecode);
+                LogpieLog.e(TAG,
+                        "no valid response code when sending data to server. error code:"
+                                + responsecode);
             }
             else
             {
-                handleCallback(false, "unknown error when sending data to server. error code:"
-                        + responsecode, callbackFuture);
+                handleCallback(false,
+                        "unknown error when sending data to server. error code:"
+                                + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "unknown error when sending data to server. error code:"
                         + responsecode);
             }
         } catch (IOException e)
         {
-            handleCallback(false, "IOException when sending data to server and getresponseCode",
+            handleCallback(false,
+                    "IOException when sending data to server and getresponseCode",
                     callbackFuture);
             e.printStackTrace();
         }
