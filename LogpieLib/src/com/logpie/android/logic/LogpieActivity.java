@@ -21,18 +21,28 @@ public class LogpieActivity implements Parcelable
     private String mStartTime;
     private String mEndTime;
     private int mCountLike;
+    private int mCountDislike;
+    private List<Comment> mComments;
 
     public int getmCountLike()
     {
         return mCountLike;
     }
 
-    public void setmCountLike(int mCountLike)
+    public void setmCountLike(int countLike)
     {
-        this.mCountLike = mCountLike;
+        this.mCountLike = countLike;
     }
 
-    private List<Comment> mComments;
+    public int getmCountDislike()
+    {
+        return mCountDislike;
+    }
+
+    public void setmCountDislike(int countDislike)
+    {
+        this.mCountDislike = countDislike;
+    }
 
     public String getID()
     {
