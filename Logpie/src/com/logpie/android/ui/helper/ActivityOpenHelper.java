@@ -3,6 +3,7 @@ package com.logpie.android.ui.helper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 
 import com.logpie.android.util.LogpieLog;
 
@@ -10,9 +11,25 @@ public class ActivityOpenHelper
 {
     private static final String TAG = ActivityOpenHelper.class.getName();
 
-    public static void openActivity(Activity activity, Class<? extends Activity> activityClass)
+    public static void openActivityAndPassParameter(final Activity activity,
+            final Class<? extends Activity> activityClass, final String key,
+            final Parcelable parameter)
     {
-        openActivityNormally(activity, activityClass);
+        openActivityNormally(activity, activityClass, key, parameter);
+    }
+
+    public static void openActivityAndPassParameterAndFinishPreviousActivity(
+            final Activity activity, final Class<? extends Activity> activityClass,
+            final String key, final Parcelable parameter)
+    {
+        openActivityNormally(activity, activityClass, key, parameter);
+        activity.finish();
+    }
+
+    public static void openActivity(final Activity activity,
+            final Class<? extends Activity> activityClass)
+    {
+        openActivityNormally(activity, activityClass, null, null);
     }
 
     /**
@@ -26,12 +43,13 @@ public class ActivityOpenHelper
     public static void openActivityAndFinishPreviousActivity(Activity activity,
             Class<? extends Activity> activityClass)
     {
-        openActivityNormally(activity, activityClass);
+        openActivityNormally(activity, activityClass, null, null);
         activity.finish();
     }
 
-    private static void openActivityNormally(Activity activity,
-            Class<? extends Activity> activityClass)
+    private static void openActivityNormally(final Activity activity,
+            final Class<? extends Activity> activityClass, final String key,
+            final Parcelable parameter)
     {
         if (activity == null || activityClass == null)
         {
@@ -40,6 +58,10 @@ public class ActivityOpenHelper
         }
 
         Intent startActivityIntent = getOpenActivityIntent(activity, activityClass);
+        if (key != null)
+        {
+            startActivityIntent.putExtra(key, parameter);
+        }
         activity.startActivity(startActivityIntent);
     }
 

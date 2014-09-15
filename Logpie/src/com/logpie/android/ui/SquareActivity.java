@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.logpie.android.R;
 import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.LogpieAccount;
+import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.operation.BaseSquareMode;
 import com.logpie.android.ui.operation.CategoryMode;
 import com.logpie.android.ui.operation.CityMode;
@@ -43,24 +44,24 @@ public class SquareActivity extends ActionBarActivity
         LogpieAccount account = AuthManager.getInstance(getApplicationContext())
                 .getCurrentAccount();
 
-        // if (account == null)
-        // {
-        // ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
-        // AuthActivity.class);
-        // }
-        // else
-        //
-        // {
-        LogpieLog.d(TAG, "Getting the action bar...");
-        mActionBar = getSupportActionBar();
+        if (account == null)
+        {
+            ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
+                    AuthActivity.class);
+        }
+        else
 
-        // Setup the navigation.
-        setUpNavigationTab(mActionBar);
-        LogpieLog.d(TAG, "Finished setting navigation bar.");
+        {
+            LogpieLog.d(TAG, "Getting the action bar...");
+            mActionBar = getSupportActionBar();
 
-        // Notice that setContentView() is not used, because we use the root
-        // android.R.id.content as the container for each fragment
-        // }
+            // Setup the navigation.
+            setUpNavigationTab(mActionBar);
+            LogpieLog.d(TAG, "Finished setting navigation bar.");
+
+            // Notice that setContentView() is not used, because we use the root
+            // android.R.id.content as the container for each fragment
+        }
     }
 
     @Override

@@ -14,7 +14,9 @@ import android.os.Parcelable;
  */
 public class LogpieActivity implements Parcelable
 {
-    private String mID;
+    private String mActivityID;
+    private String mUserID;
+    private String mUserName;
     private String mDescription;
     private LogpieLocation mLocation;
     // TODO combine the time into one Period class
@@ -24,34 +26,99 @@ public class LogpieActivity implements Parcelable
     private int mCountDislike;
     private List<Comment> mComments;
 
-    public int getmCountLike()
+    /**
+     * This is used when create an activity
+     * 
+     * @param id
+     * @param userName
+     * @param description
+     * @param location
+     * @param startTime
+     * @param endTime
+     */
+    public LogpieActivity(String userName, String description, LogpieLocation location,
+            String startTime, String endTime)
+    {
+        mUserName = userName;
+        mDescription = description;
+        mLocation = location;
+        // TODO combine the time into one Period clss
+        this.mStartTime = startTime;
+        this.mEndTime = endTime;
+    }
+
+    /**
+     * This is used when get an activity from Server
+     * 
+     * @param id
+     * @param userName
+     * @param description
+     * @param location
+     * @param startTime
+     * @param endTime
+     */
+    public LogpieActivity(String id, String userName, String description, LogpieLocation location,
+            String startTime, String endTime, int countLike, int countDislike)
+    {
+        mActivityID = id;
+        mUserName = userName;
+        mDescription = description;
+        mLocation = location;
+        // TODO combine the time into one Period clss
+        mStartTime = startTime;
+        mEndTime = endTime;
+        mCountLike = countLike;
+        mCountDislike = countDislike;
+    }
+
+    public void setUserId(String userId)
+    {
+        mUserID = userId;
+    }
+
+    public String getUserID()
+    {
+        return mUserID;
+    }
+
+    public void setUserName(String userName)
+    {
+        mUserName = userName;
+    }
+
+    public String getUserName()
+    {
+        return mUserName;
+    }
+
+    public int getCountLike()
     {
         return mCountLike;
     }
 
-    public void setmCountLike(int countLike)
+    public void setCountLike(int countLike)
     {
         this.mCountLike = countLike;
     }
 
-    public int getmCountDislike()
+    public int getCountDislike()
     {
         return mCountDislike;
     }
 
-    public void setmCountDislike(int countDislike)
+    public void setCountDislike(int countDislike)
     {
         this.mCountDislike = countDislike;
     }
 
     public String getID()
     {
-        return mID;
+        return mActivityID;
     }
 
     public void setID(String iD)
     {
-        mID = iD;
+        mActivityID = iD;
     }
 
     public String getDescription()
@@ -104,18 +171,6 @@ public class LogpieActivity implements Parcelable
         mComments = comments;
     }
 
-    public LogpieActivity(String id, String description, LogpieLocation location, String startTime,
-            String endTime, List<Comment> comments)
-    {
-        mID = id;
-        mDescription = description;
-        mLocation = location;
-        // TODO combine the time into one Period clss
-        this.mStartTime = startTime;
-        this.mEndTime = endTime;
-        mComments = comments;
-    }
-
     @Override
     public int describeContents()
     {
@@ -138,22 +193,28 @@ public class LogpieActivity implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(mID);
+        dest.writeString(mActivityID);
+        dest.writeString(mUserID);
+        dest.writeString(mUserName);
         dest.writeString(mDescription);
         dest.writeString(mStartTime);
         dest.writeString(mEndTime);
         dest.writeInt(mCountLike);
+        dest.writeInt(mCountDislike);
         dest.writeParcelable(mLocation, flags);
 
     }
 
     private LogpieActivity(Parcel in)
     {
-        mID = in.readString();
+        mActivityID = in.readString();
+        mUserID = in.readString();
+        mUserName = in.readString();
         mDescription = in.readString();
         mStartTime = in.readString();
         mEndTime = in.readString();
         mCountLike = in.readInt();
+        mCountDislike = in.readInt();
         mLocation = in.readParcelable(getClass().getClassLoader());
 
     }
