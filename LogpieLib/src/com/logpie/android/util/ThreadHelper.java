@@ -7,6 +7,7 @@ import com.logpie.android.exception.ThreadException;
 
 public final class ThreadHelper
 {
+    private static final String TAG = ThreadHelper.class.getName();
     private static ThreadPoolManager sThreadPoolManager = new ThreadPoolManager();
 
     public static boolean isRunningOnMainThread()
@@ -14,10 +15,13 @@ public final class ThreadHelper
         return Looper.getMainLooper() != null && Looper.myLooper() == Looper.getMainLooper();
     }
 
-    public static void throwIfMainThread() throws ThreadException
+    public static void throwIfMainThread()
     {
         if (isRunningOnMainThread())
-            throw new ThreadException("Cannot run on main thread.");
+        {
+            LogpieLog.e(TAG, "Error! This method is not allowed to be called on MainThread!");
+            throw new IllegalStateException("You cannot call this method on MainThread!");
+        }
     }
 
     public static void runOnMainThread(Runnable runnable)
@@ -26,15 +30,17 @@ public final class ThreadHelper
         handler.post(runnable);
     }
 
-    public static void runOffMainThread(boolean withLooper, Runnable runnable) throws ThreadException
+    public static void runOffMainThread(boolean withLooper, Runnable runnable)
+            throws ThreadException
     {
         if (!isRunningOnMainThread())
         {
             runnable.run();
         }
         else
-        {        	
-        	sThreadPoolManager.safeExecute(runnable);                  	
+        {
+            sThreadPoolManager.safeExecute(runnable);
         }
     }
+
 }
