@@ -43,4 +43,10 @@ public final class ThreadHelper
         }
     }
 
+    public static void runOnBackgroundThread(boolean withLooper, Runnable runnable)
+            throws ThreadException
+    {
+        sThreadPoolManager.safeExecute(runnable);
+    }
+
 }

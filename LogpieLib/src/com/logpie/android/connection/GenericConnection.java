@@ -28,12 +28,20 @@ import org.json.JSONObject;
 import android.os.Bundle;
 
 import com.logpie.android.connection.EndPoint.ServiceURL;
+import com.logpie.android.exception.ThreadException;
 import com.logpie.android.util.LogpieCallback;
+import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.android.util.ThreadHelper;
 
 public class GenericConnection
 {
+    // If the service call has the response value, can use this key to get
+    // the result
     public static final String KEY_RESPONSE_DATA = "com.logpie.connection.response.key";
+    // If the service call doesn't need return value, can use this key to get
+    // the boolean result
+    public static final String KEY_BOOLEAN_RESULT = "com.logpie.connection.result.boolean";
     public static final String KEY_REQUEST_ID = "request_id";
     public static final String STATIC_REQUEST_ID = "5U2VydmljZSRVc2VyU2VydmljZSR";
 
@@ -46,6 +54,7 @@ public class GenericConnection
     // logpie default verb is post
     private String mHttpVerb = "POST";
     private JSONObject mRequestData;
+    private String mResponseString;
 
     public void initialize(ServiceURL serviceURL)
     {
@@ -55,7 +64,7 @@ public class GenericConnection
             // initialize the HttpURLConnection based on the url
             URL url = serviceURL.getURL();
             boolean isUsingSSL = serviceURL.isUsingHttps();
-            if(isUsingSSL)
+            if (isUsingSSL)
             {
                 // TODO: Should turn off when release;
                 disableSSLClientCertificate();
@@ -106,10 +115,39 @@ public class GenericConnection
      * parse into the callback's onSuccess bundle with Key @link
      * GenericConnection.KEY_RESPONSE_DATA
      * 
+     * This method will trigger the service call, so this method will send the
+     * task into background thread. If you need a sync result, you can just call
+     * LogpieCallbackFuture.get() to blocking wait the result.
+     * 
      * @param callback
      *            Logpie callback.
      */
-    public void send(LogpieCallback callback)
+    public LogpieCallbackFuture send(LogpieCallback callback)
+    {
+        final LogpieCallbackFuture callbackFuture = new LogpieCallbackFuture(callback);
+
+        try
+        {
+            ThreadHelper.runOnBackgroundThread(false, new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    syncSendDataAndGetResult(callbackFuture);
+                }
+            });
+        } catch (ThreadException e)
+        {
+            LogpieLog.e(TAG, "Thread Exception when make service call");
+            handleCallback(false, "Thread Exception when make service call", callbackFuture);
+            e.printStackTrace();
+        }
+
+        return callbackFuture;
+    }
+
+    private LogpieCallbackFuture syncSendDataAndGetResult(LogpieCallbackFuture callbackFuture)
     {
         try
         {
@@ -125,8 +163,8 @@ public class GenericConnection
             // TODO: we should put the error message in one place
             Bundle error = new Bundle();
             error.putString("error", "cannot send empty data");
-            callback.onError(error);
-            return;
+            handleCallback(false, "cannot send empty data", callbackFuture);
+            return callbackFuture;
         }
         BufferedWriter writer = null;
         try
@@ -140,7 +178,8 @@ public class GenericConnection
             e.printStackTrace();
             LogpieLog.e(TAG, "geOutputStream occured error");
 
-            handleCallback(false, "IOException when trying to output the data", callback);
+            handleCallback(false, "IOException when trying to output the data", callbackFuture);
+            return callbackFuture;
         } finally
         {
             try
@@ -166,12 +205,14 @@ public class GenericConnection
                 if (mServiceURL.isDoInput())
                 {
                     // read the response data from server.
-                    String responseData = inputStringReader(mHttpURLConnection.getInputStream());
-                    handleCallbackWithResponseData(responseData, callback);
+                    mResponseString = inputStringReader(mHttpURLConnection.getInputStream());
+                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.mUrl + " is: "
+                            + mResponseString);
+                    handleCallbackWithResponseData(mResponseString, callbackFuture);
                 }
                 else
                 {
-                    handleCallback(true, "succesfully sending data to server", callback);
+                    handleCallback(true, "succesfully sending data to server", callbackFuture);
                     LogpieLog.i(TAG, "successful sending data to: " + mServiceURL.getServiceName()
                             + "<--->hitting url:" + mServiceURL.getURL().toString());
                 }
@@ -179,7 +220,7 @@ public class GenericConnection
             else if (responsecode >= 300 && responsecode < 400)
             {
                 handleCallback(false, "redirection happen when sending data to server. error code:"
-                        + responsecode, callback);
+                        + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "redirection happen when sending data to server. error code:"
                         + responsecode);
             }
@@ -187,14 +228,14 @@ public class GenericConnection
             {
                 handleCallback(false,
                         "client error happen when sending data to server. error code:"
-                                + responsecode, callback);
+                                + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "client error happen when sending data to server. error code:"
                         + responsecode);
             }
             else if (responsecode >= 500)
             {
                 handleCallback(false, "server error when sending data to server. error code:"
-                        + responsecode, callback);
+                        + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "server error when sending data to server. error code:"
                         + responsecode);
             }
@@ -202,23 +243,24 @@ public class GenericConnection
             {
                 handleCallback(false,
                         "no valid response code when sending data to server. error code:"
-                                + responsecode, callback);
+                                + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "no valid response code when sending data to server. error code:"
                         + responsecode);
             }
             else
             {
                 handleCallback(false, "unknown error when sending data to server. error code:"
-                        + responsecode, callback);
+                        + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "unknown error when sending data to server. error code:"
                         + responsecode);
             }
         } catch (IOException e)
         {
             handleCallback(false, "IOException when sending data to server and getresponseCode",
-                    callback);
+                    callbackFuture);
             e.printStackTrace();
         }
+        return callbackFuture;
     }
 
     private void handleCallback(boolean isSuccess, String message, LogpieCallback callback)
@@ -227,12 +269,12 @@ public class GenericConnection
         Bundle returnMessage = new Bundle();
         if (isSuccess)
         {
-            returnMessage.putString("success", message);
+            returnMessage.putBoolean(KEY_BOOLEAN_RESULT, true);
             callback.onSuccess(returnMessage);
         }
         else
         {
-            returnMessage.putString("error", message);
+            returnMessage.putBoolean(KEY_BOOLEAN_RESULT, false);
             callback.onError(returnMessage);
         }
 
@@ -246,14 +288,9 @@ public class GenericConnection
         callback.onSuccess(returnMessage);
     }
 
-    public JSONObject getResponse()
+    public String getResponse()
     {
-        return new JSONObject();
-    }
-
-    public JSONObject sendAndGetResult(LogpieCallback callback)
-    {
-        return new JSONObject();
+        return mResponseString;
     }
 
     public int getTimeout()

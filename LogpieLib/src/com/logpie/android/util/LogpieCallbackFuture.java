@@ -42,12 +42,12 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     // indicate whether the whole task is finished.
     private AtomicBoolean mIsFinished;
 
-    LogpieCallbackFuture()
+    public LogpieCallbackFuture()
     {
         this(null);
     }
 
-    LogpieCallbackFuture(LogpieCallback callback)
+    public LogpieCallbackFuture(LogpieCallback callback)
     {
         // If callback is null, we will create an empty callback. You still can
         // call CallbackFuture.get() to get bundle result
