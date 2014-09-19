@@ -1,5 +1,8 @@
 package com.logpie.android.logic;
 
+import java.net.HttpURLConnection;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -9,6 +12,17 @@ import com.logpie.android.util.LogpieLog;
 
 public class AuthManager
 {
+    public enum AuthType
+    {
+        // When user already logged in
+        NormalAuth,
+        // When access token is expired, need refresh_token to refresh the
+        // access_token
+        TokenExchange,
+        // No user logged in.
+        NoAuth;
+    }
+
     private final static String TAG = AuthManager.class.getName();
     public final static String KEY_UID = "uid";
     public final static String KEY_EMAIL = "email";
@@ -21,10 +35,13 @@ public class AuthManager
     private EncryptedDataStorage mStorage;
     private Context mContext;
 
+    private AtomicBoolean mIsDoingClearAccount;
+
     private AuthManager(Context context)
     {
         mContext = context;
-        mStorage = EncryptedDataStorage.getInstance(context);
+        mStorage = EncryptedDataStorage.getInstance(mContext);
+        mIsDoingClearAccount = new AtomicBoolean(false);
     }
 
     public synchronized static AuthManager getInstance(Context context)
@@ -47,10 +64,9 @@ public class AuthManager
             }
             int uid = Integer.valueOf(userId);
             String email = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
-            String nickname = mStorage.getValue(DataLevel.USER_LVL,
-                    AuthManager.KEY_NICKNAME);
-            String accessToken = mStorage.getValue(DataLevel.USER_LVL,
-                    AuthManager.KEY_ACCESS_TOKEN);
+            String nickname = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
+            String accessToken = mStorage
+                    .getValue(DataLevel.USER_LVL, AuthManager.KEY_ACCESS_TOKEN);
             String refreshToken = mStorage.getValue(DataLevel.USER_LVL,
                     AuthManager.KEY_REFRESH_TOKEN);
             mAccount = new LogpieAccount(uid, email, nickname, accessToken, refreshToken);
@@ -102,6 +118,7 @@ public class AuthManager
      */
     public synchronized void clearAccount()
     {
+        mIsDoingClearAccount.set(true);
         if (mAccount == null)
             return;
 
@@ -112,6 +129,7 @@ public class AuthManager
         mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_REFRESH_TOKEN);
 
         mAccount = null;
+        mIsDoingClearAccount.set(false);
     }
 
     public int getUID()
@@ -139,5 +157,72 @@ public class AuthManager
             return null;
         }
         return mAccount.getRefreshToken();
+    }
+
+    /**
+     * Add the necessary auth header to the connection
+     * 
+     * @param httpURLConnection
+     */
+    public void authenticateHttpURLConnection(final HttpURLConnection httpURLConnection,
+            final AuthType authType)
+    {
+
+        switch (authType)
+        {
+        case NoAuth:
+        {
+            return;
+        }
+        case TokenExchange:
+        {
+            LogpieAccount account = getCurrentAccount();
+
+            if (!mIsDoingClearAccount.get() && account != null)
+            {
+                String refresh_token = account.getRefreshToken();
+                if (refresh_token == null)
+                {
+                    logErrorAndClearAccount("refresh_token is missing! Clear the account");
+                    return;
+                }
+                httpURLConnection.setRequestProperty("refresh_token", refresh_token);
+                httpURLConnection.setRequestProperty("uid", Integer.toString(account.getUid()));
+            }
+            else
+            {
+                throw new UnsupportedOperationException(
+                        "Not supported this operation when user is already logged out");
+            }
+            return;
+        }
+        case NormalAuth:
+        {
+            LogpieAccount account = getCurrentAccount();
+            if (!mIsDoingClearAccount.get() && account != null)
+            {
+                String access_token = account.getAccessToken();
+                if (access_token == null)
+                {
+                    logErrorAndClearAccount("access_tokenn is missing! Clear the account");
+                    return;
+                }
+                httpURLConnection.setRequestProperty("access_token", access_token);
+                httpURLConnection.setRequestProperty("uid", Integer.toString(account.getUid()));
+            }
+            else
+            {
+                throw new UnsupportedOperationException(
+                        "Not supported this operation when user is already logged out");
+            }
+            return;
+        }
+        }
+    }
+
+    private void logErrorAndClearAccount(final String errorMessage)
+    {
+        LogpieLog.e("TAG", errorMessage);
+        clearAccount();
     }
 }

@@ -1,7 +1,14 @@
 package com.logpie.android.logic;
 
+import android.content.Context;
+
 public class OrganizationUser extends User
 {
+    protected OrganizationUser(Context context)
+    {
+        super(context);
+    }
+
     @Override
     public void getJoinedOrganizationList()
     {

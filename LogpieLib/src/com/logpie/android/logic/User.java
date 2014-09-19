@@ -17,20 +17,26 @@ import com.logpie.android.util.LogpieCallback;
 public abstract class User
 {
     private static String TAG = User.class.getName();
-    UserProfile mUserProfile;
+    protected UserProfile mUserProfile;
+    protected Context mContext;
+
+    protected User(Context context)
+    {
+        mContext = context;
+    }
 
     public void login()
     {
 
     }
 
-    public void register(Context context, String userEmail, String userPassword,
-            String userName, String city, LogpieCallback callback)
+    public void register(Context context, String userEmail, String userPassword, String userName,
+            String city, LogpieCallback callback)
     {
         JSONObject AuthRegData = new JSONObject();
 
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService);
+        connection.initialize(ServiceURL.AuthenticationService, mContext);
         try
         {
             AuthRegData.put("auth_type", "REGISTER");

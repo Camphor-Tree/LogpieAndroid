@@ -25,10 +25,13 @@ import javax.net.ssl.X509TrustManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.exception.ThreadException;
+import com.logpie.android.logic.AuthManager;
+import com.logpie.android.logic.AuthManager.AuthType;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
@@ -55,12 +58,28 @@ public class GenericConnection
     private String mHttpVerb = "POST";
     private JSONObject mRequestData;
     private String mResponseString;
+    private AuthType mAuthType;
+    private AuthManager mAuthManager;
 
-    public void initialize(ServiceURL serviceURL)
+    /**
+     * Initialize the HttpURLConnection. It will set all necessary parameter
+     * based on the serviceURL and also handle the authentication
+     * 
+     * @param serviceURL
+     * @param authType
+     * @param context
+     */
+    public void initialize(final ServiceURL serviceURL, final AuthType authType,
+            final Context context)
     {
+        // Check all the parameters are non-null
+        checkParameterAndThrowIfIllegal(serviceURL, authType, context);
         try
         {
+            mAuthType = authType;
             mServiceURL = serviceURL;
+            mAuthManager = AuthManager.getInstance(context);
+
             // initialize the HttpURLConnection based on the url
             URL url = serviceURL.getURL();
             boolean isUsingSSL = serviceURL.isUsingHttps();
@@ -74,39 +93,21 @@ public class GenericConnection
             {
                 mHttpURLConnection = (HttpURLConnection) url.openConnection();
             }
-            // check whether need to do input
-            if (mServiceURL.needDoOutput())
-            {
-                mHttpURLConnection.setDoOutput(true);
-            }
-            else
-            {
-                mHttpURLConnection.setDoOutput(false);
-            }
-            // check whether nned to do output
-            if (mServiceURL.needDoInput())
-            {
-                mHttpURLConnection.setDoInput(true);
-            }
-            else
-            {
-                mHttpURLConnection.setDoInput(false);
-            }
-            mHttpURLConnection.setChunkedStreamingMode(0);
-            // set the timeout
-            mHttpURLConnection.setConnectTimeout(mTimeout);
-            // set http verb
-            mHttpURLConnection.setRequestMethod(mHttpVerb);
-            // set charset, we should use UTF-8
-            mHttpURLConnection.setRequestProperty("Charset", "UTF-8");
-            // set Content-Type, logpie's default sending data format is JSON
 
-            mHttpURLConnection.setRequestProperty("Content-Type", "application/json");
+            setInputOutput();
+            setRequestParameters();
+            handleAuthentication();
 
         } catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public void initialize(ServiceURL serviceURL, Context context)
+    {
+        // Default is no auth.
+        initialize(serviceURL, AuthType.NoAuth, context);
     }
 
     /**
@@ -386,5 +387,60 @@ public class GenericConnection
             return builder.toString();
         }
         return null;
+    }
+
+    // handle the necessary authentication in request header
+    private void handleAuthentication()
+    {
+        mAuthManager.authenticateHttpURLConnection(mHttpURLConnection, mAuthType);
+    }
+
+    private void setInputOutput()
+    {
+        // check whether need to do input
+        if (mServiceURL.needDoOutput())
+        {
+            mHttpURLConnection.setDoOutput(true);
+        }
+        else
+        {
+            mHttpURLConnection.setDoOutput(false);
+        }
+        // check whether nned to do output
+        if (mServiceURL.needDoInput())
+        {
+            mHttpURLConnection.setDoInput(true);
+        }
+        else
+        {
+            mHttpURLConnection.setDoInput(false);
+        }
+    }
+
+    private void setRequestParameters() throws IOException
+    {
+        mHttpURLConnection.setChunkedStreamingMode(0);
+        // set the timeout
+        mHttpURLConnection.setConnectTimeout(mTimeout);
+        // set http verb
+        mHttpURLConnection.setRequestMethod(mHttpVerb);
+        // set charset, we should use UTF-8
+        mHttpURLConnection.setRequestProperty("Charset", "UTF-8");
+        // set Content-Type, logpie's default sending data format is JSON
+
+        mHttpURLConnection.setRequestProperty("Content-Type", "application/json");
+    }
+
+    private void checkParameterAndThrowIfIllegal(final ServiceURL serviceURL,
+            final AuthType authType, final Context context)
+    {
+        if (serviceURL == null || authType == null || context == null)
+        {
+            LogpieLog
+                    .e(TAG,
+                            "Please check your parameter! ServiceURL, AuthType and context all cannot be null");
+            throw new IllegalArgumentException(
+                    "ServiceURL, authType and context all cannot be null!");
+        }
     }
 }

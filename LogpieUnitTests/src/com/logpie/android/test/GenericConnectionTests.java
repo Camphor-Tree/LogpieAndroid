@@ -1,6 +1,5 @@
 package com.logpie.android.test;
 
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -84,7 +83,7 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testRocketService()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.RocektService);
+        connection.initialize(ServiceURL.RocektService, this.getContext());
         try
         {
             connection.setRequestData(new JSONObject(testRocketData));
@@ -113,7 +112,7 @@ public class GenericConnectionTests extends AndroidTestCase
     private void testRocketService(final CountDownLatch latch, final AtomicInteger countSuccess)
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.RocektService);
+        connection.initialize(ServiceURL.RocektService, this.getContext());
         try
         {
             connection.setRequestData(new JSONObject(testRocketData));
@@ -142,13 +141,14 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testAuthenticationServiceRegister()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService);
+        connection.initialize(ServiceURL.AuthenticationService, this.getContext());
         try
         {
             JSONObject testAuthRegData = new JSONObject();
             testAuthRegData.put("auth_type", "REGISTER");
-            //testAuthRegData.put("register_email", UUID.randomUUID().toString().subSequence(0, 10)+"@gmail.com");
-            testAuthRegData.put("register_email","testlogpie@aa.com");
+            // testAuthRegData.put("register_email",
+            // UUID.randomUUID().toString().subSequence(0, 10)+"@gmail.com");
+            testAuthRegData.put("register_email", "testlogpie@aa.com");
             testAuthRegData.put("register_password", "123456");
             testAuthRegData.put("register_nickname", "testUserName");
             testAuthRegData.put("register_city", "Seattle");
@@ -177,7 +177,7 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testAuthenticationServiceLogin()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService);
+        connection.initialize(ServiceURL.AuthenticationService, this.getContext());
         try
         {
             JSONObject testAuthLoginData = new JSONObject();

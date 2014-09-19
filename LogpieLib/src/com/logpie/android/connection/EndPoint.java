@@ -17,9 +17,11 @@ public class EndPoint
                 "test", true, false, true),
 
         AuthenticationService("RocketService",
-                "http://10.0.0.19:8080/AuthenticationService/server", "1.0.0", "test", true, true, false),
-        
-        CustomerService("CustomerService","http://10.0.0.19:8080/CustomerService/server","1.0.0","test",true,true,false);
+                "http://10.0.0.19:8080/AuthenticationService/server", "1.0.0", "test", true, true,
+                false),
+
+        CustomerService("CustomerService", "http://10.0.0.19:8080/CustomerService/server", "1.0.0",
+                "test", true, true, false);
 
         String mServiceName;
         String mUrl;
@@ -88,7 +90,7 @@ public class EndPoint
         {
             return mServiceName;
         }
-        
+
         public boolean isUsingHttps()
         {
             return mUseSSL;

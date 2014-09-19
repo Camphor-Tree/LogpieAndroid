@@ -45,8 +45,7 @@ public class RegisterFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.fragment_register, container, false);
 
@@ -64,8 +63,8 @@ public class RegisterFragment extends Fragment
                 mActivity.getApplicationContext()));
         mPassword.setHint(LanguageHelper.getId(LanguageHelper.KEY_PASSWORD,
                 mActivity.getApplicationContext()));
-        mConfirmPassword.setHint(LanguageHelper.getId(
-                LanguageHelper.KEY_CONFIRM_PASSWORD, mActivity.getApplicationContext()));
+        mConfirmPassword.setHint(LanguageHelper.getId(LanguageHelper.KEY_CONFIRM_PASSWORD,
+                mActivity.getApplicationContext()));
         mNickname.setHint(LanguageHelper.getId(LanguageHelper.KEY_NICKNAME,
                 mActivity.getApplicationContext()));
         mBackLogin.setText(LanguageHelper.getId(LanguageHelper.KEY_BACK,
@@ -136,7 +135,7 @@ public class RegisterFragment extends Fragment
         public void run()
         {
             location = GISManager.getInstance(getActivity()).getCurrentLocation();
-            NormalUser user = NormalUser.getInstance();
+            NormalUser user = NormalUser.getInstance(mActivity.getApplicationContext());
             final String email = mEmail.getText().toString();
             final String password = mPassword.getText().toString();
             final String name = mNickname.getText().toString();
@@ -174,8 +173,7 @@ public class RegisterFragment extends Fragment
                                 @Override
                                 public void onError(Bundle bundle)
                                 {
-                                    LogpieLog.e(TAG,
-                                            "Failed to register in Android SQLite");
+                                    LogpieLog.e(TAG, "Failed to register in Android SQLite");
                                 }
                             });
                 }
@@ -194,8 +192,7 @@ public class RegisterFragment extends Fragment
     private boolean isValid(StringBuffer text)
     {
         boolean tag = true;
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail.getText().toString())
-                .matches())
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail.getText().toString()).matches())
         {
             text.append("Your email is not correct.");
             tag = false;

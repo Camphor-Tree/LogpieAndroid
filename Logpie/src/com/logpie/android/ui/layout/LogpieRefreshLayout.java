@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.logpie.android.R;
-import com.logpie.android.components.LogpieSystemSetting;
+import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.ui.helper.TimeHelper;
 import com.logpie.android.util.LogpieLog;
@@ -55,18 +55,18 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     public static final int INIT_SCROLL_SPEED = 0;
 
     /**
-     * ³õÊ¼¼ÓËÙ¶È The initial accelerate speed;
+     * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ù¶ï¿½ The initial accelerate speed;
      */
     public static final int INIT_ACCELERATE_SPEED = 8;
 
     /**
-     * ÉÏ´Î¸üÐÂÊ±¼äµÄ×Ö·û´®³£Á¿£¬ÓÃÓÚ×÷ÎªSharedPreferencesµÄ¼üÖµ
+     * ï¿½Ï´Î¸ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªSharedPreferencesï¿½Ä¼ï¿½Öµ
      */
     private static final String UPDATED_AT = "updated_at";
 
     /**
-     * ÏÂÀ­Ë¢ÐÂµÄ¼àÌýÆ÷£¬Ê¹ÓÃÏÂÀ­Ë¢ÐÂµÄµØ·½Ó¦¸Ã×¢²á´Ë¼àÌýÆ÷À´»ñÈ¡Ë¢ÐÂ»Øµ÷¡£ The callback to be called when doing
-     * refresh.
+     * ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ÂµÄ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ÂµÄµØ·ï¿½Ó¦ï¿½ï¿½×¢ï¿½ï¿½Ë¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡Ë¢ï¿½Â»Øµï¿½ï¿½ï¿½ The callback to be
+     * called when doing refresh.
      */
     public interface PullToRefreshCallback
     {
@@ -80,93 +80,93 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ÏÂÀ­Ë¢ÐÂµÄ»Øµ÷½Ó¿Ú
+     * ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ÂµÄ»Øµï¿½ï¿½Ó¿ï¿½
      */
     private PullToRefreshCallback mRefreshCallback;
 
     /**
-     * ÓÃÓÚ´æ´¢ÉÏ´Î¸üÐÂÊ±¼ä
+     * ï¿½ï¿½ï¿½Ú´æ´¢ï¿½Ï´Î¸ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
      */
     private LogpieSystemSetting mSystemSetting;
 
     /**
-     * ÏÂÀ­Í·µÄView
+     * ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½View
      */
     private View mHeader;
 
     /**
-     * ÐèÒªÈ¥ÏÂÀ­Ë¢ÐÂµÄListView
+     * ï¿½ï¿½ÒªÈ¥ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Âµï¿½ListView
      */
     private ListView mListView;
 
     /**
-     * Ë¢ÐÂÊ±ÏÔÊ¾µÄ½ø¶ÈÌõ
+     * Ë¢ï¿½ï¿½Ê±ï¿½ï¿½Ê¾ï¿½Ä½ï¿½ï¿½ï¿½ï¿½
      */
     private ProgressBar mProgressBar;
 
     /**
-     * Ö¸Ê¾ÏÂÀ­ºÍÊÍ·ÅµÄ¼ýÍ·
+     * Ö¸Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ÅµÄ¼ï¿½Í·
      */
     private ImageView mArrow;
 
     /**
-     * Ö¸Ê¾ÏÂÀ­ºÍÊÍ·ÅµÄÎÄ×ÖÃèÊö
+     * Ö¸Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private TextView mDescriptionTextView;
 
     /**
-     * ÉÏ´Î¸üÐÂÊ±¼äµÄÎÄ×ÖÃèÊö
+     * ï¿½Ï´Î¸ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private TextView mUpdateAtTextView;
 
     /**
-     * ÏÂÀ­Í·µÄ²¼¾Ö²ÎÊý
+     * ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä²ï¿½ï¿½Ö²ï¿½ï¿½ï¿½
      */
     private MarginLayoutParams mHeaderLayoutParams;
 
     /**
-     * ÉÏ´Î¸üÐÂÊ±¼äµÄºÁÃëÖµ
+     * ï¿½Ï´Î¸ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Äºï¿½ï¿½ï¿½Öµ
      */
     private long mLastUpdateTime;
 
     /**
-     * ÎªÁË·ÀÖ¹²»Í¬½çÃæµÄÏÂÀ­Ë¢ÐÂÔÚÉÏ´Î¸üÐÂÊ±¼äÉÏ»¥ÏàÓÐ³åÍ»£¬Ê¹ÓÃidÀ´×öÇø·Ö
+     * Îªï¿½Ë·ï¿½Ö¹ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Î¸ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ï»ï¿½ï¿½ï¿½ï¿½Ð³ï¿½Í»ï¿½ï¿½Ê¹ï¿½ï¿½idï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private int mId = -1;
 
     /**
-     * ÏÂÀ­Í·µÄ¸ß¶È
+     * ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¸ß¶ï¿½
      */
     private int mHideHeaderHeight;
 
     /**
-     * µ±Ç°´¦ÀíÊ²Ã´×´Ì¬£¬¿ÉÑ¡ÖµÓÐSTATUS_PULL_TO_REFRESH, STATUS_RELEASE_TO_REFRESH,
-     * STATUS_REFRESHING ºÍ STATUS_REFRESH_FINISHED
+     * ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ê²Ã´×´Ì¬ï¿½ï¿½ï¿½ï¿½Ñ¡Öµï¿½ï¿½STATUS_PULL_TO_REFRESH, STATUS_RELEASE_TO_REFRESH,
+     * STATUS_REFRESHING ï¿½ï¿½ STATUS_REFRESH_FINISHED
      */
     private int currentStatus = STATUS_REFRESH_FINISHED;;
 
     /**
-     * ¼ÇÂ¼ÉÏÒ»´ÎµÄ×´Ì¬ÊÇÊ²Ã´£¬±ÜÃâ½øÐÐÖØ¸´²Ù×÷
+     * ï¿½ï¿½Â¼ï¿½ï¿½Ò»ï¿½Îµï¿½×´Ì¬ï¿½ï¿½Ê²Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private int mLastStatus = currentStatus;
 
     /**
-     * ÊÖÖ¸°´ÏÂÊ±µÄÆÁÄ»×Ý×ø±ê
+     * ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private float mYwhenClickDown;
 
     /**
-     * ÔÚ±»ÅÐ¶¨Îª¹ö¶¯Ö®Ç°ÓÃ»§ÊÖÖ¸¿ÉÒÔÒÆ¶¯µÄ×î´óÖµ¡£
+     * ï¿½Ú±ï¿½ï¿½Ð¶ï¿½Îªï¿½ï¿½ï¿½ï¿½Ö®Ç°ï¿½Ã»ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
      */
     private int mTouchSlop;
 
     /**
-     * ÊÇ·ñÒÑ¼ÓÔØ¹ýÒ»´Îlayout£¬ÕâÀïonLayoutÖÐµÄ³õÊ¼»¯Ö»Ðè¼ÓÔØÒ»´Î
+     * ï¿½Ç·ï¿½ï¿½Ñ¼ï¿½ï¿½Ø¹ï¿½Ò»ï¿½ï¿½layoutï¿½ï¿½ï¿½ï¿½ï¿½ï¿½onLayoutï¿½ÐµÄ³ï¿½Ê¼ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
      */
     private boolean mLoadOnce;
 
     /**
-     * µ±Ç°ÊÇ·ñ¿ÉÒÔÏÂÀ­£¬Ö»ÓÐListView¹ö¶¯µ½Í·µÄÊ±ºò²ÅÔÊÐíÏÂÀ­
+     * ï¿½ï¿½Ç°ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ListViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private boolean mAbleToPull;
 
@@ -179,7 +179,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ½øÐÐÒ»Ð©¹Ø¼üÐÔµÄ³õÊ¼»¯²Ù×÷£¬±ÈÈç£º½«ÏÂÀ­Í·ÏòÉÏÆ«ÒÆ½øÐÐÒþ²Ø£¬¸øListView×¢²átouchÊÂ¼þ¡£
+     * ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½Ø¼ï¿½ï¿½ÔµÄ³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç£ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½Æ«ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ListView×¢ï¿½ï¿½touchï¿½Â¼ï¿½ï¿½ï¿½
      * 
      * Do the init operation, such as: hide the Header view, register the
      * onTouchListener()
@@ -205,8 +205,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * µ±ListView±»´¥ÃþÊ±µ÷ÓÃ£¬ÆäÖÐ´¦ÀíÁË¸÷ÖÖÏÂÀ­Ë¢ÐÂµÄ¾ßÌåÂß¼­¡£ Triggered when the ListView is touched.
-     * This method will handle all the detail logic.
+     * ï¿½ï¿½ListViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ÂµÄ¾ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ Triggered when the
+     * ListView is touched. This method will handle all the detail logic.
      */
     @Override
     public boolean onTouch(View v, MotionEvent event)
@@ -223,7 +223,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             case MotionEvent.ACTION_MOVE:
                 float yMove = event.getRawY();
                 int distance = (int) (yMove - mYwhenClickDown);
-                // Èç¹ûÊÖÖ¸ÊÇÏÂ»¬×´Ì¬£¬²¢ÇÒÏÂÀ­Í·ÊÇÍêÈ«Òþ²ØµÄ£¬¾ÍÆÁ±ÎÏÂÀ­ÊÂ¼þ
+                // ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Â»ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ØµÄ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
                 // If the finger is dragging down and the header is totally
                 // hidden, then just ignore the drag down event
                 if (distance <= 0 && mHeaderLayoutParams.topMargin <= mHideHeaderHeight)
@@ -250,7 +250,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                         // drag down more.
                         currentStatus = STATUS_PULL_TO_REFRESH;
                     }
-                    // Í¨¹ýÆ«ÒÆÏÂÀ­Í·µÄtopMarginÖµ£¬À´ÊµÏÖÏÂÀ­Ð§¹û
+                    // Í¨ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½topMarginÖµï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½
                     // set the drag distance as 1/2 to achieve the dragging
                     // effect.
                     mHeaderLayoutParams.topMargin = (distance / 2) + mHideHeaderHeight;
@@ -262,7 +262,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             default:
                 if (currentStatus == STATUS_RELEASE_TO_REFRESH)
                 {
-                    // ËÉÊÖÊ±Èç¹ûÊÇÊÍ·ÅÁ¢¼´Ë¢ÐÂ×´Ì¬£¬¾ÍÈ¥µ÷ÓÃÕýÔÚË¢ÐÂµÄÈÎÎñ
+                    // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½
                     // If the current status is "Release to refresh", then try
                     // to call refreshTask.
                     // TODO: Add refersh Task
@@ -271,21 +271,21 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 }
                 else if (currentStatus == STATUS_PULL_TO_REFRESH)
                 {
-                    // ËÉÊÖÊ±Èç¹ûÊÇÏÂÀ­×´Ì¬£¬¾ÍÈ¥µ÷ÓÃÒþ²ØÏÂÀ­Í·µÄÈÎÎñ
+                    // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     // If the current status is "Pull to refresh", then try to
                     // just hide the header
                     new HideHeaderTask().execute();
                 }
                 break;
             }
-            // Ê±¿Ì¼ÇµÃ¸üÐÂÏÂÀ­Í·ÖÐµÄÐÅÏ¢
+            // Ê±ï¿½Ì¼ÇµÃ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ðµï¿½ï¿½ï¿½Ï¢
             // Always remember to update the header view (switch down the arrow,
             // etc)
             if (currentStatus == STATUS_PULL_TO_REFRESH
                     || currentStatus == STATUS_RELEASE_TO_REFRESH)
             {
                 updateHeaderView();
-                // µ±Ç°Õý´¦ÓÚÏÂÀ­»òÊÍ·Å×´Ì¬£¬ÒªÈÃListViewÊ§È¥½¹µã£¬·ñÔò±»µã»÷µÄÄÇÒ»Ïî»áÒ»Ö±´¦ÓÚÑ¡ÖÐ×´Ì¬
+                // ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½×´Ì¬ï¿½ï¿½Òªï¿½ï¿½ListViewÊ§È¥ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ò±»µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ò»Ö±ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½×´Ì¬
                 // If the current status is pull to refresh or release to
                 // refresh, need to let ListView loss the focus, otherwise, the
                 // item will be always in chosen state.
@@ -293,7 +293,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 mListView.setFocusable(false);
                 mListView.setFocusableInTouchMode(false);
                 mLastStatus = currentStatus;
-                // µ±Ç°Õý´¦ÓÚÏÂÀ­»òÊÍ·Å×´Ì¬£¬Í¨¹ý·µ»ØtrueÆÁ±ÎµôListViewµÄ¹ö¶¯ÊÂ¼þ
+                // ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½×´Ì¬ï¿½ï¿½Í¨ï¿½ï¿½ï¿½trueï¿½ï¿½ï¿½Îµï¿½ListViewï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
                 // Should return true to ignore the ListView's scroll event.
                 return true;
             }
@@ -302,15 +302,15 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ¸øÏÂÀ­Ë¢ÐÂ¿Ø¼þ×¢²áÒ»¸ö¼àÌýÆ÷¡£ Set the pullToRefresh callback.
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Â¿Ø¼ï¿½×¢ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Set the pullToRefresh callback.
      * 
      * @param listener
-     *            ¼àÌýÆ÷µÄÊµÏÖ¡£ Implementation of the calbackk
+     *            ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ö¡ï¿½ Implementation of the calbackk
      * @param id
-     *            ÎªÁË·ÀÖ¹²»Í¬½çÃæµÄÏÂÀ­Ë¢ÐÂÔÚÉÏ´Î¸üÐÂÊ±¼äÉÏ»¥ÏàÓÐ³åÍ»£¬ Çë²»Í¬½çÃæÔÚ×¢²áÏÂÀ­Ë¢ÐÂ¼àÌýÆ÷Ê±Ò»¶¨Òª´«Èë²»Í¬µÄid¡£ To
-     *            avoid multiple refresh layout's updateAtTimes' confliction,
-     *            set the different id. The id is used to build the key of the
-     *            storage.
+     *            Îªï¿½Ë·ï¿½Ö¹ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Î¸ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ï»ï¿½ï¿½ï¿½ï¿½Ð³ï¿½Í»ï¿½ï¿½
+     *            ï¿½ë²»Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ò»ï¿½ï¿½Òªï¿½ï¿½ï¿½ë²»Í¬ï¿½ï¿½idï¿½ï¿½ To avoid multiple
+     *            refresh layout's updateAtTimes' confliction, set the different
+     *            id. The id is used to build the key of the storage.
      */
     public void setPullToRefreshCallback(PullToRefreshCallback callback, int id)
     {
@@ -319,7 +319,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * µ±ËùÓÐµÄË¢ÐÂÂß¼­Íê³Éºó£¬¼ÇÂ¼µ÷ÓÃÒ»ÏÂ£¬·ñÔòÄãµÄListView½«Ò»Ö±´¦ÓÚÕýÔÚË¢ÐÂ×´Ì¬¡£
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ë¢ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½Éºó£¬¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ListViewï¿½ï¿½Ò»Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½×´Ì¬ï¿½ï¿½
      * 
      * When finish the refresh logic, should call this to set back the status
      * and record the last refresh time
@@ -333,8 +333,9 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ¸ù¾Ýµ±Ç°ListViewµÄ¹ö¶¯×´Ì¬À´Éè¶¨ {@link #ableToPull}
-     * µÄÖµ£¬Ã¿´Î¶¼ÐèÒªÔÚonTouchÖÐµÚÒ»¸öÖ´ÐÐ£¬ÕâÑù¿ÉÒÔÅÐ¶Ï³öµ±Ç°Ó¦¸ÃÊÇ¹ö¶¯ListView£¬»¹ÊÇÓ¦¸Ã½øÐÐÏÂÀ­¡£
+     * ï¿½ï¿½Ýµï¿½Ç°ListViewï¿½Ä¹ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½è¶¨ {@link #ableToPull}
+     * ï¿½ï¿½Öµï¿½ï¿½Ã¿ï¿½Î¶ï¿½ï¿½ï¿½Òªï¿½ï¿½onTouchï¿½Ðµï¿½Ò»ï¿½ï¿½Ö´ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï³ï¿½ï¿½ï¿½Ç°Ó¦ï¿½ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½ListViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã½ï¿½ï¿½ï¿½
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * 
      * According to current ListView's state to set the mAbleToPull. This should
      * be called firstly in callback method onTouch(), then it can judge it
@@ -354,7 +355,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 {
                     mYwhenClickDown = event.getRawY();
                 }
-                // Èç¹ûÊ×¸öÔªËØµÄÉÏ±ßÔµ£¬¾àÀë¸¸²¼¾ÖÖµÎª0£¬¾ÍËµÃ÷ListView¹ö¶¯µ½ÁË×î¶¥²¿£¬´ËÊ±Ó¦¸ÃÔÊÐíÏÂÀ­Ë¢ÐÂ
+                // ï¿½ï¿½ï¿½ï¿½×¸ï¿½Ôªï¿½Øµï¿½ï¿½Ï±ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½ë¸¸ï¿½ï¿½ï¿½ï¿½ÖµÎª0ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ListViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î¶¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½
                 // If the first element's top margin is 0 distance to the parent
                 // layout, then it means that the ListView is scroll to the top.
                 // Current state should be able to pull to refresh.
@@ -372,13 +373,13 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
         }
         else
         {
-            // Èç¹ûListViewÖÐÃ»ÓÐÔªËØ£¬Ò²Ó¦¸ÃÔÊÐíÏÂÀ­Ë¢ÐÂ
+            // ï¿½ï¿½ï¿½ListViewï¿½ï¿½Ã»ï¿½ï¿½Ôªï¿½Ø£ï¿½Ò²Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½
             mAbleToPull = true;
         }
     }
 
     /**
-     * ¸üÐÂÏÂÀ­Í·ÖÐµÄÐÅÏ¢¡£ Refresh the header information.
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ðµï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ Refresh the header information.
      */
     private void updateHeaderView()
     {
@@ -413,8 +414,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ¸ù¾Ýµ±Ç°µÄ×´Ì¬À´Ðý×ª¼ýÍ·¡£ Based ont the current state to determine how to switch down
-     * the arrow.
+     * ï¿½ï¿½Ýµï¿½Ç°ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½Í·ï¿½ï¿½ Based ont the current state to determine how to
+     * switch down the arrow.
      */
     private void rotateArrow()
     {
@@ -517,7 +518,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * ÕýÔÚË¢ÐÂµÄÈÎÎñ£¬ÔÚ´ËÈÎÎñÖÐ»áÈ¥»Øµ÷×¢²á½øÀ´µÄÏÂÀ­Ë¢ÐÂ¼àÌýÆ÷¡£
+     * ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½È¥ï¿½Øµï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * 
      * The refreshing task. This task will call the callback registered in this
      * layout.
@@ -573,12 +574,12 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     }
 
     /**
-     * Ê¹µ±Ç°Ïß³ÌË¯ÃßÖ¸¶¨µÄºÁÃëÊý¡£
+     * Ê¹ï¿½ï¿½Ç°ï¿½ß³ï¿½Ë¯ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½
      * 
      * Make the current thread to sleep, the time unit is milli-second
      * 
      * @param time
-     *            Ö¸¶¨µ±Ç°Ïß³ÌË¯Ãß¶à¾Ã£¬ÒÔºÁÃëÎªµ¥Î»
+     *            Ö¸ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ß³ï¿½Ë¯ï¿½ß¶ï¿½Ã£ï¿½ï¿½Ôºï¿½ï¿½ï¿½Îªï¿½ï¿½Î»
      */
     private void sleep(int time)
     {

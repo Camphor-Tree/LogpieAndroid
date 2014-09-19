@@ -5,7 +5,7 @@ import java.util.Locale;
 import android.content.Context;
 
 import com.logpie.android.R;
-import com.logpie.android.components.LogpieSystemSetting;
+import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.util.LogpieLog;
 
 public class LanguageHelper

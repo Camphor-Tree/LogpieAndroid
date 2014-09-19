@@ -1,4 +1,4 @@
-package com.logpie.android.components;
+package com.logpie.android.datastorage;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

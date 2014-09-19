@@ -100,7 +100,7 @@ public class MetricService extends IntentService
     private void sendMetrics(JSONObject metricJSON)
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.RocektService);
+        connection.initialize(ServiceURL.RocektService, this.getApplicationContext());
         connection.setRequestData(metricJSON);
         connection.send(new LogpieCallback()
         {

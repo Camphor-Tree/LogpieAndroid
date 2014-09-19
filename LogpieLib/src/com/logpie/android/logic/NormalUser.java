@@ -1,19 +1,21 @@
 package com.logpie.android.logic;
 
+import android.content.Context;
+
 public class NormalUser extends User
 {
     private static NormalUser sNormalUser;
 
-    private NormalUser()
+    private NormalUser(Context context)
     {
-
+        super(context);
     }
 
-    public static synchronized NormalUser getInstance()
+    public static synchronized NormalUser getInstance(Context context)
     {
         if (sNormalUser == null)
         {
-            sNormalUser = new NormalUser();
+            sNormalUser = new NormalUser(context);
             sNormalUser.syncInitialize();
             sNormalUser.asyncInitialize();
         }
