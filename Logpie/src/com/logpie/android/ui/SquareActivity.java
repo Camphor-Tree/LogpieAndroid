@@ -70,7 +70,7 @@ public class SquareActivity extends ActionBarActivity
         LogpieLog.d(TAG, "Call onCreateOptionsMenu!");
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.squre, menu);
+        // inflater.inflate(R.menu.squre, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -96,6 +96,7 @@ public class SquareActivity extends ActionBarActivity
         default:
             return super.onOptionsItemSelected(item);
         }
+
         return true;
     }
 
@@ -121,7 +122,8 @@ public class SquareActivity extends ActionBarActivity
         squareMode.setupTab();
     }
 
-    public static class LogpieBaseTabListener<T extends Fragment> implements ActionBar.TabListener
+    public static class LogpieBaseTabListener<T extends Fragment> implements
+            ActionBar.TabListener
     {
         private Fragment mFragment;
         private final Activity mActivity;

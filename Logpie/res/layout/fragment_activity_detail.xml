@@ -1,220 +1,225 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activityDetailFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.logpie.android.LogpieActivityDetailActivity$LogpieActivityDetailFragment" >
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/activityDetailFragment"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="com.logpie.android.LogpieActivityDetailActivity$LogpieActivityDetailFragment" >
 
-<ScrollView
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent">
-<LinearLayout
-    android:id="@+id/ll_activity_detail"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+
+		<LinearLayout
+			android:id="@+id/ll_activity_detail"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical" >
+
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical" >
+
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="60dp"
+					android:baselineAligned="false"
+					android:orientation="horizontal" >
+
+					<TextView
+						android:id="@+id/empty"
+						android:layout_width="15dp"
+						android:layout_height="40dp"
+						android:layout_marginTop="20dp"
+						android:background="@color/Beige"
+						android:fontFamily="微软雅黑"
+						android:gravity="center"
+						android:textSize="16sp" />
+
+					<ImageView
+						android:id="@+id/imageview_activity_detail_user_icon"
+						android:layout_width="60dp"
+						android:layout_height="60dp"
+						android:layout_gravity="center"
+						android:src="@drawable/test_user_icon_1" />
+
+					<TextView
+						android:id="@+id/textview_activity_detail_user_name"
+						android:layout_width="fill_parent"
+						android:layout_height="40dp"
+						android:layout_marginTop="20dp"
+						android:background="@color/Beige"
+						android:fontFamily="微软雅黑"
+						android:gravity="center_vertical|left"
+						android:paddingLeft="5dp"
+						android:text="我来测试7个字"
+						android:textSize="18sp" />
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal" >
+
+					<TextView
+						android:id="@+id/textview_activity_detail_description"
+						android:layout_width="0dip"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:background="@color/Beige"
+						android:baselineAligned="false"
+						android:fontFamily="微软雅黑"
+						android:gravity="center_vertical"
+						android:maxLines="7"
+						android:minLines="3"
+						android:paddingBottom="5dp"
+						android:paddingLeft="15dp"
+						android:paddingRight="15dp"
+						android:paddingTop="5dp"
+						android:text="今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧"
+						android:textColor="@color/Gray"
+						android:textSize="18sp" />
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="28dp"
+					android:baselineAligned="false"
+					android:orientation="horizontal" >
+
+					<ImageView
+						android:layout_width="32dp"
+						android:layout_height="32dp"
+						android:layout_gravity="center"
+						android:layout_marginLeft="5dp"
+						android:src="@drawable/ic_action_time" />
+
+					<TextView
+						android:id="@+id/textview_activity_detail_time"
+						android:layout_width="0dip"
+						android:layout_height="32dp"
+						android:layout_weight="1"
+						android:fontFamily="微软雅黑"
+						android:gravity="center_vertical|left"
+						android:lines="1"
+						android:paddingLeft="10dp"
+						android:text="2013-06-07 18:00~ 2013-08-21 24:00"
+						android:textSize="18sp" />
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="32dp"
+					android:orientation="horizontal" >
+
+					<ImageView
+						android:layout_width="32dp"
+						android:layout_height="32dp"
+						android:layout_gravity="center"
+						android:layout_marginLeft="5dp"
+						android:src="@drawable/ic_action_place" />
+
+					<TextView
+						android:id="@+id/textivew_detail_activity_location"
+						android:layout_width="0dip"
+						android:layout_height="32dp"
+						android:layout_weight="1"
+						android:fontFamily="微软雅黑"
+						android:gravity="center_vertical|left"
+						android:lines="1"
+						android:paddingLeft="10dp"
+						android:text="森林公园"
+						android:textSize="18sp" />
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="fill_parent"
+					android:layout_height="32dp"
+					android:gravity="center_vertical|center_horizontal"
+					android:orientation="horizontal"
+					android:paddingLeft="5dp" >
+
+					<ImageButton
+						android:id="@+id/imagebutton_detail_activity_like"
+						android:layout_width="50dp"
+						android:layout_height="32dp"
+						android:layout_gravity="center"
+						android:layout_weight="1"
+						android:alpha="0.5"
+						android:background="@null"
+						android:src="@drawable/ic_action_good" />
+
+					<TextView
+						android:id="@+id/textview_detail_activity_count_like"
+						android:layout_width="wrap_content"
+						android:layout_height="fill_parent"
+						android:fontFamily="微软雅黑"
+						android:gravity="center"
+						android:lines="1"
+						android:text="50"
+						android:textSize="18sp" />
+
+					<ImageButton
+						android:id="@+id/imagebutton_detail_activity_dislike"
+						android:layout_width="50dp"
+						android:layout_height="32dp"
+						android:layout_gravity="center"
+						android:layout_weight="1"
+						android:alpha="0.5"
+						android:background="@null"
+						android:src="@drawable/ic_action_bad" />
+
+					<TextView
+						android:id="@+id/textview_detail_activity_count_dislike"
+						android:layout_width="wrap_content"
+						android:layout_height="fill_parent"
+						android:fontFamily="微软雅黑"
+						android:gravity="center"
+						android:lines="1"
+						android:text="50"
+						android:textSize="18sp" />
+				</LinearLayout>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/linearlayout_detail_activity_comments"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical" >
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+
 	<LinearLayout
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content">	
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="fill_parent"
-	        android:layout_height="60dp"
-	        android:baselineAligned="false">
-	        <TextView
-	            android:id="@+id/empty"
-	            android:layout_width="15dp"
-	            android:layout_height="40dp"
-	            android:layout_marginTop="20dp"
-	            android:gravity="center"
-	            android:fontFamily="微软雅黑"
-	            android:textSize="16sp"
-	            android:background="@color/Beige"/>
-	        <ImageView 
-	            android:id="@+id/imageview_activity_detail_user_icon"
-	            android:layout_width="60dp"
-	            android:layout_height="60dp"
-	            android:layout_gravity="center"
-	            android:src="@drawable/test_user_icon_1"
-	            />
-	        <TextView 
-	            android:id="@+id/textview_activity_detail_user_name" 
-	            android:layout_width="fill_parent"
-	            android:layout_height="40dp"
-	            android:layout_marginTop="20dp"
-	            android:paddingLeft="5dp"
-	            android:gravity="center_vertical|left"
-	            android:fontFamily="微软雅黑" 
-	            android:text="我来测试7个字" 
-	            android:background="@color/Beige" 
-	            android:textSize="18sp"/>   
-	    </LinearLayout>
-	    
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content">
-
-	        <TextView 
-	            android:id="@+id/textview_activity_detail_description" 
-	            android:layout_width="0dip"
-	            android:layout_weight="1"
-	            android:layout_height="wrap_content"
-	            android:paddingLeft="15dp"
-	            android:paddingTop="5dp"
-	            android:paddingRight="15dp"
-	            android:paddingBottom="5dp"
-	            android:gravity="center_vertical"
-	            android:minLines="3"
-	            android:maxLines="7"
-	            android:fontFamily="微软雅黑" 
-	            android:text="今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧" 
-	            android:background="@color/Beige" 
-	            android:textColor="@color/Gray"
-	            android:textSize="18sp"
-	            android:baselineAligned="false"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="fill_parent"
-	        android:layout_height="28dp"
-	        android:baselineAligned="false">
-			<ImageView 
-	            android:layout_width="32dp"
-	            android:layout_height="32dp"
-	            android:layout_gravity="center"
-	            android:layout_marginLeft="5dp"
-	            android:src="@drawable/ic_action_time"
-	            />
-	        <TextView 
-	            android:id="@+id/textview_activity_detail_time" 
-	            android:layout_width="0dip"
-	            android:layout_weight="1"
-	            android:layout_height="32dp"
-	            android:paddingLeft="10dp"
-	            android:gravity="center_vertical|left"
-	            android:lines="1"
-	            android:fontFamily="微软雅黑" 
-	            android:text="2013-06-07 18:00~ 2013-08-21 24:00" 
-	            android:textSize="18sp"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="fill_parent"
-	        android:layout_height="32dp">
-			<ImageView 
-	            android:layout_width="32dp"
-	            android:layout_height="32dp"
-	            android:layout_gravity="center"
-	            android:layout_marginLeft="5dp"
-	            android:src="@drawable/ic_action_place"
-	            />
-	        <TextView 
-	            android:id="@+id/textivew_detail_activity_location" 
-	            android:layout_width="0dip"
-	            android:layout_weight="1"
-	            android:gravity="center_vertical|left"
-	            android:layout_height="32dp"
-	            android:paddingLeft="10dp"
-	            android:lines="1"
-	            android:fontFamily="微软雅黑" 
-	            android:text="森林公园" 
-	            android:textSize="18sp"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="fill_parent"
-	        android:layout_height="32dp"
-	        android:gravity="center_vertical|center_horizontal"
-	        android:paddingLeft="5dp">
-
-	        <ImageButton
-	            android:id="@+id/imagebutton_detail_activity_like"
-	            android:layout_width="50dp"
-	            android:layout_height="32dp"
-	            android:layout_weight="1"
-	            android:alpha="0.5"
-	            android:background="@null"
-	            android:layout_gravity="center"
-	            android:src="@drawable/ic_action_good"/>
-
-	        <TextView 
-	            android:id="@+id/textview_detail_activity_count_like" 
-	            android:layout_width="wrap_content"
-	            android:layout_height="fill_parent"
-	            android:gravity="center"
-	            android:lines="1"
-	            android:fontFamily="微软雅黑" 
-	            android:text="50" 
-	            android:textSize="18sp"/>
-
-	        <ImageButton
-	            android:id="@+id/imagebutton_detail_activity_dislike"
-	            android:layout_width="50dp"
-	            android:layout_height="32dp"
-	            android:layout_weight="1"
-	            android:alpha="0.5"
-	            android:background="@null"
-	            android:layout_gravity="center"
-	            android:src="@drawable/ic_action_bad"/>
-
-	        <TextView
-	            android:id="@+id/textview_detail_activity_count_dislike"
-	            android:layout_width="wrap_content"
-	            android:layout_height="fill_parent"
-	            android:fontFamily="微软雅黑"
-	            android:gravity="center"
-	            android:lines="1"
-	            android:text="50"
-	            android:textSize="18sp" />
-	       
-	    </LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout
-	    android:id="@+id/linearlayout_detail_activity_comments"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-	</LinearLayout>
-</LinearLayout>
-
-	
-</ScrollView>
-    <LinearLayout
-        android:id="@+id/linearlayout_comment"
-        android:layout_width="fill_parent"
-        android:layout_height="48dp"
-        android:padding="5dp"
+		android:id="@+id/linearlayout_comment"
+		android:layout_width="fill_parent"
+		android:layout_height="48dp"
 		android:layout_alignParentBottom="true"
-		android:gravity="center"
-		android:background="@color/Orange"
 		android:alpha="0.8"
-        android:orientation="horizontal" >
+		android:background="@color/Orange"
+		android:gravity="center"
+		android:orientation="horizontal"
+		android:padding="5dp" >
 
- 		<EditText
- 		    android:id="@+id/edittext_comment"
- 		    android:layout_width="0dip"
- 		    android:layout_weight="1"
- 		    android:layout_height="48dp"
- 		    android:paddingLeft="7dp"
- 		    android:hint="请输入您的评论"
- 		    android:drawableLeft="@drawable/ic_action_edit"
- 		    android:maxLines="1"
- 		    android:scrollHorizontally="true" />
+		<EditText
+			android:id="@+id/edittext_comment"
+			android:layout_width="0dip"
+			android:layout_height="48dp"
+			android:layout_weight="1"
+			android:drawableLeft="@drawable/ic_action_edit"
+			android:hint="请输入您的评论"
+			android:maxLines="1"
+			android:paddingLeft="7dp"
+			android:scrollHorizontally="true" />
 
+		<Button
+			android:id="@+id/button_comment"
+			android:layout_width="70dp"
+			android:layout_height="48dp"
+			android:background="@null"
+			android:text="评论"
+			android:textColor="#565656"
+			android:textSize="21sp" />
+	</LinearLayout>
 
- 		<Button 
- 		    android:id="@+id/button_comment"
- 		    android:layout_width="70dp"
- 		    android:layout_height="48dp" 
- 		    android:background="@null"
- 		    android:textSize="21sp"
- 		    android:text="评论"
- 		    android:textColor="#565656"
- 		    />
-    </LinearLayout>
 </RelativeLayout>
-
-

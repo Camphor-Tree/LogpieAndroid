@@ -6,33 +6,27 @@ import org.json.JSONObject;
 import android.os.Bundle;
 
 import com.logpie.android.util.LogpieLog;
+import com.logpie.android.util.ResponseKeys;
 
 public class UserProfile
 {
-    public static String KEY_USER_ID = "com.logpie.android.profile.user.id";
-    public static String KEY_USER_NAME = "com.logpie.android.profile.user.name";
-    public static String KEY_USER_GENDER = "com.logpie.android.profile.user.gender";
-    public static String KEY_USER_BIRTHDAY = "com.logpie.android.profile.user.birthday";
-    public static String KEY_USER_EMAIL = "com.logpie.android.profile.user.email";
-    public static String KEY_USER_TEL = "com.logpie.android.profile.user.tel";
-
     private static String TAG = UserProfile.class.getName();
     private String mUserId;
     private String mUserName;
     private String mUserGender;
     private String mUserBirthday;
     private String mUserEmail;
-    private String mUserTel;
+    private String mUserCity;
 
-    private UserProfile(String userID, String userName, String userGender, String userBirthday,
-            String userEmail, String userTel)
+    private UserProfile(String userID, String userName, String userGender,
+            String userBirthday, String userEmail, String userCity)
     {
         mUserId = userID;
         mUserName = userName;
         mUserGender = userGender;
         mUserBirthday = userBirthday;
         mUserEmail = userEmail;
-        mUserTel = userTel;
+        mUserCity = userCity;
     }
 
     /**
@@ -51,19 +45,20 @@ public class UserProfile
     {
         // check whether contains user_id and user_name.
         // user_id, user_name are necessary
-        if (!profileBundle.containsKey(KEY_USER_ID) || !profileBundle.containsKey(KEY_USER_NAME))
+        if (!profileBundle.containsKey(ResponseKeys.KEY_UID)
+                || !profileBundle.containsKey(ResponseKeys.KEY_NICKNAME))
         {
-            LogpieLog.e(TAG, "Must contain KEY_USER_ID or KEY_USER_NAME");
+            LogpieLog.e(TAG, "Must contain KEY_UID or KEY_NICKNAME");
             return null;
         }
 
-        String userId = profileBundle.getString(KEY_USER_ID);
-        String userName = profileBundle.getString(KEY_USER_NAME);
-        String gender = profileBundle.getString(KEY_USER_GENDER);
-        String birthday = profileBundle.getString(KEY_USER_BIRTHDAY);
-        String email = profileBundle.getString(KEY_USER_EMAIL);
-        String tel = profileBundle.getString(KEY_USER_TEL);
-        return new UserProfile(userId, userName, gender, birthday, email, tel);
+        String userId = profileBundle.getString(ResponseKeys.KEY_UID);
+        String userName = profileBundle.getString(ResponseKeys.KEY_NICKNAME);
+        String gender = profileBundle.getString(ResponseKeys.KEY_GENDER);
+        String birthday = profileBundle.getString(ResponseKeys.KEY_BIRTHDAY);
+        String email = profileBundle.getString(ResponseKeys.KEY_EMAIL);
+        String city = profileBundle.getString(ResponseKeys.KEY_CITY);
+        return new UserProfile(userId, userName, gender, birthday, email, city);
     }
 
     /**
@@ -82,18 +77,21 @@ public class UserProfile
     {
         try
         {
-            if (!profileJSON.has(KEY_USER_ID) || !profileJSON.has(KEY_USER_NAME))
+            if (!profileJSON.has(ResponseKeys.KEY_UID)
+                    || !profileJSON.has(ResponseKeys.KEY_NICKNAME))
             {
-                LogpieLog.e(TAG, "Must contain KEY_USER_ID or KEY_USER_NAME");
+                LogpieLog.e(TAG, "Must contain KEY_UID or KEY_NICKNAME");
                 return null;
             }
-            String userId = profileJSON.getString(KEY_USER_ID);
-            String userName = profileJSON.getString(KEY_USER_NAME);
-            String gender = profileJSON.getString(KEY_USER_GENDER);
-            String birthday = profileJSON.getString(KEY_USER_BIRTHDAY);
-            String email = profileJSON.getString(KEY_USER_EMAIL);
-            String tel = profileJSON.getString(KEY_USER_TEL);
-            return new UserProfile(userId, userName, gender, birthday, email, tel);
+
+            String userId = profileJSON.getString(ResponseKeys.KEY_UID);
+            String userName = profileJSON.getString(ResponseKeys.KEY_NICKNAME);
+            String gender = profileJSON.getString(ResponseKeys.KEY_GENDER);
+            String birthday = profileJSON.getString(ResponseKeys.KEY_BIRTHDAY);
+            String email = profileJSON.getString(ResponseKeys.KEY_EMAIL);
+            String city = profileJSON.getString(ResponseKeys.KEY_CITY);
+
+            return new UserProfile(userId, userName, gender, birthday, email, city);
         } catch (JSONException e)
         {
             LogpieLog.e(TAG, "JSONException when try to retrieve the profileJSON");
@@ -189,20 +187,20 @@ public class UserProfile
     }
 
     /**
-     * @return the userTel
+     * @return the userCity
      */
-    public String getUserTel()
+    public String getUserCity()
     {
-        return mUserTel;
+        return mUserCity;
     }
 
     /**
-     * @param userTel
-     *            the userTel to set
+     * @param userCity
+     *            the userCity to set
      */
-    public void setUserTel(String userTel)
+    public void setUserCity(String userCity)
     {
-        mUserTel = userTel;
+        mUserCity = userCity;
     }
 
 }

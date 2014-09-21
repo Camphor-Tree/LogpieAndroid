@@ -5,7 +5,7 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-//TODO: remove all the set method. All the member variable should be final.
+// TODO: remove all the set method. All the member variable should be final.
 /**
  * Make LogpieActivity parcelable, so that it can be pass in the intent.
  * 
@@ -57,8 +57,9 @@ public class LogpieActivity implements Parcelable
      * @param startTime
      * @param endTime
      */
-    public LogpieActivity(String id, String userName, String description, LogpieLocation location,
-            String startTime, String endTime, int countLike, int countDislike)
+    public LogpieActivity(String id, String userName, String description,
+            LogpieLocation location, String startTime, String endTime, int countLike,
+            int countDislike)
     {
         mActivityID = id;
         mUserName = userName;
@@ -168,6 +169,18 @@ public class LogpieActivity implements Parcelable
 
     public void setComments(List<Comment> comments)
     {
+        mComments = comments;
+    }
+
+    public LogpieActivity(String id, String description, LogpieLocation location,
+            String startTime, String endTime, List<Comment> comments)
+    {
+        mUserID = id;
+        mDescription = description;
+        mLocation = location;
+        // TODO combine the time into one Period clss
+        this.mStartTime = startTime;
+        this.mEndTime = endTime;
         mComments = comments;
     }
 

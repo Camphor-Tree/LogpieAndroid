@@ -74,6 +74,7 @@ public class LanguageHelper
 
     public static int getId(String key, Context context)
     {
+
         LogpieSystemSetting setting = LogpieSystemSetting.getInstance(context);
         if (setting.getSystemSetting(KEY_LANGUAGE).equals(CHINESE))
         {
@@ -100,7 +101,8 @@ public class LanguageHelper
         case KEY_PASSWORD:
             return switchLanguage(R.string.password_cn, R.string.password_us);
         case KEY_CONFIRM_PASSWORD:
-            return switchLanguage(R.string.confirm_password_cn, R.string.confirm_password_us);
+            return switchLanguage(R.string.confirm_password_cn,
+                    R.string.confirm_password_us);
         case KEY_NICKNAME:
             return switchLanguage(R.string.nickname_cn, R.string.nickname_us);
         case KEY_CITY:
@@ -112,19 +114,24 @@ public class LanguageHelper
         case KEY_NEARBY:
             return switchLanguage(R.string.navigation_nearby_mode_cn,
                     R.string.navigation_nearby_mode_us);
+
             // Pull to refresh Header
         case KEY_PULL_TO_REFRESH:
-            return switchLanguage(R.string.pull_to_refresh_cn, R.string.pull_to_refresh_us);
+            return switchLanguage(R.string.pull_to_refresh_cn,
+                    R.string.pull_to_refresh_us);
         case KEY_RELEASE_TO_REFRESH:
-            return switchLanguage(R.string.release_to_refresh_cn, R.string.release_to_refresh_us);
+            return switchLanguage(R.string.release_to_refresh_cn,
+                    R.string.release_to_refresh_us);
         case KEY_REFRESHING:
             return switchLanguage(R.string.refreshing_cn, R.string.refreshing_us);
         case KEY_NOT_UPDATED_YET:
-            return switchLanguage(R.string.not_updated_yet_cn, R.string.not_updated_yet_us);
+            return switchLanguage(R.string.not_updated_yet_cn,
+                    R.string.not_updated_yet_us);
         case KEY_UPDATED_AT:
             return switchLanguage(R.string.updated_at_cn, R.string.updated_at_us);
         case KEY_UPDATED_JUST_NOW:
-            return switchLanguage(R.string.updated_just_now_cn, R.string.updated_just_now_us);
+            return switchLanguage(R.string.updated_just_now_cn,
+                    R.string.updated_just_now_us);
         case KEY_TIME_ERROR:
             return switchLanguage(R.string.time_error_cn, R.string.time_error_us);
         case KEY_MINUTE:
@@ -138,6 +145,7 @@ public class LanguageHelper
         case KEY_YEAR:
             return switchLanguage(R.string.year_cn, R.string.year_us);
             // Action Bar String
+
             // LogpieActivityDetailActivity
         case KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL:
             return switchLanguage(R.string.action_bar_string_activity_detail_cn,

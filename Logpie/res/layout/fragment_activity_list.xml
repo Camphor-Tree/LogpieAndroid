@@ -1,14 +1,24 @@
-Unstaged changes after reset:
-M	Logpie/.classpath
-M	Logpie/res/layout/activity_auth.xml
-D	Logpie/res/layout/activity_main.xml
-M	Logpie/res/layout/fragment_activity_list.xml
-D	Logpie/res/layout/fragment_activity_viewer.xml
-M	Logpie/src/com/logpie/android/ui/ActivityListFragment.java
-M	Logpie/src/com/logpie/android/ui/base/LogpieSingleFragmentActivity.java
-M	Logpie/src/com/logpie/android/ui/layout/LogpieRefreshLayout.java
-M	LogpieLib/src/com/logpie/android/connection/EndPoint.java
-M	LogpieLib/src/com/logpie/android/connection/GenericConnection.java
-M	LogpieLib/src/com/logpie/android/datastorage/SQLiteConfig.java
-M	LogpieTestAPK/.classpath
-M	LogpieUnitTests/.classpath
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingBottom="@dimen/activity_vertical_margin"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:paddingTop="@dimen/activity_vertical_margin"
+	tools:context="com.logpie.android.ui.SqureActivity$PlaceholderFragment" >
+
+	<com.logpie.android.ui.layout.LogpieRefreshLayout
+		android:id="@+id/refreshable_view"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+
+		<ListView
+			android:id="@+id/list_view"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent" >
+		</ListView>
+	</com.logpie.android.ui.layout.LogpieRefreshLayout>
+
+</RelativeLayout>

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Logpie's base theme the theme applied to the application or activity -->
-    <style name="LogpieBaseTheme"
-           parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <!-- Support library compatibility -->
-        <item name="actionBarStyle">@style/LogpieActionBar</item>
-    </style>
 
-    <!-- Login page theme. For login page -->
-    <style name="LogpieNoTileBarTheme" parent="LogpieBaseTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-    
-    <!-- ActionBar styles -->
-    <style name="LogpieActionBar"
-           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <!-- Support library compatibility -->
-        <item name="background">@color/Orange</item>
-    </style>
+	<!-- Logpie's base theme the theme applied to the application or activity -->
+	<style name="LogpieBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+
+		<!-- Support library compatibility -->
+		<item name="actionBarStyle">@style/LogpieActionBar</item>
+	</style>
+
+	<!-- Login page theme. For login page -->
+	<style name="LogpieNoTileBarTheme" parent="LogpieBaseTheme">
+		<item name="android:windowNoTitle">true</item>
+	</style>
+
+	<!-- ActionBar styles -->
+	<style name="LogpieActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+		<!-- Support library compatibility -->
+
+	</style>
+
 </resources>

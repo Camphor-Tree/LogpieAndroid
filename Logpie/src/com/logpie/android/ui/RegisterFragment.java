@@ -161,6 +161,7 @@ public class RegisterFragment extends Fragment
                     bundle.putString("nickname", name);
                     bundle.putString("city", nonNullCity);
 
+                    // Store the data into SQLite
                     DataStorage.getInstance(getActivity()).registerUser(bundle,
                             new LogpieCallback()
                             {

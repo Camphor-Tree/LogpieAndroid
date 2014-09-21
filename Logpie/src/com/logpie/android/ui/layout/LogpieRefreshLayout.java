@@ -485,6 +485,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
         mArrow = (ImageView) mHeader.findViewById(R.id.arrow);
         mDescriptionTextView = (TextView) mHeader.findViewById(R.id.description);
         mUpdateAtTextView = (TextView) mHeader.findViewById(R.id.updated_at);
+
         setUpUpdateAtTextView(context);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
