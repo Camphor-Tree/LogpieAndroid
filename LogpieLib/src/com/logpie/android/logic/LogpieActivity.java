@@ -245,7 +245,7 @@ public class LogpieActivity implements Parcelable
 
     public static String getFormatDate(Date date)
     {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(date);
     }
 
@@ -257,7 +257,7 @@ public class LogpieActivity implements Parcelable
 
     public static Date getFormatDate(String s) throws ParseException
     {
-        return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(s);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
     }
 
     public int getmCountLike()

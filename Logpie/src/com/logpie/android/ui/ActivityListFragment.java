@@ -83,6 +83,7 @@ public class ActivityListFragment extends LogpieBaseFragment
         mActivityList = (ArrayList<LogpieActivity>) activityList;
         mArrayAdapter = new ArrayAdapter<LogpieActivity>(getActivity(),
                 android.R.layout.simple_list_item_1, mActivityList);
+        LogpieLog.d(TAG, "Initialized activity list and ready to set adapter.");
         mListView.setAdapter(mArrayAdapter);
 
         mRefreshableView.setPullToRefreshCallback(new PullToRefreshCallback()
@@ -145,7 +146,7 @@ public class ActivityListFragment extends LogpieBaseFragment
             if (v == null)
             {
                 v = getActivity().getLayoutInflater().inflate(
-                        R.layout.fragment_activity_list_item, null);
+                        R.layout.fragment_activity_list_item, parent, false);
             }
 
             LogpieActivity activity = getItem(position);

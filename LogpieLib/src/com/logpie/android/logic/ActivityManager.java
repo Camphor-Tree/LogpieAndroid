@@ -184,6 +184,7 @@ public class ActivityManager
                 {
                     JSONObject data = new JSONObject(responseData);
                     parseJSONData(data, activityList);
+                    LogpieLog.d(TAG, "Successfully parsed response data.");
                     mActivityCallback.onSuccess(activityList);
                 } catch (JSONException e)
                 {
