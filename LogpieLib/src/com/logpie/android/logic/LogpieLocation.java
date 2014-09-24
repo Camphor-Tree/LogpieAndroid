@@ -3,6 +3,7 @@ package com.logpie.android.logic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.logpie.android.gis.BaiduAPIHelper;
 import com.logpie.android.gis.GisAPIHelper;
 import com.logpie.android.util.LogpieLog;
 
@@ -20,19 +21,9 @@ public class LogpieLocation implements Parcelable
     private String mAddress;
     private String mCity;
 
-    public LogpieLocation(Double lat, Double lon)
-    {
-        this(lat, lon, null, null);
-    }
-
     public LogpieLocation(String address)
     {
-        this(null, null, address, null);
-    }
-
-    public LogpieLocation(Double lat, Double lon, String address)
-    {
-        this(lat, lon, address, null);
+        mAddress = address;
     }
 
     public LogpieLocation(Double lat, Double lon, String address, String city)
@@ -50,6 +41,18 @@ public class LogpieLocation implements Parcelable
 
     public String getCity()
     {
+        if (mCity == null)
+        {
+            if (mAddress == null)
+            {
+                LogpieLog.e(TAG, "Cannot get the address from Logpie Location.");
+                return null;
+            }
+            LogpieLocation loc = BaiduAPIHelper.getLatLonFromAddressAndCity(mAddress,
+                    null);
+            mCity = BaiduAPIHelper.getCityFromLatLon(loc.getLatitude(),
+                    loc.getLongitude());
+        }
         return mCity;
     }
 
@@ -108,7 +111,8 @@ public class LogpieLocation implements Parcelable
     {
         if (mLatitude != null && mLongitude != null)
         {
-            LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", " + "mLongitude");
+            LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", "
+                    + "mLongitude");
             return GisAPIHelper.getCityFromLatLon(mLatitude, mLongitude);
         }
         else

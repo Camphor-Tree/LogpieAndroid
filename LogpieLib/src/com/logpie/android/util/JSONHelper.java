@@ -36,12 +36,12 @@ public class JSONHelper
 
     public static JSONArray buildQueryKey(ArrayList<String> columns) throws JSONException
     {
+        JSONArray array = new JSONArray();
         if (columns == null)
         {
-            return null;
+            return array;
         }
 
-        JSONArray array = new JSONArray();
         for (int i = 0; i < columns.size(); i++)
         {
             JSONObject o = new JSONObject();
@@ -60,6 +60,7 @@ public class JSONHelper
             o.put(RequestKeys.KEY_CONSTRAINT_COLUMN, columns.get(i));
             o.put(RequestKeys.KEY_CONSTRAINT_OPERATOR, operators.get(i));
             o.put(RequestKeys.KEY_CONSTRAINT_VALUE, values.get(i));
+            array.put(o);
         }
         return array;
     }

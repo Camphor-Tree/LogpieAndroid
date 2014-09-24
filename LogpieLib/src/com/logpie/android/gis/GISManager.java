@@ -35,14 +35,16 @@ public class GISManager
     private GISManager(Context context)
     {
         mContext = context;
-        mCurrentLocation = new LogpieLocation(null, null);
-        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        mCurrentLocation = new LogpieLocation(null, null, null, null);
+        mLocationManager = (LocationManager) context
+                .getSystemService(Context.LOCATION_SERVICE);
 
         /**
          * LogpieLocationListener keep an instance of GISManager. it will update
          * the Lat/Lng in GISManager.
          */
-        LogpieLocationListener locationListener = new LogpieLocationListener(this, "LogpieDefaultLocationListener");
+        LogpieLocationListener locationListener = new LogpieLocationListener(this,
+                "LogpieDefaultLocationListener");
         LogpieLog.d(TAG, "location listener is instantiated.");
         addLocationListener(locationListener);
     }
@@ -59,10 +61,10 @@ public class GISManager
 
     public void checkLocationAvailable()
     {
-    	LogpieLog.d(TAG, "Checking location availability...");
+        LogpieLog.d(TAG, "Checking location availability...");
         if (mLocationManager == null)
         {
-        	LogpieLog.d(TAG, "mLocationManager is null...");
+            LogpieLog.d(TAG, "mLocationManager is null...");
             if (mContext != null)
             {
                 mLocationManager = (LocationManager) mContext
@@ -71,15 +73,16 @@ public class GISManager
             else
             {
                 mIsLocationAvailable = false;
-                LogpieLog.e(TAG,
-                        "mLocationManger is null & mContext is also null! This should be a bug.");
+                LogpieLog
+                        .e(TAG,
+                                "mLocationManger is null & mContext is also null! This should be a bug.");
                 return;
             }
         }
         if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
         {
-        	LogpieLog.d(TAG, "Setting mIsLocationAvailable as true...");
+            LogpieLog.d(TAG, "Setting mIsLocationAvailable as true...");
             mIsLocationAvailable = true;
             return;
         }
@@ -105,7 +108,7 @@ public class GISManager
 
         if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
-        	return true;
+            return true;
         }
         return false;
     }
@@ -136,25 +139,29 @@ public class GISManager
     {
         if (isGPSAvailable())
         {
-        	LogpieLog.d(TAG, "GPS is enabled. Android Location Manager is starting to request location update...");
-            new LocationThread(locationListener, mLocationManager, true);            
+            LogpieLog
+                    .d(TAG,
+                            "GPS is enabled. Android Location Manager is starting to request location update...");
+            new LocationThread(locationListener, mLocationManager, true);
         }
         else if (isNetworkAvailable())
         {
-        	LogpieLog.d(TAG, "Network is enabled. Android Location Manager is starting to request location update...");
-        	new LocationThread(locationListener, mLocationManager, false);            
+            LogpieLog
+                    .d(TAG,
+                            "Network is enabled. Android Location Manager is starting to request location update...");
+            new LocationThread(locationListener, mLocationManager, false);
         }
         LogpieLog.d(TAG, "Finished call addLocationListerner().");
-        
+
     }
-    
+
     public void updateGPSCoordinates(Location location)
     {
         if (location != null)
         {
             mCurrentLocation.setLatitude(location.getLatitude());
             mCurrentLocation.setLongitude(location.getLongitude());
-            LogpieLog.d(TAG, location.getLatitude()+", "+location.getLongitude());
+            LogpieLog.d(TAG, location.getLatitude() + ", " + location.getLongitude());
         }
     }
 
@@ -167,24 +174,27 @@ public class GISManager
 
     public LogpieLocation getCurrentLocation()
     {
-    	LogpieLog.d(TAG, "Getting current location... ");
-    	checkLocationAvailable();
+        LogpieLog.d(TAG, "Getting current location... ");
+        checkLocationAvailable();
         if (mIsLocationAvailable)
-        {   
-        	if (isGPSAvailable())
-        	{
-        		LogpieLog.d(TAG, "getting city from gps...");        		
-        		Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        		LogpieLog.d(TAG, "get location instance...");
-        		updateGPSCoordinates(location);
-        		LogpieLog.d(TAG, "finished update the coordinates.");
-        	}else
-        	{
-        		LogpieLog.d(TAG, "getting city from network...");
-        		Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                updateGPSCoordinates(location);                
-        	}        
-        	return mCurrentLocation;
+        {
+            if (isGPSAvailable())
+            {
+                LogpieLog.d(TAG, "getting city from gps...");
+                Location location = mLocationManager
+                        .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                LogpieLog.d(TAG, "get location instance...");
+                updateGPSCoordinates(location);
+                LogpieLog.d(TAG, "finished update the coordinates.");
+            }
+            else
+            {
+                LogpieLog.d(TAG, "getting city from network...");
+                Location location = mLocationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                updateGPSCoordinates(location);
+            }
+            return mCurrentLocation;
         }
         else
         {
@@ -281,5 +291,5 @@ public class GISManager
     {
         mCurrentLocation = currentLocation;
     }
-    
+
 }

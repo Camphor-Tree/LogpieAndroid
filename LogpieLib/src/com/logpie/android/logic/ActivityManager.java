@@ -21,7 +21,8 @@ import com.logpie.android.util.ResponseKeys;
 public class ActivityManager
 {
     private static final String TAG = ActivityManager.class.getName();
-    private static final int MAXIMUM_NUMBER_OF_EACH_SERVICE_CALL = 25;
+    // Each request will just request 25 records.
+    private static final int MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL = 25;
     public static final int MODE_INITIAL = 0;
     public static final int MODE_LOAD_MORE = 1;
     public static final int MODE_REFRESH_MORE = 2;
@@ -66,7 +67,7 @@ public class ActivityManager
 
         // TODO: Authenticate the token
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.LogpieService, mContext);
+        connection.initialize(ServiceURL.ActivityService, mContext);
 
         try
         {
@@ -81,7 +82,7 @@ public class ActivityManager
             ArrayList<String> operator = new ArrayList<String>();
             ArrayList<String> value = new ArrayList<String>();
 
-            city = "北京";
+            city = "北京市";
 
             if (city == null)
             {
@@ -106,7 +107,7 @@ public class ActivityManager
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
-                    MAXIMUM_NUMBER_OF_EACH_SERVICE_CALL);
+                    Integer.toString(MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL));
 
             connection.setRequestData(postData);
         } catch (JSONException e)
@@ -168,11 +169,12 @@ public class ActivityManager
         public void onSuccess(Bundle result)
         {
             ArrayList<LogpieActivity> activityList = new ArrayList<LogpieActivity>();
-            String metadata = result.getString(GenericConnection.KEY_RESPONSE_DATA);
-            if (metadata == null)
+            String responseData = result.getString(GenericConnection.KEY_RESPONSE_DATA);
+            if (responseData == null)
             {
                 Bundle errorMessage = new Bundle();
-                errorMessage.putString(ResponseKeys.KEY_ERROR_MESSAGE, metadata);
+                errorMessage.putString(ResponseKeys.KEY_ERROR_MESSAGE,
+                        "Response data is null.");
                 LogpieLog.e(TAG, "The metadata is null when parsing the response data.");
                 mActivityCallback.onError(errorMessage);
             }
@@ -180,7 +182,7 @@ public class ActivityManager
             {
                 try
                 {
-                    JSONObject data = new JSONObject(metadata);
+                    JSONObject data = new JSONObject(responseData);
                     parseJSONData(data, activityList);
                     mActivityCallback.onSuccess(activityList);
                 } catch (JSONException e)
@@ -203,16 +205,58 @@ public class ActivityManager
         private ArrayList<LogpieActivity> parseJSONData(JSONObject data,
                 ArrayList<LogpieActivity> activityList)
         {
-            String id = "1";
-            String description = "Party";
-            LogpieLocation location = new LogpieLocation("2400 4th Ave, Seattle WA");
-            String startTime = "10/30 4:00";
-            String endTime = "10/30 6:00";
-            LogpieActivity activity = new LogpieActivity(id, description, location,
-                    startTime, endTime, null);
-            activityList.add(activity);
+            try
+            {
+                if (data.isNull(ResponseKeys.KEY_RESPONSE_ID))
+                {
+                    LogpieLog.e(TAG,
+                            "Cannot find the response ID from the response data.");
+                }
+                String requestID = data.getString(ResponseKeys.KEY_RESPONSE_ID);
 
-            return activityList;
+                if (data.isNull(ResponseKeys.KEY_ACTIVITY_RESULT)
+                        || !data.getString(ResponseKeys.KEY_ACTIVITY_RESULT).equals(
+                                ResponseKeys.RESULT_SUCCESS))
+                {
+                    LogpieLog
+                            .e(TAG,
+                                    "Failed to get the successful activity result from the response data.");
+                    return null;
+                }
+
+                if (data.isNull(ResponseKeys.KEY_REQUEST_TYPE)
+                        || !data.getString(ResponseKeys.KEY_REQUEST_TYPE).equals(
+                                ResponseKeys.REQUEST_TYPE_QUERY))
+                {
+                    LogpieLog
+                            .e(TAG,
+                                    "Failed to get the correct request type from the response data.");
+                    return null;
+                }
+
+                if (data.isNull(ResponseKeys.KEY_METADATA)
+                        || data.getJSONArray(ResponseKeys.KEY_METADATA) == null)
+                {
+                    LogpieLog
+                            .e(TAG, "Failed to get the metadata from the response data.");
+                    return null;
+                }
+
+                JSONArray metadata = data.getJSONArray(ResponseKeys.KEY_METADATA);
+                for (int i = 0; i < metadata.length(); i++)
+                {
+                    JSONObject o = metadata.getJSONObject(i);
+                    LogpieActivity activity = LogpieActivity.ActivityJSONHelper(o);
+                    activityList.add(activity);
+                }
+                return activityList;
+            } catch (JSONException e)
+            {
+                LogpieLog
+                        .e(TAG, "JSONException happened when parsing the response data.");
+                e.printStackTrace();
+            }
+            return null;
         }
 
     }

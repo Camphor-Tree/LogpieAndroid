@@ -16,11 +16,32 @@ public class EndPoint
         RocektService("RocketService", "https://10.0.0.6:8443/RocketService/servlet",
                 "1.0.0", "test", true, false, true),
 
-        AuthenticationService("RocketService",
-                "http://10.0.0.19:8080/AuthenticationService/server", "1.0.0", "test",
-                true, true, false),
+        AuthenticationService("AuthenticationService",
+                "http://10.0.0.19:8080/LogpieService/auth", "1.0.0", "test", true, true,
+                false),
 
-        LogpieService("LogpieService", "http://10.0.0.19:8080/LogpieService/server",
+        CustomerService("CustomerService",
+                "http://10.0.0.19:8080/LogpieService/customer", "1.0.0", "test", true,
+                true, false),
+
+        ActivityService("ActivityService",
+                "http://10.0.0.19:8080/LogpieService/activity", "1.0.0", "test", true,
+                true, false),
+
+        // EC2 Service URL
+        AuthenticationServiceEC2(
+                "AuthenticationService",
+                "http://ec2-54-68-64-62.us-west-2.compute.amazonaws.com:8080/LogpieService/auth",
+                "1.0.0", "test", true, true, false),
+
+        CustomerServiceEC2(
+                "CustomerService",
+                "http://ec2-54-68-64-62.us-west-2.compute.amazonaws.com:8080/LogpieService/customer",
+                "1.0.0", "test", true, true, false),
+
+        ActivityServiceEC2(
+                "ActivityService",
+                "http://ec2-54-68-64-62.us-west-2.compute.amazonaws.com:8080/LogpieService/activity",
                 "1.0.0", "test", true, true, false);
 
         String mServiceName;

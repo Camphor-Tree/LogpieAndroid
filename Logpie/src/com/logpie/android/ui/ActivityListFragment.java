@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.logpie.android.R;
 import com.logpie.android.logic.ActivityManager;
@@ -30,18 +32,20 @@ import com.logpie.android.util.LogpieLog;
 public class ActivityListFragment extends LogpieBaseFragment
 {
     private static final String TAG = ActivityListFragment.class.getName();
+
     private LogpieRefreshLayout mRefreshableView;
     private ListView mListView;
     private ArrayAdapter<LogpieActivity> mArrayAdapter;
 
-    private ActivityManager mActivityManager = ActivityManager.getInstance(getActivity());
+    private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
     private User user;
 
     @Override
     public void handleOnCreate(Bundle savedInstanceState)
     {
-        user = NormalUser.getInstance();
+        user = NormalUser.getInstance(getActivity());
+        mActivityManager = ActivityManager.getInstance(getActivity());
     }
 
     @Override
@@ -76,6 +80,7 @@ public class ActivityListFragment extends LogpieBaseFragment
 
     private void onSucceed(List<LogpieActivity> activityList)
     {
+        mActivityList = (ArrayList<LogpieActivity>) activityList;
         mArrayAdapter = new ArrayAdapter<LogpieActivity>(getActivity(),
                 android.R.layout.simple_list_item_1, mActivityList);
         mListView.setAdapter(mArrayAdapter);
@@ -135,11 +140,11 @@ public class ActivityListFragment extends LogpieBaseFragment
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent)
+        public View getView(int position, View v, ViewGroup parent)
         {
-            if (convertView == null)
+            if (v == null)
             {
-                convertView = getActivity().getLayoutInflater().inflate(
+                v = getActivity().getLayoutInflater().inflate(
                         R.layout.fragment_activity_list_item, null);
             }
 
@@ -147,8 +152,54 @@ public class ActivityListFragment extends LogpieBaseFragment
             /**
              * set UI of each activity part
              */
+            ImageView avatar = (ImageView) v.findViewById(R.id.activity_list_user_avatar);
 
-            return convertView;
+            TextView nickname = (TextView) v
+                    .findViewById(R.id.activity_list_user_nickname);
+            nickname.setText(activity.getmUserName());
+
+            TextView createTime = (TextView) v
+                    .findViewById(R.id.activity_list_create_time);
+            createTime.setText(LogpieActivity.getFormatDate(activity.getmCreateTime()));
+
+            TextView description = (TextView) v
+                    .findViewById(R.id.activity_list_description);
+            description.setText(activity.getmDescription());
+
+            TextView location = (TextView) v.findViewById(R.id.activity_list_location);
+            location.setText(activity.getmLocation().getAddress());
+
+            TextView city = (TextView) v.findViewById(R.id.activity_list_city);
+            city.setText(activity.getmLocation().getCity());
+
+            TextView startTime = (TextView) v.findViewById(R.id.activity_list_start_time);
+            startTime.setText(LogpieActivity.getFormatDate(activity.getmStartTime()));
+
+            TextView endTime = (TextView) v.findViewById(R.id.activity_list_end_time);
+            endTime.setText(LogpieActivity.getFormatDate(activity.getmEndTime()));
+
+            TextView like = (TextView) v.findViewById(R.id.activity_list_count_like);
+            like.setText(activity.getmCountLike());
+
+            TextView dislike = (TextView) v
+                    .findViewById(R.id.activity_list_count_dislike);
+            dislike.setText(activity.getmCountDislike());
+
+            ImageView ic_location = (ImageView) v
+                    .findViewById(R.id.activity_list_ic_location);
+            ImageView ic_time = (ImageView) v.findViewById(R.id.activity_list_ic_time);
+            ImageView ic_like = (ImageView) v
+                    .findViewById(R.id.activity_list_ic_count_like);
+            ImageView ic_dislike = (ImageView) v
+                    .findViewById(R.id.activity_list_ic_count_dislike);
+
+            ImageView ic_more = (ImageView) v
+                    .findViewById(R.id.activity_list_more_functions);
+
+            ImageView ic_comment = (ImageView) v
+                    .findViewById(R.id.activity_list_ic_comment);
+
+            return v;
         }
     }
 }

@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.logpie.android.connection.SimpleAPIConnection;
 import com.logpie.android.logic.LogpieLocation;
@@ -23,24 +22,26 @@ public class BaiduAPIHelper
     {
         if (lat == null || lon == null)
         {
-            LogpieLog.e(TAG,
-                    "Building reverseGeocodingURL error, because the lat/lon cannot be null");
+            LogpieLog
+                    .e(TAG,
+                            "Building reverseGeocodingURL error, because the lat/lon cannot be null");
             return null;
         }
         return String
                 .format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderReverse&location=%s,%s&output=json&pois=0",
                         APIkey, lat, lon);
     }
-    
+
     private static String buildQueryGeocodingURL(final String address, final String city)
     {
-        if(TextUtils.isEmpty(address)&&TextUtils.isEmpty(city))
+        if (TextUtils.isEmpty(address) && TextUtils.isEmpty(city))
         {
-            LogpieLog.e(TAG,
-                    "Address and city cannot both be null!");
+            LogpieLog.e(TAG, "Address and city cannot both be null!");
             return null;
         }
-        return String.format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderOption&output=json&address=%s&city=%s", APIkey,encodeChineseToUTF8(address),encodeChineseToUTF8(city));    
+        return String
+                .format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderOption&output=json&address=%s&city=%s",
+                        APIkey, encodeChineseToUTF8(address), encodeChineseToUTF8(city));
     }
 
     /**
@@ -57,8 +58,9 @@ public class BaiduAPIHelper
     {
         if (lat == null || lon == null)
         {
-            LogpieLog.e(TAG,
-                    "Building reverseGeocodingURL error, because the lat/lon cannot be null");
+            LogpieLog
+                    .e(TAG,
+                            "Building reverseGeocodingURL error, because the lat/lon cannot be null");
             return null;
         }
 
@@ -73,14 +75,15 @@ public class BaiduAPIHelper
         // Since baidu API's response will contain:
         // renderReverse&&renderReverse(), need to remove that first.
         String resultAfterCutHead = removeHeaderInResult(resultString);
-        JSONObject result =  getResultJSON(resultAfterCutHead);
+        JSONObject result = getResultJSON(resultAfterCutHead);
 
         try
         {
             if (checkWhetherSuccess(result))
             {
                 JSONObject resultJSON = result.getJSONObject("result");
-                JSONObject addressComponentJSON = resultJSON.getJSONObject("addressComponent");
+                JSONObject addressComponentJSON = resultJSON
+                        .getJSONObject("addressComponent");
                 String city = addressComponentJSON.getString("city");
                 if (TextHelper.checkIfNull(city))
                 {
@@ -106,21 +109,22 @@ public class BaiduAPIHelper
             return null;
         }
     }
-    
-    public static LogpieLocation getLatLonFromAddressAndCity(final String address, final String city)
+
+    public static LogpieLocation getLatLonFromAddressAndCity(final String address,
+            final String city)
     {
-        String queryURL = buildQueryGeocodingURL(address,city);
+        String queryURL = buildQueryGeocodingURL(address, city);
         if (queryURL == null)
         {
             LogpieLog.e(TAG, "queryURL cannot be null. Returning null");
             return null;
         }
-        
+
         String resultString = SimpleAPIConnection.doGetQuery(queryURL);
         // Since baidu API's response will contain:
         // renderReverse&&renderReverse(), need to remove that first.
         String resultAfterCutHead = removeHeaderInResult(resultString);
-        JSONObject result =  getResultJSON(resultAfterCutHead);
+        JSONObject result = getResultJSON(resultAfterCutHead);
 
         try
         {
@@ -130,14 +134,15 @@ public class BaiduAPIHelper
                 JSONObject locationComponentJSON = resultJSON.getJSONObject("location");
                 String longitude = locationComponentJSON.getString("lng");
                 String latitude = locationComponentJSON.getString("lat");
-                if (TextHelper.checkIfNull(longitude)||TextHelper.checkIfNull(latitude))
+                if (TextHelper.checkIfNull(longitude) || TextHelper.checkIfNull(latitude))
                 {
-                    LogpieLog.e(TAG,"Latitude or longitude is null!");
+                    LogpieLog.e(TAG, "Latitude or longitude is null!");
                     return null;
                 }
                 else
                 {
-                    return new LogpieLocation(Double.valueOf(latitude),Double.valueOf(longitude),address,city);
+                    return new LogpieLocation(Double.valueOf(latitude),
+                            Double.valueOf(longitude), address, city);
                 }
             }
             else
@@ -154,14 +159,14 @@ public class BaiduAPIHelper
             e.printStackTrace();
             return null;
         }
-        
+
     }
 
     private static String removeHeaderInResult(String result)
     {
         return result.substring(result.indexOf("(") + 1, result.length() - 1);
     }
-    
+
     private static JSONObject getResultJSON(String resultString)
     {
         JSONObject result = null;
@@ -175,7 +180,7 @@ public class BaiduAPIHelper
         }
         return result;
     }
-    
+
     private static boolean checkWhetherSuccess(JSONObject resultJSON)
     {
         try
@@ -186,17 +191,24 @@ public class BaiduAPIHelper
             }
         } catch (JSONException e)
         {
-            LogpieLog.e(TAG, "The result may not contain status, something wrong with the baidu server");
+            LogpieLog
+                    .e(TAG,
+                            "The result may not contain status, something wrong with the baidu server");
             e.printStackTrace();
         }
         return false;
     }
-    
+
     private static String encodeChineseToUTF8(String chinese)
     {
+        // if the city is null, then just leave an empty string
+        if (chinese == null)
+        {
+            return "";
+        }
         try
         {
-            return URLEncoder.encode(chinese,"utf-8");
+            return URLEncoder.encode(chinese, "utf-8");
         } catch (UnsupportedEncodingException e)
         {
             return null;

@@ -44,7 +44,7 @@ public class SquareActivity extends ActionBarActivity
         LogpieAccount account = AuthManager.getInstance(getApplicationContext())
                 .getCurrentAccount();
 
-        if (account == null)
+        if (account != null)
         {
             ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
                     AuthActivity.class);

@@ -48,12 +48,10 @@ public class ResponseKeys
     public static final String KEY_IS_ORGANIZATION = "com.logpie.is.organization";
 
     public static final String KEY_AID = "com.logpie.aid";
-    public static final String KEY_CREATE_USER = "com.logpie.create.user";
     public static final String KEY_DESCRIPTION = "com.logpie.description";
     public static final String KEY_LOCATION = "com.logpie.location";
     public static final String KEY_LATITUDE = "com.logpie.latitude";
     public static final String KEY_LONGITUDE = "com.logpie.longitude";
-    public static final String KEY_ADDRESS = "com.logpie.address";
     public static final String KEY_CREATE_TIME = "com.logpie.create.time";
     public static final String KEY_START_TIME = "com.logpie.start.time";
     public static final String KEY_END_TIME = "com.logpie.end.time";
