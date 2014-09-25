@@ -6,7 +6,8 @@
 
 	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="48dp" >
+		android:layout_height="48dp"
+		android:layout_marginTop="8dp" >
 
 		<ImageView
 			android:id="@+id/activity_list_user_avatar"
@@ -35,7 +36,6 @@
 			android:layout_toLeftOf="@id/activity_list_more_functions"
 			android:layout_toRightOf="@id/activity_list_user_avatar"
 			android:fontFamily="微软雅黑"
-			android:text="测试名字"
 			android:textStyle="bold" />
 
 		<TextView
@@ -46,8 +46,7 @@
 			android:layout_marginLeft="8dp"
 			android:layout_toLeftOf="@id/activity_list_more_functions"
 			android:layout_toRightOf="@id/activity_list_user_avatar"
-			android:fontFamily="微软雅黑"
-			android:text="16:55" />
+			android:fontFamily="微软雅黑" />
 	</RelativeLayout>
 
 	<LinearLayout
@@ -67,7 +66,6 @@
 			android:paddingLeft="16dp"
 			android:paddingRight="16dp"
 			android:paddingTop="4dp"
-			android:text="乔巴: 今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧"
 			android:textSize="18sp" />
 	</LinearLayout>
 
@@ -77,10 +75,10 @@
 
 		<ImageView
 			android:id="@+id/activity_list_ic_location"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
+			android:layout_width="20dp"
+			android:layout_height="20dp"
 			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="16dp"
+			android:layout_marginLeft="8dp"
 			android:layout_marginRight="8dp"
 			android:src="@drawable/ic_action_map" />
 
@@ -93,8 +91,7 @@
 			android:layout_marginTop="2dp"
 			android:layout_toRightOf="@id/activity_list_ic_location"
 			android:fontFamily="微软雅黑"
-			android:lines="1"
-			android:text="森林公园" />
+			android:lines="1" />
 
 		<TextView
 			android:id="@+id/activity_list_city"
@@ -104,8 +101,7 @@
 			android:layout_marginTop="2dp"
 			android:layout_toRightOf="@id/activity_list_location"
 			android:fontFamily="微软雅黑"
-			android:lines="1"
-			android:text="北京" />
+			android:lines="1" />
 
 		<TextView
 			android:id="@+id/activity_list_end_time"
@@ -113,11 +109,10 @@
 			android:layout_height="20dp"
 			android:layout_alignParentRight="true"
 			android:layout_marginBottom="2dp"
-			android:layout_marginRight="16dp"
+			android:layout_marginRight="8dp"
 			android:layout_marginTop="2dp"
 			android:fontFamily="微软雅黑"
-			android:lines="1"
-			android:text="End time: 08-21 9:00" />
+			android:lines="1" />
 
 		<TextView
 			android:id="@+id/activity_list_start_time"
@@ -128,8 +123,7 @@
 			android:layout_marginTop="2dp"
 			android:layout_toLeftOf="@id/activity_list_end_time"
 			android:fontFamily="微软雅黑"
-			android:lines="1"
-			android:text="Start time: 08-21 6:00" />
+			android:lines="1" />
 
 		<ImageView
 			android:id="@+id/activity_list_ic_time"
@@ -149,7 +143,7 @@
 			android:layout_width="24dp"
 			android:layout_height="24dp"
 			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="16dp"
+			android:layout_marginLeft="8dp"
 			android:layout_marginRight="8dp"
 			android:src="@drawable/ic_action_good" />
 
@@ -162,8 +156,7 @@
 			android:layout_marginTop="2dp"
 			android:layout_toRightOf="@id/activity_list_ic_count_like"
 			android:fontFamily="微软雅黑"
-			android:lines="1"
-			android:text="24" />
+			android:lines="1" />
 
 		<ImageView
 			android:id="@+id/activity_list_ic_count_dislike"
@@ -183,8 +176,7 @@
 			android:layout_marginTop="2dp"
 			android:layout_toRightOf="@id/activity_list_ic_count_dislike"
 			android:fontFamily="微软雅黑"
-			android:lines="1"
-			android:text="20" />
+			android:lines="1" />
 
 		<TextView
 			android:id="@+id/activity_list_comment"
@@ -192,7 +184,7 @@
 			android:layout_height="20dp"
 			android:layout_alignParentRight="true"
 			android:layout_marginBottom="2dp"
-			android:layout_marginRight="16dp"
+			android:layout_marginRight="8dp"
 			android:layout_marginTop="2dp"
 			android:fontFamily="微软雅黑"
 			android:lines="1"

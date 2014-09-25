@@ -3,7 +3,6 @@ package com.logpie.android.logic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.logpie.android.gis.BaiduAPIHelper;
 import com.logpie.android.gis.GisAPIHelper;
 import com.logpie.android.util.LogpieLog;
 
@@ -48,10 +47,12 @@ public class LogpieLocation implements Parcelable
                 LogpieLog.e(TAG, "Cannot get the address from Logpie Location.");
                 return null;
             }
-            LogpieLocation loc = BaiduAPIHelper.getLatLonFromAddressAndCity(mAddress,
-                    null);
-            mCity = BaiduAPIHelper.getCityFromLatLon(loc.getLatitude(),
-                    loc.getLongitude());
+            /*
+             * LogpieLocation loc =
+             * BaiduAPIHelper.getLatLonFromAddressAndCity(mAddress, null); mCity
+             * = BaiduAPIHelper.getCityFromLatLon(loc.getLatitude(),
+             * loc.getLongitude());
+             */
         }
         return mCity;
     }

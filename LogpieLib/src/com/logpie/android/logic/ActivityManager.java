@@ -246,6 +246,8 @@ public class ActivityManager
                 JSONArray metadata = data.getJSONArray(ResponseKeys.KEY_METADATA);
                 for (int i = 0; i < metadata.length(); i++)
                 {
+                    LogpieLog.d(TAG, "Metadata has " + String.valueOf(metadata.length())
+                            + " JSON objects.");
                     JSONObject o = metadata.getJSONObject(i);
                     LogpieActivity activity = LogpieActivity.ActivityJSONHelper(o);
                     activityList.add(activity);

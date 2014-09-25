@@ -3,7 +3,9 @@ package com.logpie.android.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,6 @@ import com.logpie.android.logic.ActivityManager.ActivityCallback;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.NormalUser;
 import com.logpie.android.logic.User;
-import com.logpie.android.ui.base.LogpieBaseFragment;
 import com.logpie.android.ui.layout.LogpieRefreshLayout;
 import com.logpie.android.ui.layout.LogpieRefreshLayout.PullToRefreshCallback;
 import com.logpie.android.util.LogpieLog;
@@ -29,62 +30,44 @@ import com.logpie.android.util.LogpieLog;
  * @author yilei
  * 
  */
-public class ActivityListFragment extends LogpieBaseFragment
+public class ActivityListFragment extends ListFragment
 {
     private static final String TAG = ActivityListFragment.class.getName();
 
     private LogpieRefreshLayout mRefreshableView;
     private ListView mListView;
-    private ArrayAdapter<LogpieActivity> mArrayAdapter;
+    private ActivityAdapter mArrayAdapter;
 
     private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
     private User user;
 
     @Override
-    public void handleOnCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
+        super.onCreate(savedInstanceState);
         user = NormalUser.getInstance(getActivity());
         mActivityManager = ActivityManager.getInstance(getActivity());
+        new FetchItemsTask().execute();
     }
 
     @Override
-    public View handleOnCreateView(LayoutInflater inflater, ViewGroup parent,
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState)
     {
+        if (inflater == null || parent == null)
+        {
+            LogpieLog.e(TAG, "Inflator or ViewGroup is null! It is impossible.");
+            return null;
+        }
         LogpieLog.i(TAG, "Starting handleOnCreateView() in ActivityListFragment");
         View v = inflater.inflate(R.layout.fragment_activity_list, parent, false);
+
         mRefreshableView = (LogpieRefreshLayout) v.findViewById(R.id.refreshable_view);
-        mListView = (ListView) v.findViewById(R.id.list_view);
+        mListView = (ListView) v.findViewById(android.R.id.list);
+        mArrayAdapter = new ActivityAdapter(mActivityList);
 
-        ActivityCallback callback = new ActivityCallback()
-        {
-
-            @Override
-            public void onSuccess(List<LogpieActivity> activityList)
-            {
-                onSucceed(activityList);
-            }
-
-            @Override
-            public void onError(Bundle bundle)
-            {
-                onFailed(bundle);
-            }
-        };
-
-        mActivityManager.getActivityListByCity(user, ActivityManager.MODE_INITIAL, null,
-                mActivityManager.new ActivityCallbackAdapter(callback));
-        return new View(getActivity());
-    }
-
-    private void onSucceed(List<LogpieActivity> activityList)
-    {
-        mActivityList = (ArrayList<LogpieActivity>) activityList;
-        mArrayAdapter = new ArrayAdapter<LogpieActivity>(getActivity(),
-                android.R.layout.simple_list_item_1, mActivityList);
-        LogpieLog.d(TAG, "Initialized activity list and ready to set adapter.");
-        mListView.setAdapter(mArrayAdapter);
+        setupAdapter(mArrayAdapter);
 
         mRefreshableView.setPullToRefreshCallback(new PullToRefreshCallback()
         {
@@ -95,40 +78,37 @@ public class ActivityListFragment extends LogpieBaseFragment
                 try
                 {
                     Thread.sleep(2000);
+
                 } catch (InterruptedException e)
                 {
                     e.printStackTrace();
                 }
             }
         }, 0);
+
+        return v;
     }
 
-    private void onFailed(Bundle bundle)
+    void setupAdapter(ArrayAdapter adapter)
     {
-        mArrayAdapter = new ArrayAdapter<LogpieActivity>(getActivity(),
-                android.R.layout.simple_list_item_1, mActivityList);
-        mListView.setAdapter(mArrayAdapter);
-
-        mRefreshableView.setPullToRefreshCallback(new PullToRefreshCallback()
+        if (getActivity() == null || mListView == null)
         {
-
-            @Override
-            public void onRefresh()
-            {
-                try
-                {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }, 0);
-        LogpieLog.e(TAG, "Failed to get latest activity list.");
+            return;
+        }
+        if (mActivityList != null)
+        {
+            LogpieLog.d(TAG, "List is not null!");
+            mListView.setAdapter(adapter);
+        }
+        else
+        {
+            LogpieLog.d(TAG, "List is null!");
+            mListView.setAdapter(null);
+        }
     }
 
     /**
-     * Customize a new adapter working with Crime object
+     * Customize a new adapter working with Activity object
      * 
      * @author xujiahang
      * 
@@ -146,10 +126,11 @@ public class ActivityListFragment extends LogpieBaseFragment
             if (v == null)
             {
                 v = getActivity().getLayoutInflater().inflate(
-                        R.layout.fragment_activity_list_item, parent, false);
+                        R.layout.fragment_activity_list_item, null);
             }
 
             LogpieActivity activity = getItem(position);
+            LogpieLog.d(TAG, "Initialize the UI...");
             /**
              * set UI of each activity part
              */
@@ -180,11 +161,13 @@ public class ActivityListFragment extends LogpieBaseFragment
             endTime.setText(LogpieActivity.getFormatDate(activity.getmEndTime()));
 
             TextView like = (TextView) v.findViewById(R.id.activity_list_count_like);
-            like.setText(activity.getmCountLike());
+            like.setText(String.valueOf(activity.getmCountLike()));
 
             TextView dislike = (TextView) v
                     .findViewById(R.id.activity_list_count_dislike);
-            dislike.setText(activity.getmCountDislike());
+            dislike.setText(String.valueOf(activity.getmCountDislike()));
+
+            TextView comment = (TextView) v.findViewById(R.id.activity_list_comment);
 
             ImageView ic_location = (ImageView) v
                     .findViewById(R.id.activity_list_ic_location);
@@ -203,4 +186,55 @@ public class ActivityListFragment extends LogpieBaseFragment
             return v;
         }
     }
+
+    private class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<LogpieActivity>>
+    {
+        ArrayList<LogpieActivity> mList = new ArrayList<LogpieActivity>();
+
+        @Override
+        protected ArrayList<LogpieActivity> doInBackground(Void... params)
+        {
+
+            ActivityCallback callback = new ActivityCallback()
+            {
+                @Override
+                public void onSuccess(List<LogpieActivity> activityList)
+                {
+                    mList.addAll(activityList);
+                }
+
+                @Override
+                public void onError(Bundle bundle)
+                {
+
+                }
+            };
+
+            ActivityListFragment.this.mActivityManager
+                    .getActivityListByCity(
+                            user,
+                            ActivityManager.MODE_INITIAL,
+                            null,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+
+            return mList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<LogpieActivity> items)
+        {
+            LogpieLog.d(TAG, "Finished Async Task.");
+            if (ActivityListFragment.this.mActivityList == null)
+            {
+                ActivityListFragment.this.mActivityList = new ArrayList<LogpieActivity>();
+            }
+            ActivityListFragment.this.mActivityList = items;
+            mArrayAdapter = new ActivityAdapter(mActivityList);
+
+            setupAdapter(mArrayAdapter);
+        }
+
+    }
+
 }

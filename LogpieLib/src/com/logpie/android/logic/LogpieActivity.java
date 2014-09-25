@@ -110,8 +110,9 @@ public class LogpieActivity implements Parcelable
             String uid = data.getString(ResponseKeys.KEY_UID);
             String userName = data.getString(ResponseKeys.KEY_NICKNAME);
             String description = data.getString(ResponseKeys.KEY_DESCRIPTION);
-            LogpieLocation location = new LogpieLocation(
-                    data.getString(ResponseKeys.KEY_LOCATION));
+            LogpieLocation location = new LogpieLocation(null, null,
+                    data.getString(ResponseKeys.KEY_LOCATION),
+                    data.getString(ResponseKeys.KEY_CITY));
             Date startTime = getFormatDate(data.getString(ResponseKeys.KEY_START_TIME));
             Date endTime = getFormatDate(data.getString(ResponseKeys.KEY_END_TIME));
             Date createTime = getFormatDate(data.getString(ResponseKeys.KEY_CREATE_TIME));
@@ -245,19 +246,19 @@ public class LogpieActivity implements Parcelable
 
     public static String getFormatDate(Date date)
     {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm");
         return dateFormat.format(date);
     }
 
     public static String getFormatTime(Date date)
     {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         return dateFormat.format(date);
     }
 
     public static Date getFormatDate(String s) throws ParseException
     {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(s);
     }
 
     public int getmCountLike()
