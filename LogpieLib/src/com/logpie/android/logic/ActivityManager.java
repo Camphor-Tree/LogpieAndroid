@@ -115,7 +115,7 @@ public class ActivityManager
             LogpieLog.e(TAG, "JSONException happened when get activity list by city");
             return;
         }
-        connection.send(callback);
+        connection.syncSendDataAndGetResult(callback);
     }
 
     private void switchMode(int mode, ArrayList<String> column,

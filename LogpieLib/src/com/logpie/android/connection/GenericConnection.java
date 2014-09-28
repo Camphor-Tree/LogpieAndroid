@@ -149,9 +149,28 @@ public class GenericConnection
         return callbackFuture;
     }
 
-    private LogpieCallbackFuture syncSendDataAndGetResult(
-            LogpieCallbackFuture callbackFuture)
+    /**
+     * This api must be called off-main thread.
+     */
+    public LogpieCallbackFuture syncSendDataAndGetResult(LogpieCallback callback)
     {
+        if (ThreadHelper.isRunningOnMainThread())
+        {
+            throw new IllegalStateException(
+                    "This function cannot be called on main thread.");
+        }
+
+        LogpieCallbackFuture callbackFuture;
+
+        if (callback instanceof LogpieCallbackFuture)
+        {
+            callbackFuture = (LogpieCallbackFuture) callback;
+        }
+        else
+        {
+            callbackFuture = new LogpieCallbackFuture(callback);
+        }
+
         try
         {
             mRequestData.put(KEY_REQUEST_ID, UUID.randomUUID().toString());

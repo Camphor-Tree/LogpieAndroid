@@ -33,6 +33,9 @@ public class LanguageHelper
     public final static String KEY_CATEGORY = "category";
     public final static String KEY_CITY = "city";
 
+    // For Activity List Fragment
+    public final static String KEY_ACTIVITY_EMPTY = "activity_empty";
+
     // For Header
     public final static String KEY_PULL_TO_REFRESH = "pull_to_refresh";
     public final static String KEY_RELEASE_TO_REFRESH = "release_to_refresh";
@@ -114,6 +117,8 @@ public class LanguageHelper
         case KEY_NEARBY:
             return switchLanguage(R.string.navigation_nearby_mode_cn,
                     R.string.navigation_nearby_mode_us);
+        case KEY_ACTIVITY_EMPTY:
+            return switchLanguage(R.string.activity_empty_cn, R.string.activity_empty_us);
 
             // Pull to refresh Header
         case KEY_PULL_TO_REFRESH:

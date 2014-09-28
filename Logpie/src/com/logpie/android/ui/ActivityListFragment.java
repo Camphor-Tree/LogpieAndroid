@@ -3,10 +3,14 @@ package com.logpie.android.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,6 +24,7 @@ import com.logpie.android.logic.ActivityManager.ActivityCallback;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.NormalUser;
 import com.logpie.android.logic.User;
+import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.ui.layout.LogpieRefreshLayout;
 import com.logpie.android.ui.layout.LogpieRefreshLayout.PullToRefreshCallback;
 import com.logpie.android.util.LogpieLog;
@@ -41,14 +46,20 @@ public class ActivityListFragment extends ListFragment
     private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
     private User user;
+    private String mTabName;
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         user = NormalUser.getInstance(getActivity());
         mActivityManager = ActivityManager.getInstance(getActivity());
-        new FetchItemsTask().execute();
+
+        ActionBar bar = getActivity().getActionBar();
+        mTabName = bar.getSelectedTab().getText().toString();
+
+        new FetchItemsTask().execute(mTabName);
     }
 
     @Override
@@ -65,6 +76,9 @@ public class ActivityListFragment extends ListFragment
 
         mRefreshableView = (LogpieRefreshLayout) v.findViewById(R.id.refreshable_view);
         mListView = (ListView) v.findViewById(android.R.id.list);
+        TextView empty = (TextView) v.findViewById(R.id.activity_empty_text);
+        empty.setText(LanguageHelper.getId(LanguageHelper.KEY_ACTIVITY_EMPTY,
+                getActivity()));
         mArrayAdapter = new ActivityAdapter(mActivityList);
 
         setupAdapter(mArrayAdapter);
@@ -104,6 +118,20 @@ public class ActivityListFragment extends ListFragment
         {
             LogpieLog.d(TAG, "List is null!");
             mListView.setAdapter(null);
+        }
+    }
+
+    @TargetApi(11)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+        case R.id.action_create_activity:
+
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -187,13 +215,15 @@ public class ActivityListFragment extends ListFragment
         }
     }
 
-    private class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<LogpieActivity>>
+    private class FetchItemsTask extends
+            AsyncTask<String, Void, ArrayList<LogpieActivity>>
     {
         ArrayList<LogpieActivity> mList = new ArrayList<LogpieActivity>();
 
         @Override
-        protected ArrayList<LogpieActivity> doInBackground(Void... params)
+        protected ArrayList<LogpieActivity> doInBackground(String... params)
         {
+            String tab = params[0];
 
             ActivityCallback callback = new ActivityCallback()
             {
@@ -210,21 +240,42 @@ public class ActivityListFragment extends ListFragment
                 }
             };
 
-            ActivityListFragment.this.mActivityManager
-                    .getActivityListByCity(
-                            user,
-                            ActivityManager.MODE_INITIAL,
-                            null,
-                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
-                                    callback));
+            String nearby = LanguageHelper.getString(LanguageHelper.KEY_NEARBY,
+                    getActivity());
+            String city = LanguageHelper
+                    .getString(LanguageHelper.KEY_CITY, getActivity());
+            String category = LanguageHelper.getString(LanguageHelper.KEY_CATEGORY,
+                    getActivity());
 
+            if (tab.equals(nearby))
+            {
+
+            }
+            else if (tab.equals(city))
+            {
+                ActivityListFragment.this.mActivityManager
+                        .getActivityListByCity(
+                                user,
+                                ActivityManager.MODE_INITIAL,
+                                null,
+                                ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                        callback));
+            }
+            else if (tab.equals(category))
+            {
+
+            }
+            else
+            {
+                LogpieLog.e(TAG, "Unsupported tab name.");
+            }
             return mList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<LogpieActivity> items)
         {
-            LogpieLog.d(TAG, "Finished Async Task.");
+            LogpieLog.d(TAG, "Starting onPostExecute....");
             if (ActivityListFragment.this.mActivityList == null)
             {
                 ActivityListFragment.this.mActivityList = new ArrayList<LogpieActivity>();
@@ -233,6 +284,7 @@ public class ActivityListFragment extends ListFragment
             mArrayAdapter = new ActivityAdapter(mActivityList);
 
             setupAdapter(mArrayAdapter);
+            LogpieLog.d(TAG, "Finished Async Task.");
         }
 
     }
