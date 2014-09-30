@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,8 @@ public class ActivityListFragment extends ListFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         user = NormalUser.getInstance(getActivity());
         mActivityManager = ActivityManager.getInstance(getActivity());
 
@@ -119,6 +123,13 @@ public class ActivityListFragment extends ListFragment
             LogpieLog.d(TAG, "List is null!");
             mListView.setAdapter(null);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.square, menu);
     }
 
     @TargetApi(11)
