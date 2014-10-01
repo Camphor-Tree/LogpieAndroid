@@ -5,9 +5,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.util.LogpieCallback;
+import com.logpie.commonlib.EndPoint.ServiceURL;
 
 /**
  * Central User, abstract user's behavior.
@@ -30,8 +30,8 @@ public abstract class User
 
     }
 
-    public void register(Context context, String userEmail, String userPassword, String userName,
-            String city, LogpieCallback callback)
+    public void register(Context context, String userEmail, String userPassword,
+            String userName, String city, LogpieCallback callback)
     {
         JSONObject AuthRegData = new JSONObject();
 

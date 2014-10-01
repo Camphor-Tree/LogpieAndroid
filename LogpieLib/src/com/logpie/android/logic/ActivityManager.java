@@ -10,13 +10,13 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.util.JSONHelper;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
-import com.logpie.android.util.RequestKeys;
-import com.logpie.android.util.ResponseKeys;
+import com.logpie.commonlib.EndPoint.ServiceURL;
+import com.logpie.commonlib.RequestKeys;
+import com.logpie.commonlib.ResponseKeys;
 
 public class ActivityManager
 {

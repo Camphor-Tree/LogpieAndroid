@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import android.os.Bundle;
 
 import com.logpie.android.util.LogpieLog;
-import com.logpie.android.util.ResponseKeys;
+import com.logpie.commonlib.ResponseKeys;
 
 public class UserProfile
 {

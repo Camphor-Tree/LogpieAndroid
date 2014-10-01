@@ -43,6 +43,8 @@ class SQLStorage
                 {
                     db.execSQL(SQLiteConfig.SQL_CREATE_CATEGORY_TABLE);
                     db.execSQL(SQLiteConfig.SQL_CREATE_SUBCATEGORY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_INSERT_CATEGORY_TABLE);
+                    db.execSQL(SQLiteConfig.SQL_INSERT_SUBCATEGORY_TABLE);
                 }
                 db.execSQL(SQLiteConfig.SQL_INIT_USER_TABLE);
                 db.execSQL(SQLiteConfig.SQL_INIT_ORGANIZATION_TABLE);
@@ -53,7 +55,8 @@ class SQLStorage
 
             } catch (Exception e)
             {
-                LogpieLog.e(TAG, "Cannot create the table during the SQLiteOpenHelper onCreate()");
+                LogpieLog.e(TAG,
+                        "Cannot create the table during the SQLiteOpenHelper onCreate()");
             }
         }
 
@@ -72,8 +75,8 @@ class SQLStorage
             }
             LogpieLog.d(TAG, "Check the table '" + tableName + "' is existed or not...");
             Cursor cursor = db.rawQuery(
-                    "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName
-                            + "';", null);
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='"
+                            + tableName + "';", null);
             if (cursor != null)
             {
                 if (cursor.getCount() > 0)
@@ -84,7 +87,8 @@ class SQLStorage
                 }
                 cursor.close();
             }
-            LogpieLog.d(TAG, "The table '" + tableName + "' does not exist. Need to create...");
+            LogpieLog.d(TAG, "The table '" + tableName
+                    + "' does not exist. Need to create...");
             return false;
         }
     }
@@ -195,13 +199,13 @@ class SQLStorage
      *            words
      * @return Cursor
      */
-    public Bundle query(String table, String[] columns, String selection, String[] selectionArgs,
-            String groupBy, String having, String orderBy)
+    public Bundle query(String table, String[] columns, String selection,
+            String[] selectionArgs, String groupBy, String having, String orderBy)
     {
         SQLiteDatabase db = openDatabase();
         // query the dabatase
-        Cursor result = db
-                .query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+        Cursor result = db.query(table, columns, selection, selectionArgs, groupBy,
+                having, orderBy);
 
         Bundle bundle = new Bundle();
         int id = 0;
@@ -232,7 +236,8 @@ class SQLStorage
      *            words
      * @return Cursor
      */
-    public boolean update(String table, Bundle bundle, String whereClause, String[] whereArgs)
+    public boolean update(String table, Bundle bundle, String whereClause,
+            String[] whereArgs)
     {
         SQLiteDatabase db = openDatabase();
         // remove the data level information from bundle
@@ -259,7 +264,8 @@ class SQLStorage
      *            All strings should be the same as SQL grammar without key
      *            words
      */
-    public void delete(String table, String whereClause, String[] whereArgs, LogpieCallback callback)
+    public void delete(String table, String whereClause, String[] whereArgs,
+            LogpieCallback callback)
     {
         SQLiteDatabase db = openDatabase();
         int res = db.delete(table, whereClause, whereArgs);

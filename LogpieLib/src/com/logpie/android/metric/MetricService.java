@@ -10,11 +10,11 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.util.BuildInfo;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class MetricService extends IntentService
 {

@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.exception.ThreadException;
 import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.AuthManager.AuthType;
@@ -36,6 +35,7 @@ import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.android.util.ThreadHelper;
+import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class GenericConnection
 {
@@ -231,7 +231,7 @@ public class GenericConnection
                     // read the response data from server.
                     mResponseString = inputStringReader(mHttpURLConnection
                             .getInputStream());
-                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.mUrl
+                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.getURL()
                             + " is: " + mResponseString);
                     handleCallbackWithResponseData(mResponseString, callbackFuture);
                 }

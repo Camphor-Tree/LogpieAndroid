@@ -14,7 +14,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.logpie.android.util.LogpieLog;
-import com.logpie.android.util.ResponseKeys;
+import com.logpie.commonlib.ResponseKeys;
 
 // TODO: remove all the set method. All the member variable should be final.
 /**
