@@ -63,7 +63,7 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     }
 
     @Override
-    public boolean cancel(boolean mayInterruptIfRunning)
+    public boolean cancel(final boolean mayInterruptIfRunning)
     {
         mLatch.countDown();
         mIsCanceled.set(true);
@@ -92,8 +92,8 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     }
 
     @Override
-    public Bundle get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
-            TimeoutException
+    public Bundle get(final long timeout, final TimeUnit unit) throws InterruptedException,
+            ExecutionException, TimeoutException
     {
         ThreadHelper.throwIfMainThread();
         mIsBlockingWait.set(true);
@@ -102,7 +102,7 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     }
 
     @Override
-    public void onSuccess(Bundle result)
+    public void onSuccess(final Bundle result)
     {
         mIsFinished.set(true);
         if (mIsBlockingWait.get())
@@ -115,7 +115,7 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     }
 
     @Override
-    public void onError(Bundle errorMessage)
+    public void onError(final Bundle errorMessage)
     {
         mIsFinished.set(true);
         if (mIsBlockingWait.get())

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.exception.ThreadException;
 import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.AuthManager.AuthType;
@@ -35,7 +36,6 @@ import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.android.util.ThreadHelper;
-import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class GenericConnection
 {
@@ -60,6 +60,14 @@ public class GenericConnection
     private String mResponseString;
     private AuthType mAuthType;
     private AuthManager mAuthManager;
+    private Context mContext;
+    private LogpieCallback mCallback;
+    private LogpieCallbackFuture mCallbackFuture;
+
+    // This variable indicate whether the connection is retriable when meeting a
+    // token expiration(Http 401 error). Notes: We should never retry for the
+    // second time, since it may cause infinite-loop.
+    private boolean mIsRetriable;
 
     /**
      * Initialize the HttpURLConnection. It will set all necessary parameter
@@ -76,9 +84,13 @@ public class GenericConnection
         checkParameterAndThrowIfIllegal(serviceURL, authType, context);
         try
         {
+            mContext = context;
             mAuthType = authType;
             mServiceURL = serviceURL;
             mAuthManager = AuthManager.getInstance(context);
+
+            // Retriable default to true;
+            mIsRetriable = true;
 
             // initialize the HttpURLConnection based on the url
             URL url = serviceURL.getURL();
@@ -123,41 +135,40 @@ public class GenericConnection
      * @param callback
      *            Logpie callback.
      */
-    public LogpieCallbackFuture send(LogpieCallback callback)
+    public LogpieCallbackFuture send(final LogpieCallback callback)
     {
-        final LogpieCallbackFuture callbackFuture = new LogpieCallbackFuture(callback);
+
+        mCallback = callback;
+        mCallbackFuture = new LogpieCallbackFuture(callback);
 
         try
         {
             ThreadHelper.runOnBackgroundThread(false, new Runnable()
             {
-
                 @Override
                 public void run()
                 {
-                    syncSendDataAndGetResult(callbackFuture);
+                    syncSendDataAndGetResult(mCallbackFuture);
                 }
             });
         } catch (ThreadException e)
         {
             LogpieLog.e(TAG, "Thread Exception when make service call");
-            handleCallback(false, "Thread Exception when make service call",
-                    callbackFuture);
+            handleCallback(false, "Thread Exception when make service call", mCallbackFuture);
             e.printStackTrace();
         }
 
-        return callbackFuture;
+        return mCallbackFuture;
     }
 
     /**
      * This api must be called off-main thread.
      */
-    public LogpieCallbackFuture syncSendDataAndGetResult(LogpieCallback callback)
+    private void syncSendDataAndGetResult(final LogpieCallback callback)
     {
         if (ThreadHelper.isRunningOnMainThread())
         {
-            throw new IllegalStateException(
-                    "This function cannot be called on main thread.");
+            throw new IllegalStateException("This function cannot be called on main thread.");
         }
 
         LogpieCallbackFuture callbackFuture;
@@ -177,8 +188,7 @@ public class GenericConnection
         } catch (JSONException e1)
         {
             // Do nothing if cannot add requestID
-            LogpieLog.e(TAG,
-                    "JSONException when putting request_id. Putting empty request_id");
+            LogpieLog.e(TAG, "JSONException when putting request_id. Putting empty request_id");
         }
         String data = mRequestData.toString();
         if (data == null)
@@ -187,7 +197,6 @@ public class GenericConnection
             Bundle error = new Bundle();
             error.putString("error", "cannot send empty data");
             handleCallback(false, "cannot send empty data", callbackFuture);
-            return callbackFuture;
         }
         BufferedWriter writer = null;
         try
@@ -201,9 +210,7 @@ public class GenericConnection
             e.printStackTrace();
             LogpieLog.e(TAG, "geOutputStream occured error");
 
-            handleCallback(false, "IOException when trying to output the data",
-                    callbackFuture);
-            return callbackFuture;
+            handleCallback(false, "IOException when trying to output the data", callbackFuture);
         } finally
         {
             try
@@ -229,45 +236,55 @@ public class GenericConnection
                 if (mServiceURL.isDoInput())
                 {
                     // read the response data from server.
-                    mResponseString = inputStringReader(mHttpURLConnection
-                            .getInputStream());
-                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.getURL()
-                            + " is: " + mResponseString);
+                    mResponseString = inputStringReader(mHttpURLConnection.getInputStream());
+                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.mUrl + " is: "
+                            + mResponseString);
                     handleCallbackWithResponseData(mResponseString, callbackFuture);
                 }
                 else
                 {
-                    handleCallback(true, "succesfully sending data to server",
-                            callbackFuture);
-                    LogpieLog.i(TAG,
-                            "successful sending data to: " + mServiceURL.getServiceName()
-                                    + "<--->hitting url:"
-                                    + mServiceURL.getURL().toString());
+                    handleCallback(true, "succesfully sending data to server", callbackFuture);
+                    LogpieLog.d(TAG, "Successfully send data to: " + mServiceURL.getServiceName()
+                            + "<--->hitting url:" + mServiceURL.getURL().toString());
                 }
             }
             else if (responsecode >= 300 && responsecode < 400)
             {
-                handleCallback(false,
-                        "redirection happen when sending data to server. error code:"
-                                + responsecode, callbackFuture);
-                LogpieLog.e(TAG,
-                        "redirection happen when sending data to server. error code:"
-                                + responsecode);
+                handleCallback(false, "redirection happen when sending data to server. error code:"
+                        + responsecode, callbackFuture);
+                LogpieLog.e(TAG, "redirection happen when sending data to server. error code:"
+                        + responsecode);
             }
             else if (responsecode >= 400 && responsecode < 500)
             {
+                /*
+                 * When the error code is 401, means the token is invalid. We
+                 * need to use refresh token to refresh access token. And we
+                 * only do a retry for the first time to avoid potential
+                 * infinite loop.
+                 */
+                if (responsecode == 401 && mIsRetriable)
+                {
+                    boolean tokenExchangeSuccess = mAuthManager.doTokenExchange();
+                    /*
+                     * If tokenExchangeSucceed, then we should use the new
+                     * access_token to retry the connection
+                     */
+                    if (tokenExchangeSuccess)
+                    {
+                        retryConnection();
+                    }
+                }
                 handleCallback(false,
                         "client error happen when sending data to server. error code:"
                                 + responsecode, callbackFuture);
-                LogpieLog.e(TAG,
-                        "client error happen when sending data to server. error code:"
-                                + responsecode);
+                LogpieLog.e(TAG, "client error happen when sending data to server. error code:"
+                        + responsecode);
             }
             else if (responsecode >= 500)
             {
-                handleCallback(false,
-                        "server error when sending data to server. error code:"
-                                + responsecode, callbackFuture);
+                handleCallback(false, "server error when sending data to server. error code:"
+                        + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "server error when sending data to server. error code:"
                         + responsecode);
             }
@@ -276,29 +293,26 @@ public class GenericConnection
                 handleCallback(false,
                         "no valid response code when sending data to server. error code:"
                                 + responsecode, callbackFuture);
-                LogpieLog.e(TAG,
-                        "no valid response code when sending data to server. error code:"
-                                + responsecode);
+                LogpieLog.e(TAG, "no valid response code when sending data to server. error code:"
+                        + responsecode);
             }
             else
             {
-                handleCallback(false,
-                        "unknown error when sending data to server. error code:"
-                                + responsecode, callbackFuture);
+                handleCallback(false, "unknown error when sending data to server. error code:"
+                        + responsecode, callbackFuture);
                 LogpieLog.e(TAG, "unknown error when sending data to server. error code:"
                         + responsecode);
             }
         } catch (IOException e)
         {
-            handleCallback(false,
-                    "IOException when sending data to server and getresponseCode",
+            handleCallback(false, "IOException when sending data to server and getresponseCode",
                     callbackFuture);
             e.printStackTrace();
         }
-        return callbackFuture;
     }
 
-    private void handleCallback(boolean isSuccess, String message, LogpieCallback callback)
+    private void handleCallback(final boolean isSuccess, final String message,
+            final LogpieCallback callback)
 
     {
         Bundle returnMessage = new Bundle();
@@ -315,12 +329,21 @@ public class GenericConnection
 
     }
 
-    private void handleCallbackWithResponseData(String message, LogpieCallback callback)
-
+    private void handleCallbackWithResponseData(final String responseData,
+            final LogpieCallback callback)
     {
         Bundle returnMessage = new Bundle();
-        returnMessage.putString(KEY_RESPONSE_DATA, message);
+        returnMessage.putString(KEY_RESPONSE_DATA, responseData);
         callback.onSuccess(returnMessage);
+    }
+
+    private void retryConnection()
+    {
+        GenericConnection connection = new GenericConnection();
+        connection.initialize(mServiceURL, mContext);
+        connection.setRequestData(mRequestData);
+        connection.setRetriable(false);
+        connection.syncSendDataAndGetResult(mCallbackFuture);
     }
 
     public String getResponse()
@@ -333,7 +356,7 @@ public class GenericConnection
         return mTimeout;
     }
 
-    public void setTimeout(int timeout)
+    public void setTimeout(final int timeout)
     {
         mTimeout = timeout;
     }
@@ -343,7 +366,7 @@ public class GenericConnection
         return mHttpVerb;
     }
 
-    public void setHttpVerb(String httpVerb)
+    public void setHttpVerb(final String httpVerb)
     {
         mHttpVerb = httpVerb;
     }
@@ -353,9 +376,22 @@ public class GenericConnection
         return mRequestData;
     }
 
-    public void setRequestData(JSONObject mRequestData)
+    public void setRequestData(final JSONObject mRequestData)
     {
         this.mRequestData = mRequestData;
+    }
+
+    /**
+     * If this is set true, then the connection will automatically retry when
+     * meeting the token expriation. It will try to do token exchange first,
+     * then retry the connection. But the second connection will not be able to
+     * retry again.
+     * 
+     * @param retriable
+     */
+    public void setRetriable(final boolean retriable)
+    {
+        this.mIsRetriable = retriable;
     }
 
     private void disableSSLClientCertificate()
@@ -407,7 +443,7 @@ public class GenericConnection
         }
     }
 
-    private String inputStringReader(InputStream inputStream) throws IOException
+    private String inputStringReader(final InputStream inputStream) throws IOException
     {
         if (inputStream != null)
         {

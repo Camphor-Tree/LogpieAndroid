@@ -67,8 +67,7 @@ public class ActivityListFragment extends ListFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent,
-            Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
     {
         if (inflater == null || parent == null)
         {
@@ -81,8 +80,7 @@ public class ActivityListFragment extends ListFragment
         mRefreshableView = (LogpieRefreshLayout) v.findViewById(R.id.refreshable_view);
         mListView = (ListView) v.findViewById(android.R.id.list);
         TextView empty = (TextView) v.findViewById(R.id.activity_empty_text);
-        empty.setText(LanguageHelper.getId(LanguageHelper.KEY_ACTIVITY_EMPTY,
-                getActivity()));
+        empty.setText(LanguageHelper.getId(LanguageHelper.KEY_ACTIVITY_EMPTY, getActivity()));
         mArrayAdapter = new ActivityAdapter(mActivityList);
 
         setupAdapter(mArrayAdapter);
@@ -164,8 +162,8 @@ public class ActivityListFragment extends ListFragment
         {
             if (v == null)
             {
-                v = getActivity().getLayoutInflater().inflate(
-                        R.layout.fragment_activity_list_item, null);
+                v = getActivity().getLayoutInflater().inflate(R.layout.fragment_activity_list_item,
+                        null);
             }
 
             LogpieActivity activity = getItem(position);
@@ -175,16 +173,13 @@ public class ActivityListFragment extends ListFragment
              */
             ImageView avatar = (ImageView) v.findViewById(R.id.activity_list_user_avatar);
 
-            TextView nickname = (TextView) v
-                    .findViewById(R.id.activity_list_user_nickname);
+            TextView nickname = (TextView) v.findViewById(R.id.activity_list_user_nickname);
             nickname.setText(activity.getmUserName());
 
-            TextView createTime = (TextView) v
-                    .findViewById(R.id.activity_list_create_time);
+            TextView createTime = (TextView) v.findViewById(R.id.activity_list_create_time);
             createTime.setText(LogpieActivity.getFormatDate(activity.getmCreateTime()));
 
-            TextView description = (TextView) v
-                    .findViewById(R.id.activity_list_description);
+            TextView description = (TextView) v.findViewById(R.id.activity_list_description);
             description.setText(activity.getmDescription());
 
             TextView location = (TextView) v.findViewById(R.id.activity_list_location);
@@ -202,32 +197,25 @@ public class ActivityListFragment extends ListFragment
             TextView like = (TextView) v.findViewById(R.id.activity_list_count_like);
             like.setText(String.valueOf(activity.getmCountLike()));
 
-            TextView dislike = (TextView) v
-                    .findViewById(R.id.activity_list_count_dislike);
+            TextView dislike = (TextView) v.findViewById(R.id.activity_list_count_dislike);
             dislike.setText(String.valueOf(activity.getmCountDislike()));
 
             TextView comment = (TextView) v.findViewById(R.id.activity_list_comment);
 
-            ImageView ic_location = (ImageView) v
-                    .findViewById(R.id.activity_list_ic_location);
+            ImageView ic_location = (ImageView) v.findViewById(R.id.activity_list_ic_location);
             ImageView ic_time = (ImageView) v.findViewById(R.id.activity_list_ic_time);
-            ImageView ic_like = (ImageView) v
-                    .findViewById(R.id.activity_list_ic_count_like);
-            ImageView ic_dislike = (ImageView) v
-                    .findViewById(R.id.activity_list_ic_count_dislike);
+            ImageView ic_like = (ImageView) v.findViewById(R.id.activity_list_ic_count_like);
+            ImageView ic_dislike = (ImageView) v.findViewById(R.id.activity_list_ic_count_dislike);
 
-            ImageView ic_more = (ImageView) v
-                    .findViewById(R.id.activity_list_more_functions);
+            ImageView ic_more = (ImageView) v.findViewById(R.id.activity_list_more_functions);
 
-            ImageView ic_comment = (ImageView) v
-                    .findViewById(R.id.activity_list_ic_comment);
+            ImageView ic_comment = (ImageView) v.findViewById(R.id.activity_list_ic_comment);
 
             return v;
         }
     }
 
-    private class FetchItemsTask extends
-            AsyncTask<String, Void, ArrayList<LogpieActivity>>
+    private class FetchItemsTask extends AsyncTask<String, Void, ArrayList<LogpieActivity>>
     {
         ArrayList<LogpieActivity> mList = new ArrayList<LogpieActivity>();
 
@@ -251,12 +239,9 @@ public class ActivityListFragment extends ListFragment
                 }
             };
 
-            String nearby = LanguageHelper.getString(LanguageHelper.KEY_NEARBY,
-                    getActivity());
-            String city = LanguageHelper
-                    .getString(LanguageHelper.KEY_CITY, getActivity());
-            String category = LanguageHelper.getString(LanguageHelper.KEY_CATEGORY,
-                    getActivity());
+            String nearby = LanguageHelper.getString(LanguageHelper.KEY_NEARBY, getActivity());
+            String city = LanguageHelper.getString(LanguageHelper.KEY_CITY, getActivity());
+            String category = LanguageHelper.getString(LanguageHelper.KEY_CATEGORY, getActivity());
 
             if (tab.equals(nearby))
             {
@@ -264,13 +249,10 @@ public class ActivityListFragment extends ListFragment
             }
             else if (tab.equals(city))
             {
-                ActivityListFragment.this.mActivityManager
-                        .getActivityListByCity(
-                                user,
-                                ActivityManager.MODE_INITIAL,
-                                null,
-                                ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
-                                        callback));
+                ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
+                        ActivityManager.MODE_INITIAL, null,
+                        ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                callback));
             }
             else if (tab.equals(category))
             {
