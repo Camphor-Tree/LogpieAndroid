@@ -2,6 +2,7 @@ package com.logpie.android.logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,8 +61,7 @@ public class ActivityManager
 
     }
 
-    public void getActivityListByCity(User user, int mode, String city,
-            LogpieCallback callback)
+    public void getActivityListByCity(User user, int mode, String city, LogpieCallback callback)
     {
         JSONObject postData = new JSONObject();
 
@@ -71,8 +71,7 @@ public class ActivityManager
 
         try
         {
-            postData.put(RequestKeys.KEY_REQUEST_SERVICE,
-                    RequestKeys.SERVICE_FIND_ACTIVITY_BY_CITY);
+            postData.put(RequestKeys.KEY_REQUEST_SERVICE, RequestKeys.SERVICE_FIND_ACTIVITY_BY_CITY);
             postData.put(RequestKeys.KEY_REQUEST_TYPE, RequestKeys.REQUEST_TYPE_QUERY);
 
             JSONArray queryKey = JSONHelper.buildQueryKey(null);
@@ -102,8 +101,8 @@ public class ActivityManager
 
             switchMode(mode, column, operator, value);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column,
-                    operator, value);
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column, operator,
+                    value);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
@@ -115,11 +114,22 @@ public class ActivityManager
             LogpieLog.e(TAG, "JSONException happened when get activity list by city");
             return;
         }
-        connection.syncSendDataAndGetResult(callback);
+        try
+        {
+            connection.send(callback).get();
+        } catch (InterruptedException e)
+        {
+            LogpieLog.e(TAG, "InterruptedException happened when get activity list by city");
+            e.printStackTrace();
+        } catch (ExecutionException e)
+        {
+            LogpieLog.e(TAG, "ExecutionException happened when get activity list by city");
+            e.printStackTrace();
+        }
     }
 
-    private void switchMode(int mode, ArrayList<String> column,
-            ArrayList<String> operator, ArrayList<String> value)
+    private void switchMode(int mode, ArrayList<String> column, ArrayList<String> operator,
+            ArrayList<String> value)
     {
         switch (mode)
         {
@@ -134,8 +144,7 @@ public class ActivityManager
             }
             else
             {
-                LogpieLog.e(TAG,
-                        "Cannot find the bottom activity ID. Should switch to Mode 0.");
+                LogpieLog.e(TAG, "Cannot find the bottom activity ID. Should switch to Mode 0.");
             }
             break;
         case 2:
@@ -147,8 +156,7 @@ public class ActivityManager
             }
             else
             {
-                LogpieLog.e(TAG,
-                        "Cannot find the top activity ID. Should switch to Mode 0.");
+                LogpieLog.e(TAG, "Cannot find the top activity ID. Should switch to Mode 0.");
             }
             break;
         default:
@@ -173,8 +181,7 @@ public class ActivityManager
             if (responseData == null)
             {
                 Bundle errorMessage = new Bundle();
-                errorMessage.putString(ResponseKeys.KEY_ERROR_MESSAGE,
-                        "Response data is null.");
+                errorMessage.putString(ResponseKeys.KEY_ERROR_MESSAGE, "Response data is null.");
                 LogpieLog.e(TAG, "The metadata is null when parsing the response data.");
                 mActivityCallback.onError(errorMessage);
             }
@@ -210,8 +217,7 @@ public class ActivityManager
             {
                 if (data.isNull(ResponseKeys.KEY_RESPONSE_ID))
                 {
-                    LogpieLog.e(TAG,
-                            "Cannot find the response ID from the response data.");
+                    LogpieLog.e(TAG, "Cannot find the response ID from the response data.");
                 }
                 String requestID = data.getString(ResponseKeys.KEY_RESPONSE_ID);
 
@@ -219,9 +225,8 @@ public class ActivityManager
                         || !data.getString(ResponseKeys.KEY_ACTIVITY_RESULT).equals(
                                 ResponseKeys.RESULT_SUCCESS))
                 {
-                    LogpieLog
-                            .e(TAG,
-                                    "Failed to get the successful activity result from the response data.");
+                    LogpieLog.e(TAG,
+                            "Failed to get the successful activity result from the response data.");
                     return null;
                 }
 
@@ -229,17 +234,15 @@ public class ActivityManager
                         || !data.getString(ResponseKeys.KEY_REQUEST_TYPE).equals(
                                 ResponseKeys.REQUEST_TYPE_QUERY))
                 {
-                    LogpieLog
-                            .e(TAG,
-                                    "Failed to get the correct request type from the response data.");
+                    LogpieLog.e(TAG,
+                            "Failed to get the correct request type from the response data.");
                     return null;
                 }
 
                 if (data.isNull(ResponseKeys.KEY_METADATA)
                         || data.getJSONArray(ResponseKeys.KEY_METADATA) == null)
                 {
-                    LogpieLog
-                            .e(TAG, "Failed to get the metadata from the response data.");
+                    LogpieLog.e(TAG, "Failed to get the metadata from the response data.");
                     return null;
                 }
 
@@ -255,8 +258,7 @@ public class ActivityManager
                 return activityList;
             } catch (JSONException e)
             {
-                LogpieLog
-                        .e(TAG, "JSONException happened when parsing the response data.");
+                LogpieLog.e(TAG, "JSONException happened when parsing the response data.");
                 e.printStackTrace();
             }
             return null;

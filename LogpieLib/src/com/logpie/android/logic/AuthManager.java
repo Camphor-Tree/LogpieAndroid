@@ -12,13 +12,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.datastorage.DataLevel;
 import com.logpie.android.datastorage.EncryptedDataStorage;
 import com.logpie.android.util.LogpieLog;
-import com.logpie.android.util.RequestKeys;
-import com.logpie.android.util.ResponseKeys;
+import com.logpie.commonlib.EndPoint.ServiceURL;
+import com.logpie.commonlib.RequestKeys;
+import com.logpie.commonlib.ResponseKeys;
 
 public class AuthManager
 {

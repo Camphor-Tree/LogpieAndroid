@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.exception.ThreadException;
 import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.AuthManager.AuthType;
@@ -36,6 +35,7 @@ import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.android.util.ThreadHelper;
+import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class GenericConnection
 {
@@ -130,14 +130,25 @@ public class GenericConnection
      * 
      * This method will trigger the service call, so this method will send the
      * task into background thread. If you need a sync result, you can just call
-     * LogpieCallbackFuture.get() to blocking wait the result.
+     * LogpieCallbackFuture.get() to blocking wait the result. You need a sync
+     * callback, then you also need to call LogpieCallbackFuture.get() to make
+     * sure the callback is called in a sync way.
+     * 
+     * In summary, this api support 3 return modes:
+     * 
+     * 1. Callback, sync (pass a callback, and also call the return
+     * callbackFuture.get())
+     * 
+     * 2. Callback, async (just pass a callback)
+     * 
+     * 3. Return value, sync (NOT passing a callback, just get the return
+     * callbackFuture, call callbackFuture.get())
      * 
      * @param callback
      *            Logpie callback.
      */
     public LogpieCallbackFuture send(final LogpieCallback callback)
     {
-
         mCallback = callback;
         mCallbackFuture = new LogpieCallbackFuture(callback);
 
@@ -237,7 +248,7 @@ public class GenericConnection
                 {
                     // read the response data from server.
                     mResponseString = inputStringReader(mHttpURLConnection.getInputStream());
-                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.mUrl + " is: "
+                    LogpieLog.d(TAG, "The response from server:" + mServiceURL.getURL() + " is: "
                             + mResponseString);
                     handleCallbackWithResponseData(mResponseString, callbackFuture);
                 }

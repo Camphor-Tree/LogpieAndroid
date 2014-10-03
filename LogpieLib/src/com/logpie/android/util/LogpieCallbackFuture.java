@@ -16,12 +16,12 @@ import android.os.Bundle;
  * Note1: you should never call get() on MainThread since it will cause the
  * application ANR.
  * 
- * Note2: In this implementation, if you just rely on asyn result, then we will
+ * Note2: In this implementation, if you just rely on async result, then we will
  * just use this as a normal callback, when async task is done, we will just
  * call the callback.onSuccess() But if you are calling get() or get(time,
- * timeunit), which means you need a sync result, we won't call the
- * callback.onSuccess(); So, basically this class just allow you to choose
- * either asyn way or sync way.
+ * timeunit), which means you can get a sync result, we will also call the
+ * callback.onSuccess(); So, basically don't handle the result based on both
+ * return value and callback.
  * 
  * @author yilei
  * 
@@ -32,9 +32,7 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
 
     private LogpieCallback mCallback;
     private CountDownLatch mLatch;
-    // indicate whether get() is called, then we won't do an async way to
-    // callback.onSuccess()
-    private AtomicBoolean mIsBlockingWait;
+
     // store the result
     private Bundle mResult;
     // indicate whether is canceled
@@ -57,7 +55,6 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
         }
         mCallback = callback;
         mLatch = new CountDownLatch(DEFAULT_LATCH_COUNT_DOWN_NUMBER);
-        mIsBlockingWait = new AtomicBoolean(false);
         mIsCanceled = new AtomicBoolean(false);
         mIsFinished = new AtomicBoolean(false);
     }
@@ -86,7 +83,6 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     public Bundle get() throws InterruptedException, ExecutionException
     {
         ThreadHelper.throwIfMainThread();
-        mIsBlockingWait.set(true);
         mLatch.await();
         return mResult;
     }
@@ -96,7 +92,6 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
             ExecutionException, TimeoutException
     {
         ThreadHelper.throwIfMainThread();
-        mIsBlockingWait.set(true);
         mLatch.await(timeout, unit);
         return mResult;
     }
@@ -105,26 +100,18 @@ public class LogpieCallbackFuture implements LogpieCallback, Future<Bundle>
     public void onSuccess(final Bundle result)
     {
         mIsFinished.set(true);
-        if (mIsBlockingWait.get())
-        {
-            mResult = result;
-            mLatch.countDown();
-            return;
-        }
+        mResult = result;
         mCallback.onSuccess(result);
+        mLatch.countDown();
     }
 
     @Override
     public void onError(final Bundle errorMessage)
     {
         mIsFinished.set(true);
-        if (mIsBlockingWait.get())
-        {
-            mResult = errorMessage;
-            mLatch.countDown();
-            return;
-        }
+        mResult = errorMessage;
         mCallback.onError(errorMessage);
+        mLatch.countDown();
     }
 
 }
