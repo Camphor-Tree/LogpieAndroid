@@ -45,10 +45,9 @@ public abstract class AbstractDataEncryptor
         try
         {
             dataBytes = data.getBytes(UTF8);
-        } catch (UnsupportedEncodingException e1)
+        } catch (UnsupportedEncodingException e)
         {
-            LogpieLog.e(TAG, "Not support UTF-8");
-            e1.printStackTrace();
+            LogpieLog.e(TAG, "Not support UTF-8", e);
             return null;
         }
 
@@ -64,12 +63,10 @@ public abstract class AbstractDataEncryptor
 
         } catch (InvalidKeyException e)
         {
-            LogpieLog.e(TAG, "InvalidKeyException");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "InvalidKeyException", e);
         } catch (InvalidAlgorithmParameterException e)
         {
-            LogpieLog.e(TAG, "InvalidAlgorithmParameterException");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "InvalidAlgorithmParameterException", e);
         }
         return null;
     };
@@ -101,16 +98,13 @@ public abstract class AbstractDataEncryptor
             return new String(plainDataBytes, UTF8);
         } catch (InvalidKeyException e)
         {
-            LogpieLog.e(TAG, "InvalidKeyException");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "InvalidKeyException", e);
         } catch (InvalidAlgorithmParameterException e)
         {
-            LogpieLog.e(TAG, "InvalidAlgorithmParameterException");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "InvalidAlgorithmParameterException", e);
         } catch (UnsupportedEncodingException e)
         {
-            LogpieLog.e(TAG, "Not Support UTF-8");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "Not Support UTF-8", e);
         }
         return null;
     };
@@ -122,12 +116,10 @@ public abstract class AbstractDataEncryptor
             return cipher.doFinal(dataToEncrypt, offset, length);
         } catch (IllegalBlockSizeException e)
         {
-            LogpieLog.e(TAG, "IllegalBlockSizeException happens when decrypt the data");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "IllegalBlockSizeException happens when decrypt the data", e);
         } catch (BadPaddingException e)
         {
-            LogpieLog.e(TAG, "BadPaddingException happens when decrypt the data");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "BadPaddingException happens when decrypt the data", e);
         }
         return null;
     }
@@ -150,8 +142,7 @@ public abstract class AbstractDataEncryptor
                     encryptedDataBytes.length);
         } catch (Exception e)
         {
-            LogpieLog.e(TAG, "Exception happens when try to concat two bytes array");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "Exception happens when try to concat two bytes array", e);
             return null;
         }
         return finalResult;
@@ -165,12 +156,10 @@ public abstract class AbstractDataEncryptor
             cipher = Cipher.getInstance(AES_MODE);
         } catch (NoSuchAlgorithmException e)
         {
-            LogpieLog.e(TAG, "No Such Algorithm Exception, AES/CBC is not supported");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "No Such Algorithm Exception, AES/CBC is not supported", e);
         } catch (NoSuchPaddingException e)
         {
-            LogpieLog.e(TAG, "No Such Padding Exception, AES/CBC is not supported");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "No Such Padding Exception, AES/CBC is not supported", e);
         }
         return cipher;
     }

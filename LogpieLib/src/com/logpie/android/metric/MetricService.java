@@ -90,7 +90,7 @@ public class MetricService extends IntentService
 
         } catch (JSONException e)
         {
-            LogpieLog.e(TAG, "JSONExcepetion happed when build RocketJSON");
+            LogpieLog.e(TAG, "JSONExcepetion happed when build RocketJSON", e);
         }
 
         LogpieLog.d(TAG, metricJSON.toString());

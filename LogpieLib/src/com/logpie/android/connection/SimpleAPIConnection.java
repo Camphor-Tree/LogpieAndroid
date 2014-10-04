@@ -22,7 +22,7 @@ public class SimpleAPIConnection
             URL url = new URL(stringUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("Charset", "UTF-8");  
+            connection.setRequestProperty("Charset", "UTF-8");
 
             int responsecode = connection.getResponseCode();
             if (responsecode >= 200 && responsecode < 300)
@@ -78,13 +78,11 @@ public class SimpleAPIConnection
             return null;
         } catch (MalformedURLException e)
         {
-            LogpieLog.e(TAG, "The query url is mal-formatted!");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "The query url is mal-formatted!", e);
             return null;
         } catch (IOException e)
         {
-            LogpieLog.e(TAG, "IOException when open the Connection");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "IOException when open the Connection", e);
             return null;
         }
     }

@@ -111,7 +111,7 @@ public class ActivityManager
             connection.setRequestData(postData);
         } catch (JSONException e)
         {
-            LogpieLog.e(TAG, "JSONException happened when get activity list by city");
+            LogpieLog.e(TAG, "JSONException happened when get activity list by city", e);
             return;
         }
         try
@@ -119,12 +119,10 @@ public class ActivityManager
             connection.send(callback).get();
         } catch (InterruptedException e)
         {
-            LogpieLog.e(TAG, "InterruptedException happened when get activity list by city");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "InterruptedException happened when get activity list by city", e);
         } catch (ExecutionException e)
         {
-            LogpieLog.e(TAG, "ExecutionException happened when get activity list by city");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "ExecutionException happened when get activity list by city", e);
         }
     }
 

@@ -96,8 +96,7 @@ public class LogpieActivity implements Parcelable
                 || data.isNull(ResponseKeys.KEY_DESCRIPTION)
                 || data.isNull(ResponseKeys.KEY_LOCATION)
                 || data.isNull(ResponseKeys.KEY_START_TIME)
-                || data.isNull(ResponseKeys.KEY_END_TIME)
-                || data.isNull(ResponseKeys.KEY_CITY))
+                || data.isNull(ResponseKeys.KEY_END_TIME) || data.isNull(ResponseKeys.KEY_CITY))
         {
             LogpieLog.e(TAG, "Missing the required key for create an activity.");
             return null;
@@ -122,8 +121,8 @@ public class LogpieActivity implements Parcelable
                     .getString(ResponseKeys.KEY_AID) : DEFAULT_AVATAR;
             int countLike = data.has(ResponseKeys.KEY_COUNT_LIKE) ? Integer.valueOf(data
                     .getString(ResponseKeys.KEY_COUNT_LIKE)) : 0;
-            int countDislike = data.has(ResponseKeys.KEY_COUNT_DISLIKE) ? Integer
-                    .valueOf(data.getString(ResponseKeys.KEY_COUNT_DISLIKE)) : 0;
+            int countDislike = data.has(ResponseKeys.KEY_COUNT_DISLIKE) ? Integer.valueOf(data
+                    .getString(ResponseKeys.KEY_COUNT_DISLIKE)) : 0;
             List<Comment> comments = new ArrayList<Comment>();
             if (data.has(ResponseKeys.KEY_COMMENT))
             {
@@ -131,25 +130,20 @@ public class LogpieActivity implements Parcelable
             }
 
             LogpieActivity activity = new LogpieActivity(aid, uid, userName, userAvatar,
-                    description, location, startTime, endTime, createTime, countLike,
-                    countDislike, comments);
+                    description, location, startTime, endTime, createTime, countLike, countDislike,
+                    comments);
 
             return activity;
         } catch (ParseException e)
         {
-            LogpieLog.e(TAG,
-                    "ParseException happened when parse JSON data to an activity");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "ParseException happened when parse JSON data to an activity", e);
         } catch (JSONException e)
         {
-            LogpieLog
-                    .e(TAG, "JSONException happened when parse JSON data to an activity");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "JSONException happened when parse JSON data to an activity", e);
         } catch (NumberFormatException e)
         {
-            LogpieLog.e(TAG,
-                    "NumberFormatException happened when parse JSON data to an activity");
-            e.printStackTrace();
+            LogpieLog.e(TAG, "NumberFormatException happened when parse JSON data to an activity",
+                    e);
         }
         return null;
     }
@@ -337,9 +331,8 @@ public class LogpieActivity implements Parcelable
             mEndTime = getFormatDate(in.readString());
         } catch (ParseException e)
         {
-            LogpieLog
-                    .e(TAG,
-                            "ParseException happened when parse a date from String type to Date type.");
+            LogpieLog.e(TAG,
+                    "ParseException happened when parse a date from String type to Date type.");
             e.printStackTrace();
         }
         mCountLike = in.readInt();

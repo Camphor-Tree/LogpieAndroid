@@ -101,9 +101,7 @@ public class Comment
                     content, time);
         } catch (JSONException e)
         {
-            LogpieLog.e(TAG, "JSONException when try to retrieve the commentJSON");
-            LogpieLog.e(TAG, e.getMessage());
-            e.printStackTrace();
+            LogpieLog.e(TAG, "JSONException when try to retrieve the commentJSON", e);
             return null;
         }
     }

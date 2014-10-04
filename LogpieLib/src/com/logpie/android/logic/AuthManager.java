@@ -335,8 +335,7 @@ public class AuthManager
             LogpieLog
                     .e(TAG,
                             "JSONException happed when parse the token exchange result! Maybe the response from server is mal-formated"
-                                    + tokenExchangeResultString);
-            e.printStackTrace();
+                                    + tokenExchangeResultString, e);
         }
         return false;
     }

@@ -164,9 +164,8 @@ public class GenericConnection
             });
         } catch (ThreadException e)
         {
-            LogpieLog.e(TAG, "Thread Exception when make service call");
+            LogpieLog.e(TAG, "Thread Exception when make service call", e);
             handleCallback(false, "Thread Exception when make service call", mCallbackFuture);
-            e.printStackTrace();
         }
 
         return mCallbackFuture;
@@ -196,10 +195,10 @@ public class GenericConnection
         try
         {
             mRequestData.put(KEY_REQUEST_ID, UUID.randomUUID().toString());
-        } catch (JSONException e1)
+        } catch (JSONException e)
         {
             // Do nothing if cannot add requestID
-            LogpieLog.e(TAG, "JSONException when putting request_id. Putting empty request_id");
+            LogpieLog.e(TAG, "JSONException when putting request_id. Putting empty request_id", e);
         }
         String data = mRequestData.toString();
         if (data == null)
@@ -218,8 +217,7 @@ public class GenericConnection
             writer.write(data);
         } catch (IOException e)
         {
-            e.printStackTrace();
-            LogpieLog.e(TAG, "geOutputStream occured error");
+            LogpieLog.e(TAG, "geOutputStream occured error", e);
 
             handleCallback(false, "IOException when trying to output the data", callbackFuture);
         } finally
@@ -233,8 +231,7 @@ public class GenericConnection
                 }
             } catch (IOException e)
             {
-                e.printStackTrace();
-                LogpieLog.e(TAG, "error when try to close BufferedWriter");
+                LogpieLog.e(TAG, "error when try to close BufferedWriter", e);
             }
         }
 
@@ -316,9 +313,9 @@ public class GenericConnection
             }
         } catch (IOException e)
         {
+            LogpieLog.e(TAG, "IOException when sending data to server and getresponseCode", e);
             handleCallback(false, "IOException when sending data to server and getresponseCode",
                     callbackFuture);
-            e.printStackTrace();
         }
     }
 

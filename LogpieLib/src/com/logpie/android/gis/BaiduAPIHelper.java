@@ -22,9 +22,8 @@ public class BaiduAPIHelper
     {
         if (lat == null || lon == null)
         {
-            LogpieLog
-                    .e(TAG,
-                            "Building reverseGeocodingURL error, because the lat/lon cannot be null");
+            LogpieLog.e(TAG,
+                    "Building reverseGeocodingURL error, because the lat/lon cannot be null");
             return null;
         }
         return String
@@ -58,9 +57,8 @@ public class BaiduAPIHelper
     {
         if (lat == null || lon == null)
         {
-            LogpieLog
-                    .e(TAG,
-                            "Building reverseGeocodingURL error, because the lat/lon cannot be null");
+            LogpieLog.e(TAG,
+                    "Building reverseGeocodingURL error, because the lat/lon cannot be null");
             return null;
         }
 
@@ -82,8 +80,7 @@ public class BaiduAPIHelper
             if (checkWhetherSuccess(result))
             {
                 JSONObject resultJSON = result.getJSONObject("result");
-                JSONObject addressComponentJSON = resultJSON
-                        .getJSONObject("addressComponent");
+                JSONObject addressComponentJSON = resultJSON.getJSONObject("addressComponent");
                 String city = addressComponentJSON.getString("city");
                 if (TextHelper.checkIfNull(city))
                 {
@@ -104,14 +101,13 @@ public class BaiduAPIHelper
 
             LogpieLog
                     .e(TAG,
-                            "JSONException when reading the response data. May because Baidu Server's response format is not as expected");
-            e.printStackTrace();
+                            "JSONException when reading the response data. May because Baidu Server's response format is not as expected",
+                            e);
             return null;
         }
     }
 
-    public static LogpieLocation getLatLonFromAddressAndCity(final String address,
-            final String city)
+    public static LogpieLocation getLatLonFromAddressAndCity(final String address, final String city)
     {
         String queryURL = buildQueryGeocodingURL(address, city);
         if (queryURL == null)
@@ -141,8 +137,8 @@ public class BaiduAPIHelper
                 }
                 else
                 {
-                    return new LogpieLocation(Double.valueOf(latitude),
-                            Double.valueOf(longitude), address, city);
+                    return new LogpieLocation(Double.valueOf(latitude), Double.valueOf(longitude),
+                            address, city);
                 }
             }
             else
@@ -191,10 +187,8 @@ public class BaiduAPIHelper
             }
         } catch (JSONException e)
         {
-            LogpieLog
-                    .e(TAG,
-                            "The result may not contain status, something wrong with the baidu server");
-            e.printStackTrace();
+            LogpieLog.e(TAG,
+                    "The result may not contain status, something wrong with the baidu server", e);
         }
         return false;
     }
