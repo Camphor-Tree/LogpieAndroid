@@ -29,7 +29,6 @@ public class ActivityManager
     public static final int MODE_REFRESH_MORE = 2;
 
     private static ActivityManager sActivityManager;
-    private List mActivityList;
     private Context mContext;
     private long mTopActivityID;
     private long mBottomActivityID;
@@ -213,11 +212,18 @@ public class ActivityManager
         {
             try
             {
+                // Log the request id, and the response data.
                 if (data.isNull(ResponseKeys.KEY_RESPONSE_ID))
                 {
                     LogpieLog.e(TAG, "Cannot find the response ID from the response data.");
                 }
-                String requestID = data.getString(ResponseKeys.KEY_RESPONSE_ID);
+                else
+                {
+                    String requestID = data.getString(ResponseKeys.KEY_RESPONSE_ID);
+                    LogpieLog.d(TAG, "Receiving response from server, request_id is:" + requestID);
+                }
+                LogpieLog.d(TAG,
+                        "Receiving response from server, responseData is:" + data.toString());
 
                 if (data.isNull(ResponseKeys.KEY_ACTIVITY_RESULT)
                         || !data.getString(ResponseKeys.KEY_ACTIVITY_RESULT).equals(
@@ -256,12 +262,10 @@ public class ActivityManager
                 return activityList;
             } catch (JSONException e)
             {
-                LogpieLog.e(TAG, "JSONException happened when parsing the response data.");
-                e.printStackTrace();
+                LogpieLog.e(TAG, "JSONException happened when parsing the response data.", e);
             }
             return null;
         }
-
     }
 
     public interface ActivityCallback
