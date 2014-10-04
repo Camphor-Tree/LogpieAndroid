@@ -11,10 +11,10 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 
-import com.logpie.android.connection.EndPoint.ServiceURL;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class GenericConnectionTests extends AndroidTestCase
 {
