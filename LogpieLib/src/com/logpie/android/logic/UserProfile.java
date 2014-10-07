@@ -13,13 +13,14 @@ public class UserProfile
     private static String TAG = UserProfile.class.getName();
     private String mUserId;
     private String mUserName;
-    private String mUserGender;
+    // true => male false => female
+    private boolean mUserGender;
     private String mUserBirthday;
     private String mUserEmail;
     private String mUserCity;
 
-    private UserProfile(String userID, String userName, String userGender,
-            String userBirthday, String userEmail, String userCity)
+    private UserProfile(final String userID, final String userName, final boolean userGender,
+            final String userBirthday, final String userEmail, final String userCity)
     {
         mUserId = userID;
         mUserName = userName;
@@ -54,7 +55,7 @@ public class UserProfile
 
         String userId = profileBundle.getString(ResponseKeys.KEY_UID);
         String userName = profileBundle.getString(ResponseKeys.KEY_NICKNAME);
-        String gender = profileBundle.getString(ResponseKeys.KEY_GENDER);
+        boolean gender = profileBundle.getBoolean(ResponseKeys.KEY_GENDER);
         String birthday = profileBundle.getString(ResponseKeys.KEY_BIRTHDAY);
         String email = profileBundle.getString(ResponseKeys.KEY_EMAIL);
         String city = profileBundle.getString(ResponseKeys.KEY_CITY);
@@ -86,7 +87,7 @@ public class UserProfile
 
             String userId = profileJSON.getString(ResponseKeys.KEY_UID);
             String userName = profileJSON.getString(ResponseKeys.KEY_NICKNAME);
-            String gender = profileJSON.getString(ResponseKeys.KEY_GENDER);
+            boolean gender = profileJSON.getBoolean(ResponseKeys.KEY_GENDER);
             String birthday = profileJSON.getString(ResponseKeys.KEY_BIRTHDAY);
             String email = profileJSON.getString(ResponseKeys.KEY_EMAIL);
             String city = profileJSON.getString(ResponseKeys.KEY_CITY);
@@ -138,7 +139,7 @@ public class UserProfile
     /**
      * @return the userGender
      */
-    public String getUserGender()
+    public boolean getUserGender()
     {
         return mUserGender;
     }
@@ -147,7 +148,7 @@ public class UserProfile
      * @param userGender
      *            the userGender to set
      */
-    public void setUserGender(String userGender)
+    public void setUserGender(boolean userGender)
     {
         mUserGender = userGender;
     }

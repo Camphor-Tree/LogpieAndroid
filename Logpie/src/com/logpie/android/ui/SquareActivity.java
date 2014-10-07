@@ -44,7 +44,7 @@ public class SquareActivity extends ActionBarActivity
         LogpieAccount account = AuthManager.getInstance(getApplicationContext())
                 .getCurrentAccount();
 
-        if (account != null)
+        if (account == null)
         {
             ActivityOpenHelper.openActivityAndFinishPreviousActivity(SquareActivity.this,
                     AuthActivity.class);
@@ -90,7 +90,8 @@ public class SquareActivity extends ActionBarActivity
         }
         case R.id.action_settings:
         {
-            // TODO: open settings page
+            // Open the settings page
+            ActivityOpenHelper.openActivity(this, LogpieSettingsActivity.class);
             break;
         }
         default:
@@ -122,8 +123,7 @@ public class SquareActivity extends ActionBarActivity
         squareMode.setupTab();
     }
 
-    public static class LogpieBaseTabListener<T extends Fragment> implements
-            ActionBar.TabListener
+    public static class LogpieBaseTabListener<T extends Fragment> implements ActionBar.TabListener
     {
         private Fragment mFragment;
         private final Activity mActivity;

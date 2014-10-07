@@ -79,8 +79,7 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         String endTime = LogpieActivity.getFormatDate(mLogpieActivity.getmEndTime());
         mUIHolder.mActivityTimeTextView.setText(startTime + " ~ " + endTime);
         // Set the activity location
-        mUIHolder.mActivityLocationTextView.setText(mLogpieActivity.getmLocation()
-                .getAddress());
+        mUIHolder.mActivityLocationTextView.setText(mLogpieActivity.getmLocation().getAddress());
         // Set the activity count like
         mUIHolder.mActivityCountLikeTextView.setText(Integer.toString(mLogpieActivity
                 .getmCountLike()));

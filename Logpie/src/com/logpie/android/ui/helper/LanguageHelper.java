@@ -54,6 +54,19 @@ public class LanguageHelper
 
     // ActionBar String
     public final static String KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL = "action_bar_string_activity_detail";
+    public final static String KEY_ACTION_BAR_STRING_SETTINGS = "action_bar_string_settings";
+
+    // For Settings page
+    public final static String KEY_USER_PROFILE_PHOTO_SETTING_LABEL = "settings_user_profile_photo_setting_label";
+    public final static String KEY_USER_NICKNAME_SETTING_LABEL = "settings_user_nickname_setting_label";
+    public final static String KEY_USER_EMAIL_SETTING_LABEL = "settings_user_email_setting_label";
+    public final static String KEY_USER_GENDER_SETTING_LABEL = "settings_user_gender_setting_label";
+    public final static String KEY_USER_CITY_SETTING_LABEL = "settings_user_city_setting_label";
+    public final static String KEY_SYSTEM_LANGUAGE_SETTING_LABEL = "settings_system_language_setting_label";
+    public final static String KEY_SYSTEM_VERSION_SETTING_LABEL = "settings_system_version_setting_label";
+    public final static String KEY_SYSTEM_ABOUT_SETTING_LABEL = "settings_system_about_setting_label";
+    // For dialog edit text hint
+    public final static String KEY_SETTING_NICKNAME_DIALOG_HINT = "settings_nickname_dialog_hint";
 
     /**
      * Initialize the language of Logpie
@@ -104,8 +117,7 @@ public class LanguageHelper
         case KEY_PASSWORD:
             return switchLanguage(R.string.password_cn, R.string.password_us);
         case KEY_CONFIRM_PASSWORD:
-            return switchLanguage(R.string.confirm_password_cn,
-                    R.string.confirm_password_us);
+            return switchLanguage(R.string.confirm_password_cn, R.string.confirm_password_us);
         case KEY_NICKNAME:
             return switchLanguage(R.string.nickname_cn, R.string.nickname_us);
         case KEY_CITY:
@@ -122,21 +134,17 @@ public class LanguageHelper
 
             // Pull to refresh Header
         case KEY_PULL_TO_REFRESH:
-            return switchLanguage(R.string.pull_to_refresh_cn,
-                    R.string.pull_to_refresh_us);
+            return switchLanguage(R.string.pull_to_refresh_cn, R.string.pull_to_refresh_us);
         case KEY_RELEASE_TO_REFRESH:
-            return switchLanguage(R.string.release_to_refresh_cn,
-                    R.string.release_to_refresh_us);
+            return switchLanguage(R.string.release_to_refresh_cn, R.string.release_to_refresh_us);
         case KEY_REFRESHING:
             return switchLanguage(R.string.refreshing_cn, R.string.refreshing_us);
         case KEY_NOT_UPDATED_YET:
-            return switchLanguage(R.string.not_updated_yet_cn,
-                    R.string.not_updated_yet_us);
+            return switchLanguage(R.string.not_updated_yet_cn, R.string.not_updated_yet_us);
         case KEY_UPDATED_AT:
             return switchLanguage(R.string.updated_at_cn, R.string.updated_at_us);
         case KEY_UPDATED_JUST_NOW:
-            return switchLanguage(R.string.updated_just_now_cn,
-                    R.string.updated_just_now_us);
+            return switchLanguage(R.string.updated_just_now_cn, R.string.updated_just_now_us);
         case KEY_TIME_ERROR:
             return switchLanguage(R.string.time_error_cn, R.string.time_error_us);
         case KEY_MINUTE:
@@ -155,6 +163,39 @@ public class LanguageHelper
         case KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL:
             return switchLanguage(R.string.action_bar_string_activity_detail_cn,
                     R.string.action_bar_string_activity_detail_us);
+            // LogpieSettingsActivity
+        case KEY_ACTION_BAR_STRING_SETTINGS:
+            return switchLanguage(R.string.action_bar_string_settings_cn,
+                    R.string.action_bar_string_settings_us);
+            // LogpieSettingsPageLabels:
+        case KEY_USER_PROFILE_PHOTO_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_user_profile_photo_cn,
+                    R.string.settings_label_user_profile_photo_us);
+        case KEY_USER_NICKNAME_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_user_nickname_cn,
+                    R.string.settings_label_user_nickname_us);
+        case KEY_USER_EMAIL_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_user_email_cn,
+                    R.string.settings_label_user_email_us);
+        case KEY_USER_GENDER_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_user_gender_cn,
+                    R.string.settings_label_user_gender_us);
+        case KEY_USER_CITY_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_user_city_cn,
+                    R.string.settings_label_user_city_us);
+        case KEY_SYSTEM_LANGUAGE_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_system_language_cn,
+                    R.string.settings_label_system_language_us);
+        case KEY_SYSTEM_VERSION_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_system_version_cn,
+                    R.string.settings_label_system_version_us);
+        case KEY_SYSTEM_ABOUT_SETTING_LABEL:
+            return switchLanguage(R.string.settings_label_system_about_cn,
+                    R.string.settings_label_system_about_us);
+            // Setting Page nickname Dialog edit text hint
+        case KEY_SETTING_NICKNAME_DIALOG_HINT:
+            return switchLanguage(R.string.settings_dialog_user_nickname_hint_cn,
+                    R.string.settings_dialog_user_nickname_hint_us);
         default:
             LogpieLog.d(TAG, "Failed to find the key when setting the language.");
             return -1;

@@ -1,5 +1,8 @@
 package com.logpie.android.ui;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,10 +16,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.logpie.android.R;
+import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.datastorage.LogpieSystemSetting;
+import com.logpie.android.logic.AuthManager;
+import com.logpie.android.logic.LogpieAccount;
 import com.logpie.android.ui.base.LogpieBaseFragment;
 import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.util.LogpieCallback;
+import com.logpie.android.util.LogpieLog;
+import com.logpie.commonlib.ResponseKeys;
 
 public class LoginFragment extends LogpieBaseFragment
 {
@@ -30,6 +39,7 @@ public class LoginFragment extends LogpieBaseFragment
     private TextView mLogin;
 
     private Activity mActivity;
+    private AuthManager mAuthManager;
 
     @SuppressLint("NewApi")
     private void setLanguage(String lan)
@@ -58,6 +68,7 @@ public class LoginFragment extends LogpieBaseFragment
     public void handleOnCreate(Bundle savedInstanceState)
     {
         mActivity = getActivity();
+        mAuthManager = AuthManager.getInstance(mActivity);
     }
 
     @Override
@@ -105,12 +116,51 @@ public class LoginFragment extends LogpieBaseFragment
             @Override
             public void onClick(View v)
             {
+                final String email = mEmail.getText().toString();
+                final String password = mPassword.getText().toString();
+
                 if (mEmail.getText() != null && mPassword.getText() != null)
                 {
-                    // TODO add Login Service call
+                    LogpieCallback callback = new LogpieCallback()
+                    {
 
-                    ActivityOpenHelper.openActivityAndFinishPreviousActivity(mActivity,
-                            SquareActivity.class);
+                        @Override
+                        public void onSuccess(Bundle result)
+                        {
+                            String responseString = result
+                                    .getString(GenericConnection.KEY_RESPONSE_DATA);
+                            LogpieLog.d(TAG, "The login response from server:" + responseString);
+                            try
+                            {
+                                JSONObject responseJSON = new JSONObject(responseString);
+                                String accessToken = responseJSON
+                                        .getString(ResponseKeys.KEY_ACCESS_TOKEN);
+                                String refreshToken = responseJSON
+                                        .getString(ResponseKeys.KEY_REFRESH_TOKEN);
+                                String uid = responseJSON.getString(ResponseKeys.KEY_UID);
+                                mAuthManager.addAccount(new LogpieAccount(uid, email,
+                                        "Tester name", accessToken, refreshToken));
+                            } catch (JSONException e)
+                            {
+                                LogpieLog.e(TAG,
+                                        "JSONException happened when parsing the response", e);
+                                return;
+                            }
+                            ActivityOpenHelper.openActivityAndFinishPreviousActivity(mActivity,
+                                    SquareActivity.class);
+
+                        }
+
+                        @Override
+                        public void onError(Bundle errorMessage)
+                        {
+                            LogpieLog.e(TAG, "Login error!");
+                            LogpieLog.d(TAG,
+                                    "Login error! error message is " + errorMessage.toString());
+
+                        }
+                    };
+                    mAuthManager.login(email, password, callback);
 
                 }
             }

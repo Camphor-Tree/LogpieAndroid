@@ -2,13 +2,13 @@ package com.logpie.android.logic;
 
 public class LogpieAccount
 {
-    private int uid;
+    private String uid;
     private String email;
     private String nickname;
     private String accessToken;
     private String refreshToken;
 
-    public LogpieAccount(int uid, String email, String nickname, String accessToken,
+    public LogpieAccount(String uid, String email, String nickname, String accessToken,
             String refreshToken)
     {
         this.uid = uid;
@@ -18,7 +18,7 @@ public class LogpieAccount
         this.refreshToken = refreshToken;
     }
 
-    public int getUid()
+    public String getUid()
     {
         return uid;
     }

@@ -37,6 +37,8 @@
 	<!-- ActionBar in Activity Detail Page -->
 	<string name="action_bar_string_activity_detail_cn">活动详情</string>
 	<string name="action_bar_string_activity_detail_us">Activty Detail</string>
+	<string name="action_bar_string_settings_cn">设置</string>
+    <string name="action_bar_string_settings_us">Settings</string>
 
 	<!-- Listview Pull-to-Refresh Header -->
 	<string name="pull_to_refresh_cn">下拉可以刷新</string>
@@ -44,7 +46,7 @@
 	<string name="release_to_refresh_cn">释放立即刷新</string>
 	<string name="release_to_refresh_us">Release to refresh</string>
 	<string name="refreshing_cn">正在刷新…</string>
-	<string name="refreshing_us">Refreshing...</string>
+	<string name="refreshing_us">Refreshing</string>
 	<string name="not_updated_yet_cn">暂未更新过</string>
 	<string name="not_updated_yet_us">Have not updated yet</string>
 	<string name="updated_at_cn">上次更新于%1$s前</string>
@@ -57,6 +59,28 @@
 	<!-- Listview in Square Page -->
 	<string name="activity_empty_cn">没有发现活动</string>
 	<string name="activity_empty_us">Not found an activity yet</string>
+	
+	<!-- Settings page -->
+	<string name="settings_label_user_profile_photo_cn">头像</string>
+	<string name="settings_label_user_profile_photo_us">Profile Photo</string>
+	<string name="settings_label_user_nickname_cn">昵称</string>
+    <string name="settings_label_user_nickname_us">Nicakname</string>
+    <string name="settings_label_user_email_cn">邮箱</string>
+    <string name="settings_label_user_email_us">Email</string>
+    <string name="settings_label_user_gender_cn">性别</string>
+    <string name="settings_label_user_gender_us">Gender</string>
+    <string name="settings_label_user_city_cn">城市</string>
+    <string name="settings_label_user_city_us">City</string>
+    <string name="settings_label_system_language_cn">语言</string>
+    <string name="settings_label_system_language_us">Language</string>
+    <string name="settings_label_system_version_cn">版本</string>
+    <string name="settings_label_system_version_us">Version</string>
+    <string name="settings_label_system_about_cn">关于 Logpie</string>
+    <string name="settings_label_system_about_us">About Logpie</string>
+    <!-- Settings dialog edit text hint -->
+    <string name="settings_dialog_user_nickname_hint_cn">输入一个好记的昵称</string>
+    <string name="settings_dialog_user_nickname_hint_us">Enter a name easy to remember</string>
+        
 
 	<!-- Time Unit -->
 	<!-- TODO: handle the s -->
