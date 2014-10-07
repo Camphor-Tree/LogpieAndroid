@@ -55,9 +55,70 @@ public class ActivityManager
      * @param callback
      * @return
      */
-    public void getNearbyActivityList(User user, int mode, LogpieCallback callback)
+    public void getNearbyActivityList(User user, String lat, String lon, int mode,
+            LogpieCallback callback)
     {
+        JSONObject postData = new JSONObject();
 
+        // TODO: Authenticate the token
+        GenericConnection connection = new GenericConnection();
+        connection.initialize(ServiceURL.ActivityService, mContext);
+
+        try
+        {
+            postData.put(RequestKeys.KEY_REQUEST_SERVICE, RequestKeys.SERVICE_FIND_NEARBY_ACTIVITY);
+            postData.put(RequestKeys.KEY_REQUEST_TYPE, RequestKeys.REQUEST_TYPE_QUERY);
+
+            JSONArray queryKey = JSONHelper.buildQueryKey(null);
+            postData.put(RequestKeys.KEY_QUERY_KEY, queryKey);
+
+            ArrayList<String> column = new ArrayList<String>();
+            ArrayList<String> operator = new ArrayList<String>();
+            ArrayList<String> value = new ArrayList<String>();
+
+            lat = "1";
+            lon = "2";
+
+            if (lat == null || lon == null)
+            {
+                LogpieLog.e(TAG, "Cannot get the latitude & longitude.");
+                return;
+            }
+
+            column.add(RequestKeys.KEY_LATITUDE);
+            operator.add(RequestKeys.KEY_EQUAL);
+            value.add(lat);
+            column.add(RequestKeys.KEY_LONGITUDE);
+            operator.add(RequestKeys.KEY_EQUAL);
+            value.add(lon);
+
+            switchMode(mode, column, operator, value);
+
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column, operator,
+                    value);
+            postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
+
+            postData.put(RequestKeys.KEY_LIMIT_NUMBER,
+                    Integer.toString(MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL));
+
+            connection.setRequestData(postData);
+        } catch (JSONException e)
+        {
+            LogpieLog.e(TAG, "JSONException happened when get nearby activity list");
+            return;
+        }
+        try
+        {
+            connection.send(callback).get();
+        } catch (InterruptedException e)
+        {
+            LogpieLog.e(TAG, "InterruptedException happened when get nearby activity list");
+            e.printStackTrace();
+        } catch (ExecutionException e)
+        {
+            LogpieLog.e(TAG, "ExecutionException happened when get nearby activity list");
+            e.printStackTrace();
+        }
     }
 
     public void getActivityListByCity(User user, int mode, String city, LogpieCallback callback)
@@ -122,6 +183,73 @@ public class ActivityManager
         } catch (ExecutionException e)
         {
             LogpieLog.e(TAG, "ExecutionException happened when get activity list by city", e);
+        }
+    }
+
+    public void getActivityListByCategory(User user, int mode, String category, String subCategory,
+            LogpieCallback callback)
+    {
+        JSONObject postData = new JSONObject();
+
+        // TODO: Authenticate the token
+        GenericConnection connection = new GenericConnection();
+        connection.initialize(ServiceURL.ActivityService, mContext);
+
+        try
+        {
+            postData.put(RequestKeys.KEY_REQUEST_SERVICE,
+                    RequestKeys.SERVICE_FIND_ACTIVITY_BY_CATEGORY);
+            postData.put(RequestKeys.KEY_REQUEST_TYPE, RequestKeys.REQUEST_TYPE_QUERY);
+
+            JSONArray queryKey = JSONHelper.buildQueryKey(null);
+            postData.put(RequestKeys.KEY_QUERY_KEY, queryKey);
+
+            ArrayList<String> column = new ArrayList<String>();
+            ArrayList<String> operator = new ArrayList<String>();
+            ArrayList<String> value = new ArrayList<String>();
+
+            if (category == null)
+            {
+                LogpieLog.e(TAG, "Cannot find the category");
+                return;
+            }
+            column.add(RequestKeys.KEY_CATEGORY);
+            operator.add(RequestKeys.KEY_EQUAL);
+            value.add(category);
+
+            if (subCategory != null)
+            {
+                column.add(RequestKeys.KEY_SUBCATEGORY);
+                operator.add(RequestKeys.KEY_EQUAL);
+                value.add(subCategory);
+            }
+
+            switchMode(mode, column, operator, value);
+
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column, operator,
+                    value);
+            postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
+
+            postData.put(RequestKeys.KEY_LIMIT_NUMBER,
+                    Integer.toString(MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL));
+
+            connection.setRequestData(postData);
+        } catch (JSONException e)
+        {
+            LogpieLog.e(TAG, "JSONException happened when get activity list by category");
+            return;
+        }
+        try
+        {
+            connection.send(callback).get();
+        } catch (InterruptedException e)
+        {
+            LogpieLog.e(TAG, "InterruptedException happened when get activity list by category");
+            e.printStackTrace();
+        } catch (ExecutionException e)
+        {
+            LogpieLog.e(TAG, "ExecutionException happened when get activity list by category");
+            e.printStackTrace();
         }
     }
 

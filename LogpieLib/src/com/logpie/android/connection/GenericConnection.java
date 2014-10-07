@@ -35,7 +35,6 @@ import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.android.util.ThreadHelper;
-import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class GenericConnection
 {
@@ -218,7 +217,6 @@ public class GenericConnection
         } catch (IOException e)
         {
             LogpieLog.e(TAG, "geOutputStream occured error", e);
-
             handleCallback(false, "IOException when trying to output the data", callbackFuture);
         } finally
         {
@@ -253,7 +251,8 @@ public class GenericConnection
                 {
                     handleCallback(true, "succesfully sending data to server", callbackFuture);
                     LogpieLog.d(TAG, "Successfully send data to: " + mServiceURL.getServiceName()
-                            + "<--->hitting url:" + mServiceURL.getURL().toString());
+
+                    + "<--->hitting url:" + mServiceURL.getURL().toString());
                 }
             }
             else if (responsecode >= 300 && responsecode < 400)

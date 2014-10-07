@@ -245,7 +245,10 @@ public class ActivityListFragment extends ListFragment
 
             if (tab.equals(nearby))
             {
-
+                ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null, null,
+                        ActivityManager.MODE_INITIAL,
+                        ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                callback));
             }
             else if (tab.equals(city))
             {
@@ -256,7 +259,10 @@ public class ActivityListFragment extends ListFragment
             }
             else if (tab.equals(category))
             {
-
+                ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
+                        ActivityManager.MODE_INITIAL, "3", null,
+                        ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                callback));
             }
             else
             {
