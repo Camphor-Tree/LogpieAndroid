@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.datastorage.DataLevel;
 import com.logpie.android.datastorage.EncryptedDataStorage;
-import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.commonlib.EndPoint.ServiceURL;
 import com.logpie.commonlib.RequestKeys;
@@ -45,7 +44,6 @@ public class AuthManager
     private LogpieAccount mAccount;
     private EncryptedDataStorage mStorage;
     private Context mContext;
-    private User mUser;
 
     private AtomicBoolean mIsDoingClearAccount;
 
@@ -55,7 +53,6 @@ public class AuthManager
         mStorage = EncryptedDataStorage.getInstance(mContext);
         mIsDoingClearAccount = new AtomicBoolean(false);
         mAccount = getCurrentAccount();
-        mUser = NormalUser.getInstance(mContext);
     }
 
     public synchronized static AuthManager getInstance(Context context)
@@ -65,27 +62,6 @@ public class AuthManager
             sAuthManager = new AuthManager(context);
         }
         return sAuthManager;
-    }
-
-    public void login(final String email, final String password, final LogpieCallback callback)
-    {
-        GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService, mContext);
-        JSONObject authenticateData = new JSONObject();
-        try
-        {
-            authenticateData.put(RequestKeys.KEY_REQUEST_TYPE, "AUTHENTICATE");
-            authenticateData.put(RequestKeys.KEY_EMAIL, email);
-            authenticateData.put(RequestKeys.KEY_PASSWORD, password);
-            authenticateData.put(RequestKeys.KEY_REQUEST_ID, UUID.randomUUID().toString());
-            LogpieLog.d(TAG, "Register String" + authenticateData.toString());
-            connection.setRequestData(authenticateData);
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        connection.send(callback);
     }
 
     public LogpieAccount getCurrentAccount()

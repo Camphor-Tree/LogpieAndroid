@@ -25,7 +25,7 @@ public class LogpieSettingsActivity extends LogpieSingleFragmentActivity
     @Override
     protected String getTitleBarString()
     {
-        return LanguageHelper.getString(LanguageHelper.KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL,
+        return LanguageHelper.getString(LanguageHelper.KEY_ACTION_BAR_STRING_SETTINGS,
                 getBaseContext());
     }
 

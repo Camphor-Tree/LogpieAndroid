@@ -1,13 +1,11 @@
 package com.logpie.android.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.logpie.android.R;
-import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.logic.AuthManager;
-import com.logpie.android.logic.LogpieAccount;
+import com.logpie.android.logic.NormalUser;
+import com.logpie.android.logic.User;
 import com.logpie.android.ui.base.LogpieBaseFragment;
 import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
-import com.logpie.commonlib.ResponseKeys;
 
 public class LoginFragment extends LogpieBaseFragment
 {
@@ -40,6 +37,7 @@ public class LoginFragment extends LogpieBaseFragment
 
     private Activity mActivity;
     private AuthManager mAuthManager;
+    private User mUser;
 
     @SuppressLint("NewApi")
     private void setLanguage(String lan)
@@ -69,6 +67,7 @@ public class LoginFragment extends LogpieBaseFragment
     {
         mActivity = getActivity();
         mAuthManager = AuthManager.getInstance(mActivity);
+        mUser = NormalUser.getInstance(mActivity);
     }
 
     @Override
@@ -116,10 +115,13 @@ public class LoginFragment extends LogpieBaseFragment
             @Override
             public void onClick(View v)
             {
+                mEmail.setText("a7197901-e@logpie.com");
+                mPassword.setText("123456");
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
 
-                if (mEmail.getText() != null && mPassword.getText() != null)
+                // TODO: Add email-password format check
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password))
                 {
                     LogpieCallback callback = new LogpieCallback()
                     {
@@ -127,41 +129,23 @@ public class LoginFragment extends LogpieBaseFragment
                         @Override
                         public void onSuccess(Bundle result)
                         {
-                            String responseString = result
-                                    .getString(GenericConnection.KEY_RESPONSE_DATA);
-                            LogpieLog.d(TAG, "The login response from server:" + responseString);
-                            try
-                            {
-                                JSONObject responseJSON = new JSONObject(responseString);
-                                String accessToken = responseJSON
-                                        .getString(ResponseKeys.KEY_ACCESS_TOKEN);
-                                String refreshToken = responseJSON
-                                        .getString(ResponseKeys.KEY_REFRESH_TOKEN);
-                                String uid = responseJSON.getString(ResponseKeys.KEY_UID);
-                                mAuthManager.addAccount(new LogpieAccount(uid, email,
-                                        "Tester name", accessToken, refreshToken));
-                            } catch (JSONException e)
-                            {
-                                LogpieLog.e(TAG,
-                                        "JSONException happened when parsing the response", e);
-                                return;
-                            }
                             ActivityOpenHelper.openActivityAndFinishPreviousActivity(mActivity,
                                     SquareActivity.class);
-
                         }
 
                         @Override
                         public void onError(Bundle errorMessage)
                         {
                             LogpieLog.e(TAG, "Login error!");
-                            LogpieLog.d(TAG,
-                                    "Login error! error message is " + errorMessage.toString());
+                            if (errorMessage != null)
+                            {
+                                LogpieLog.d(TAG,
+                                        "Login error! error message is " + errorMessage.toString());
+                            }
 
                         }
                     };
-                    mAuthManager.login(email, password, callback);
-
+                    mUser.login(email, password, callback);
                 }
             }
         });

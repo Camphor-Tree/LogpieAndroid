@@ -47,6 +47,13 @@ public class ActivityOpenHelper
         activity.finish();
     }
 
+    public static void restartApplication(Context context)
+    {
+        Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(i);
+    }
+
     private static void openActivityNormally(final Activity activity,
             final Class<? extends Activity> activityClass, final String key,
             final Parcelable parameter)

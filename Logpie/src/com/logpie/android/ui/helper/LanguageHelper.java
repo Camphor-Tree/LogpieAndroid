@@ -67,6 +67,11 @@ public class LanguageHelper
     public final static String KEY_SYSTEM_ABOUT_SETTING_LABEL = "settings_system_about_setting_label";
     // For dialog edit text hint
     public final static String KEY_SETTING_NICKNAME_DIALOG_HINT = "settings_nickname_dialog_hint";
+    // For gender string
+    public final static String KEY_GENDER_MALE = "gender_male";
+    public final static String KEY_GENDER_FEMALE = "gender_female";
+    // For language showing string
+    public final static String KEY_LANGUAGE_SHOWING_STRING = "language_showing_string";
 
     /**
      * Initialize the language of Logpie
@@ -196,6 +201,15 @@ public class LanguageHelper
         case KEY_SETTING_NICKNAME_DIALOG_HINT:
             return switchLanguage(R.string.settings_dialog_user_nickname_hint_cn,
                     R.string.settings_dialog_user_nickname_hint_us);
+            // For gender string
+        case KEY_GENDER_MALE:
+            return switchLanguage(R.string.gender_male_cn, R.string.gender_male_us);
+        case KEY_GENDER_FEMALE:
+            return switchLanguage(R.string.gender_female_cn, R.string.gender_female_us);
+            // For language showing string
+        case KEY_LANGUAGE_SHOWING_STRING:
+            return switchLanguage(R.string.language_showing_string_cn,
+                    R.string.language_showing_string_us);
         default:
             LogpieLog.d(TAG, "Failed to find the key when setting the language.");
             return -1;

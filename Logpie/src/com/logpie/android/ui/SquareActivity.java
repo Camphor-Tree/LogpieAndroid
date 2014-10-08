@@ -50,7 +50,6 @@ public class SquareActivity extends ActionBarActivity
                     AuthActivity.class);
         }
         else
-
         {
             LogpieLog.d(TAG, "Getting the action bar...");
             mActionBar = getSupportActionBar();

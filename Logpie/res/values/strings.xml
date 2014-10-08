@@ -80,7 +80,16 @@
     <!-- Settings dialog edit text hint -->
     <string name="settings_dialog_user_nickname_hint_cn">输入一个好记的昵称</string>
     <string name="settings_dialog_user_nickname_hint_us">Enter a name easy to remember</string>
-        
+    
+    <!-- Gender String -->
+    <string name="gender_male_cn">男</string>
+    <string name="gender_male_us">Male</string>
+    <string name="gender_female_cn">女</string>
+    <string name="gender_female_us">Female</string>
+    
+    <!-- Language Showing String -->
+    <string name="language_showing_string_cn">中文</string>
+    <string name="language_showing_string_us">English</string>
 
 	<!-- Time Unit -->
 	<!-- TODO: handle the s -->

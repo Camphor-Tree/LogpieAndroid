@@ -1,7 +1,9 @@
 package com.logpie.android.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,12 @@ import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.logic.NormalUser;
 import com.logpie.android.logic.User;
 import com.logpie.android.ui.base.LogpieBaseFragment;
+import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper.LogpieEditTextDialogCallback;
+import com.logpie.android.ui.helper.LogpieDialogHelper.LogpiePickerDialogCallback;
+import com.logpie.android.util.BuildInfo;
 import com.logpie.android.util.LogpieLog;
 
 /**
@@ -30,7 +35,6 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
     private User mUser;
     private LogpieSystemSetting mSystemSetting;
     private Context mContext;
-    private SettingsUIHolder mUiHolder;
 
     private SettingUnit mUserProfilePhotoUnit;
     private SettingUnit mUserNicknameUnit;
@@ -56,109 +60,31 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
             Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_settings, parent, false);
-        // setupUI(view);
         setupSettingUnit(view);
-        // setupSettingLogic();
         return view;
-    }
-
-    private void setupSettingLogic()
-    {
-        mUiHolder.mUserNicknameLinearLayout.setOnClickListener(new View.OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v)
-            {
-                LogpieDialogHelper.openEditTextDialog(mContext, "Change Nickname",
-                        "Choose a name easy to remember", new LogpieEditTextDialogCallback()
-                        {
-                            @Override
-                            public void onSelect(String text)
-                            {
-                                LogpieLog.i(TAG, "The new nickname user just entered is " + text);
-                                mUiHolder.mUserNickNameTextView.setText(text);
-                            }
-
-                            @Override
-                            public void onCancel()
-                            {
-                                LogpieLog.i(TAG, "User canceled input a new nickname");
-                            }
-                        });
-            }
-        });
-    }
-
-    private void setupUI(View view)
-    {
-        mUiHolder = new SettingsUIHolder();
-        mUiHolder.mUserProfilePhotoLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_user_profile_photo_linear_layout);
-
-        mUiHolder.mUserNicknameLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_user_nickname_linear_layout);
-        mUiHolder.mUserEmailLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_user_email_linear_layout);
-        mUiHolder.mUserGenderLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_user_gender_linear_layout);
-        mUiHolder.mUserCityLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_user_city_linear_layout);
-        mUiHolder.mSystemLanguageLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_system_language_linear_layout);
-        mUiHolder.mSystemVersionLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_system_version_linear_layout);
-        mUiHolder.mSystemAboutLinearLayout = (LinearLayout) view
-                .findViewById(R.id.settings_system_about_linear_layout);
-
-        mUiHolder.mUserNickNameTextView = (TextView) view
-                .findViewById(R.id.settings_user_nickname_text_view);
-    }
-
-    private static class SettingsUIHolder
-    {
-        LinearLayout mUserProfilePhotoLinearLayout;
-        LinearLayout mUserNicknameLinearLayout;
-        LinearLayout mUserEmailLinearLayout;
-        LinearLayout mUserGenderLinearLayout;
-        LinearLayout mUserCityLinearLayout;
-        LinearLayout mSystemLanguageLinearLayout;
-        LinearLayout mSystemVersionLinearLayout;
-        LinearLayout mSystemAboutLinearLayout;
-
-        TextView mUserProfilePhotoLabelImageView;
-        TextView mUserNickNameLabelTextView;
-        TextView mUserEmailLabelTextView;
-        TextView mUserGenderLabelTextView;
-        TextView mUserCityLabelTextView;
-        TextView mSystemLanguageLabelTextView;
-        TextView mSystemVersionLabelTextView;
-
-        ImageView mUserProfilePhotoImageView;
-        TextView mUserNickNameTextView;
-        TextView mUserEmailTextView;
-        TextView mUserGenderTextView;
-        TextView mUserCityTextView;
-        TextView mSystemLanguageTextView;
-        TextView mSystemVersionTextView;
     }
 
     private static class SettingUnit
     {
-        private Context mContext;
+        // The whole linear layout for one single setting unit
         LinearLayout mLinearLayout;
+        // The label textview
         TextView mLabelTextView;
+        // The value view. (For ProfilePhoto it is ImageView, for other fields
+        // it is TextView)
         View mContent;
-        private boolean mIsClickable;
+        // The Key to get the String from LanguageHelper. So that it can be
+        // dynamically change based on the system language
         private String mLabelKey;
+        // The onClickListener for the entire setting unit. Some setting unit
+        // may not have a clickListener, such as: system version, user email.
         private View.OnClickListener mOnClickListener;
 
-        public SettingUnit(final Context context, final View parentView, final boolean isClickable,
+        public SettingUnit(final Context context, final View parentView,
                 final int linearLayoutResource, final int labelResource, final int contentResource,
                 final String labelNameKey, final Class<? extends View> resourceType)
         {
-            mContext = context;
-            mIsClickable = isClickable;
+
             mLinearLayout = (LinearLayout) parentView.findViewById(linearLayoutResource);
             mLabelTextView = (TextView) parentView.findViewById(labelResource);
             if (contentResource != -1)
@@ -166,36 +92,132 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                 mContent = parentView.findViewById(contentResource);
             }
             mLabelKey = labelNameKey;
-            initLabel();
+            initLabel(context);
         }
 
-        private void initLabel()
+        public void setTextValue(final String value)
+        {
+            TextView contentView = (TextView) mContent;
+            contentView.setText(value);
+        }
+
+        private void initLabel(Context context)
         {
             // Use the label name key to find the corresponding string.
-            mLabelTextView.setText(LanguageHelper.getString(mLabelKey, mContext));
+            mLabelTextView.setText(LanguageHelper.getString(mLabelKey, context));
         }
 
         /* package-private */void setOnClickListener(final View.OnClickListener onClickListener)
         {
             mOnClickListener = onClickListener;
-            if (!mIsClickable)
-            {
-                LogpieLog.e(TAG, "This setting unit is not clickable!");
-                throw new UnsupportedOperationException("This setting unit is not clickable!");
-            }
             mLinearLayout.setOnClickListener(mOnClickListener);
         }
     }
 
+    // Setup all the setting units one by one.
     private void setupSettingUnit(View view)
     {
-        mUserProfilePhotoUnit = new SettingUnit(mContext, view, true,
-                R.id.settings_user_profile_photo_linear_layout,
-                R.id.settings_user_profile_photo_label_text_view,
-                R.id.settings_user_profile_photo_image_view,
-                LanguageHelper.KEY_USER_PROFILE_PHOTO_SETTING_LABEL, ImageView.class);
+        // Setup the user profile photo setting unit.
+        setupProfilePhotoUnit(view);
+        // Setup the user nickname setting unit.
+        setupNicknameUnit(view);
+        // Setup the user email setting unit.
+        setupEmailUnit(view);
+        // Setup the user gender setting unit.
+        setupGenderUnit(view);
+        // Setup the user city setting unit.
+        setupCityUnit(view);
+        // Setup the system language setting unit.
+        setupSystemLanguageUnit(view);
+        // Setup the system version setting unit.
+        setupSystemVersionUnit(view);
+        // Setup the system about setting unit.
+        setupSystemAboutUnit(view);
+    }
 
-        mUserNicknameUnit = new SettingUnit(mContext, view, true,
+    private void setupSystemAboutUnit(View view)
+    {
+        mSystemAbountUnit = new SettingUnit(mContext, view,
+                R.id.settings_system_about_linear_layout,
+                R.id.settings_system_about_label_text_view, -1,
+                LanguageHelper.KEY_SYSTEM_ABOUT_SETTING_LABEL, TextView.class);
+    }
+
+    private void setupSystemVersionUnit(View view)
+    {
+        mSystemVersionUnit = new SettingUnit(mContext, view,
+                R.id.settings_system_version_linear_layout,
+                R.id.settings_system_version_label_text_view,
+                R.id.settings_system_version_text_view,
+                LanguageHelper.KEY_SYSTEM_VERSION_SETTING_LABEL, TextView.class);
+        mSystemVersionUnit.setTextValue(BuildInfo.VERSION);
+    }
+
+    private void setupSystemLanguageUnit(View view)
+    {
+        mSystemLanguageUnit = new SettingUnit(mContext, view,
+                R.id.settings_system_language_linear_layout,
+                R.id.settings_system_language_label_text_view,
+                R.id.settings_system_language_text_view,
+                LanguageHelper.KEY_SYSTEM_LANGUAGE_SETTING_LABEL, TextView.class);
+
+        mSystemLanguageUnit.setTextValue(LanguageHelper.getString(
+                LanguageHelper.KEY_LANGUAGE_SHOWING_STRING, mContext));
+
+        Resources resources = mContext.getResources();
+        String[] languageStoreValue = new String[] { LanguageHelper.ENGLISH, LanguageHelper.CHINESE };
+        String[] languageShowValue = new String[] {
+                resources.getString(R.string.language_showing_string_us),
+                resources.getString(R.string.language_showing_string_cn) };
+        mSystemLanguageUnit.setOnClickListener(getPickerListener(mContext,
+                LanguageHelper.KEY_SYSTEM_LANGUAGE_SETTING_LABEL, mSystemLanguageUnit,
+                LanguageHelper.KEY_LANGUAGE, languageShowValue, languageStoreValue, true));
+    }
+
+    private void setupCityUnit(View view)
+    {
+        mUserCityUnit = new SettingUnit(mContext, view, R.id.settings_user_city_linear_layout,
+                R.id.settings_user_city_label_text_view, R.id.settings_user_city_text_view,
+                LanguageHelper.KEY_USER_CITY_SETTING_LABEL, TextView.class);
+        mUserCityUnit.setTextValue(mUser.getUserProfile().getUserCity());
+    }
+
+    private void setupGenderUnit(View view)
+    {
+        mUserGenderUnit = new SettingUnit(mContext, view, R.id.settings_user_gender_linear_layout,
+                R.id.settings_user_gender_label_text_view, R.id.settings_user_gender_text_view,
+                LanguageHelper.KEY_USER_GENDER_SETTING_LABEL, TextView.class);
+        boolean userGender = mUser.getUserProfile().getUserGender();
+        if (userGender)
+        {
+            mUserGenderUnit.setTextValue(LanguageHelper.getString(LanguageHelper.KEY_GENDER_MALE,
+                    mContext));
+        }
+        else
+        {
+            mUserGenderUnit.setTextValue(LanguageHelper.getString(LanguageHelper.KEY_GENDER_FEMALE,
+                    mContext));
+        }
+        String[] genderShowChoice = new String[] {
+                LanguageHelper.getString(LanguageHelper.KEY_GENDER_MALE, mContext),
+                LanguageHelper.getString(LanguageHelper.KEY_GENDER_FEMALE, mContext) };
+        String[] genderStoreValue = new String[] { String.valueOf(true), String.valueOf(false) };
+        mUserGenderUnit.setOnClickListener(getPickerListener(mContext,
+                LanguageHelper.KEY_USER_GENDER_SETTING_LABEL, mUserGenderUnit,
+                User.KEY_USER_GENDER, genderShowChoice, genderStoreValue, false));
+    }
+
+    private void setupEmailUnit(View view)
+    {
+        mUserEmailUnit = new SettingUnit(mContext, view, R.id.settings_user_email_linear_layout,
+                R.id.settings_user_email_label_text_view, R.id.settings_user_email_text_view,
+                LanguageHelper.KEY_USER_EMAIL_SETTING_LABEL, TextView.class);
+        mUserEmailUnit.setTextValue(mUser.getUserProfile().getUserEmail());
+    }
+
+    private void setupNicknameUnit(View view)
+    {
+        mUserNicknameUnit = new SettingUnit(mContext, view,
                 R.id.settings_user_nickname_linear_layout,
                 R.id.settings_user_nickname_label_text_view, R.id.settings_user_nickname_text_view,
                 LanguageHelper.KEY_USER_NICKNAME_SETTING_LABEL, TextView.class);
@@ -203,37 +225,16 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                 LanguageHelper.KEY_USER_NICKNAME_SETTING_LABEL,
                 LanguageHelper.KEY_SETTING_NICKNAME_DIALOG_HINT, mUserNicknameUnit,
                 User.KEY_USER_NICKNAME, false));
+        mUserNicknameUnit.setTextValue(mUser.getUserProfile().getUserName());
+    }
 
-        mUserEmailUnit = new SettingUnit(mContext, view, false,
-                R.id.settings_user_email_linear_layout, R.id.settings_user_email_label_text_view,
-                R.id.settings_user_email_text_view, LanguageHelper.KEY_USER_EMAIL_SETTING_LABEL,
-                TextView.class);
-        mUserGenderUnit = new SettingUnit(mContext, view, true,
-                R.id.settings_user_gender_linear_layout, R.id.settings_user_gender_label_text_view,
-                R.id.settings_user_gender_text_view, LanguageHelper.KEY_USER_GENDER_SETTING_LABEL,
-                TextView.class);
-        mUserCityUnit = new SettingUnit(mContext, view, true,
-                R.id.settings_user_city_linear_layout, R.id.settings_user_city_label_text_view,
-                R.id.settings_user_city_text_view, LanguageHelper.KEY_USER_CITY_SETTING_LABEL,
-                TextView.class);
-
-        mSystemLanguageUnit = new SettingUnit(mContext, view, true,
-                R.id.settings_system_language_linear_layout,
-                R.id.settings_system_language_label_text_view,
-                R.id.settings_system_language_text_view,
-                LanguageHelper.KEY_SYSTEM_LANGUAGE_SETTING_LABEL, TextView.class);
-
-        mSystemVersionUnit = new SettingUnit(mContext, view, false,
-                R.id.settings_system_version_linear_layout,
-                R.id.settings_system_version_label_text_view,
-                R.id.settings_system_version_text_view,
-                LanguageHelper.KEY_SYSTEM_VERSION_SETTING_LABEL, TextView.class);
-
-        mSystemAbountUnit = new SettingUnit(mContext, view, true,
-                R.id.settings_system_about_linear_layout,
-                R.id.settings_system_about_label_text_view, -1,
-                LanguageHelper.KEY_SYSTEM_ABOUT_SETTING_LABEL, TextView.class);
-
+    private void setupProfilePhotoUnit(View view)
+    {
+        mUserProfilePhotoUnit = new SettingUnit(mContext, view,
+                R.id.settings_user_profile_photo_linear_layout,
+                R.id.settings_user_profile_photo_label_text_view,
+                R.id.settings_user_profile_photo_image_view,
+                LanguageHelper.KEY_USER_PROFILE_PHOTO_SETTING_LABEL, ImageView.class);
     }
 
     private View.OnClickListener getEditTextListener(final Context context,
@@ -271,6 +272,66 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                             public void onCancel()
                             {
                                 LogpieLog.i(TAG, "User canceled input a new nickname");
+                            }
+                        });
+            }
+        };
+    }
+
+    /**
+     * Get the picker dialog when click the layout.
+     * 
+     * @param context
+     * @param titleStringKey
+     * @param settingUnit
+     * @param key
+     * @param showChoice
+     *            The choice use to show up.
+     * @param storeValue
+     *            The value used to store in the database.
+     * @param isSystemSetting
+     * @return
+     */
+    private View.OnClickListener getPickerListener(final Context context,
+            final String titleStringKey, final SettingUnit settingUnit, final String key,
+            final String[] showChoice, final String[] storeValue, final boolean isSystemSetting)
+    {
+        return new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final String titleString = LanguageHelper.getString(titleStringKey, context);
+                LogpieDialogHelper.openPickerDialog(mContext, titleString, showChoice,
+                        new LogpiePickerDialogCallback()
+                        {
+                            @Override
+                            public void onCancel()
+                            {
+                                LogpieLog.i(TAG, "User canceled input a new nickname");
+                            }
+
+                            @Override
+                            public void onSelect(int n)
+                            {
+                                LogpieLog.i(TAG, "The " + titleString + " user just choose is "
+                                        + showChoice[n]);
+                                TextView textView = (TextView) settingUnit.mContent;
+                                textView.setText(showChoice[n]);
+                                if (isSystemSetting)
+                                {
+                                    mSystemSetting.setSystemSetting(key, storeValue[n]);
+                                    // If it is setting a system language, it
+                                    // will restart the device.
+                                    if (TextUtils.equals(key, LanguageHelper.KEY_LANGUAGE))
+                                    {
+                                        ActivityOpenHelper.restartApplication(mContext);
+                                    }
+                                }
+                                else
+                                {
+                                    mUser.updateProfile(key, storeValue[n]);
+                                }
                             }
                         });
             }

@@ -15,17 +15,23 @@ public class UserProfile
     private String mUserName;
     // true => male false => female
     private boolean mUserGender;
-    private String mUserBirthday;
     private String mUserEmail;
     private String mUserCity;
 
-    private UserProfile(final String userID, final String userName, final boolean userGender,
-            final String userBirthday, final String userEmail, final String userCity)
+    /**
+     * 
+     * @param userID
+     * @param userName
+     * @param string
+     * @param userEmail
+     * @param userCity
+     */
+    public UserProfile(final String userID, final String userName, final boolean gender,
+            final String userEmail, final String userCity)
     {
         mUserId = userID;
         mUserName = userName;
-        mUserGender = userGender;
-        mUserBirthday = userBirthday;
+        mUserGender = gender;
         mUserEmail = userEmail;
         mUserCity = userCity;
     }
@@ -56,10 +62,9 @@ public class UserProfile
         String userId = profileBundle.getString(ResponseKeys.KEY_UID);
         String userName = profileBundle.getString(ResponseKeys.KEY_NICKNAME);
         boolean gender = profileBundle.getBoolean(ResponseKeys.KEY_GENDER);
-        String birthday = profileBundle.getString(ResponseKeys.KEY_BIRTHDAY);
         String email = profileBundle.getString(ResponseKeys.KEY_EMAIL);
         String city = profileBundle.getString(ResponseKeys.KEY_CITY);
-        return new UserProfile(userId, userName, gender, birthday, email, city);
+        return new UserProfile(userId, userName, gender, email, city);
     }
 
     /**
@@ -88,11 +93,10 @@ public class UserProfile
             String userId = profileJSON.getString(ResponseKeys.KEY_UID);
             String userName = profileJSON.getString(ResponseKeys.KEY_NICKNAME);
             boolean gender = profileJSON.getBoolean(ResponseKeys.KEY_GENDER);
-            String birthday = profileJSON.getString(ResponseKeys.KEY_BIRTHDAY);
             String email = profileJSON.getString(ResponseKeys.KEY_EMAIL);
             String city = profileJSON.getString(ResponseKeys.KEY_CITY);
 
-            return new UserProfile(userId, userName, gender, birthday, email, city);
+            return new UserProfile(userId, userName, gender, email, city);
         } catch (JSONException e)
         {
             LogpieLog.e(TAG, "JSONException when try to retrieve the profileJSON");
@@ -151,23 +155,6 @@ public class UserProfile
     public void setUserGender(boolean userGender)
     {
         mUserGender = userGender;
-    }
-
-    /**
-     * @return the userBirthday
-     */
-    public String getUserBirthday()
-    {
-        return mUserBirthday;
-    }
-
-    /**
-     * @param userBirthday
-     *            the userBirthday to set
-     */
-    public void setUserBirthday(String userBirthday)
-    {
-        mUserBirthday = userBirthday;
     }
 
     /**

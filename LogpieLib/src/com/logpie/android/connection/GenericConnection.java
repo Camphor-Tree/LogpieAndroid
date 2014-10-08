@@ -35,6 +35,7 @@ import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieCallbackFuture;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.android.util.ThreadHelper;
+import com.logpie.commonlib.EndPoint.ServiceURL;
 
 public class GenericConnection
 {
