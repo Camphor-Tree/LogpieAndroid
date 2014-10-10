@@ -216,7 +216,9 @@ class SQLStorage
             Bundle record = new Bundle();
             int len = result.getColumnCount();
             for (int i = 0; i < len; i++)
+            {
                 record.putString(result.getColumnName(i), result.getString(i));
+            }
             bundle.putBundle(String.valueOf(id), record);
             id++;
         }

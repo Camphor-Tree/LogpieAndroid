@@ -141,18 +141,23 @@ public class ActivityManager
             ArrayList<String> operator = new ArrayList<String>();
             ArrayList<String> value = new ArrayList<String>();
 
-            city = "北京市";
-
             if (city == null)
             {
-                if (user.getUserProfile().getUserCity() == null)
+                if (user.getUserProfile() == null)
                 {
-                    LogpieLog.e(TAG, "Cannot find the city");
+                    LogpieLog.e(TAG, "Cannot find the profile when trying to get the city");
                     return;
                 }
                 else
                 {
-                    city = user.getUserProfile().getUserCity();
+                    UserProfile profile = user.getUserProfile();
+                    city = profile.getUserCity();
+                    if (city == null)
+                    {
+                        LogpieLog.e(TAG, "Cannot find the city from the user profile.");
+                        return;
+                    }
+
                 }
             }
             column.add(RequestKeys.KEY_CITY);
@@ -306,7 +311,6 @@ public class ActivityManager
             if (responseData == null)
             {
                 Bundle errorMessage = new Bundle();
-                errorMessage.putString(ResponseKeys.KEY_ERROR_MESSAGE, "Response data is null.");
                 LogpieLog.e(TAG, "The metadata is null when parsing the response data.");
                 mActivityCallback.onError(errorMessage);
             }

@@ -40,6 +40,18 @@
 	<string name="action_bar_string_settings_cn">设置</string>
     <string name="action_bar_string_settings_us">Settings</string>
 
+	<!-- City/Category Picker Dialog -->
+	<string name="title_city_picker_cn">选择城市</string>
+	<string name="title_city_picker_us">Choose A City</string>
+	<string name="title_category_picker_cn">选择分类</string>
+	<string name="title_category_picker_us">Choose A Category</string>
+
+	<!-- Common Button -->
+	<string name="button_cancel_cn">取消</string>
+	<string name="button_cancel_us">Cancel</string>
+	<string name="button_ok_cn">确定</string>
+	<string name="button_ok_us">OK</string>
+
 	<!-- Listview Pull-to-Refresh Header -->
 	<string name="pull_to_refresh_cn">下拉可以刷新</string>
 	<string name="pull_to_refresh_us">Pull to refresh</string>

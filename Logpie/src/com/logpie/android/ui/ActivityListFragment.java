@@ -5,9 +5,13 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,14 +45,22 @@ import com.logpie.android.util.LogpieLog;
 public class ActivityListFragment extends ListFragment
 {
     private static final String TAG = ActivityListFragment.class.getName();
+    private static final String KEY_CITY_PICKER_DIALOG = "city_picker_dialog";
+    private static final String KEY_CATEGORY_PICKER_DIALOG = "category_picker_dialog";
+    private static final int REQUEST_CODE_CITY_DIALOG = 0;
+    private static final int REQUEST_CODE_CATEGORY_DIALOG = 1;
 
     private LogpieRefreshLayout mRefreshableView;
     private ListView mListView;
     private ActivityAdapter mArrayAdapter;
+    private Button mButton;
 
     private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
     private User user;
+    private String mCity;
+    private String mCategory;
+    private String mSubcategory;
     private String mTabName;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -82,6 +95,32 @@ public class ActivityListFragment extends ListFragment
         TextView empty = (TextView) v.findViewById(R.id.activity_empty_text);
         empty.setText(LanguageHelper.getId(LanguageHelper.KEY_ACTIVITY_EMPTY, getActivity()));
         mArrayAdapter = new ActivityAdapter(mActivityList);
+
+        mButton = (Button) v.findViewById(R.id.picker_button);
+        mButton.setOnClickListener(new View.OnClickListener()
+        {
+
+            @Override
+            public void onClick(View v)
+            {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                if (mTabName.equals(LanguageHelper
+                        .getString(LanguageHelper.KEY_CITY, getActivity())))
+                {
+                    DialogFragment dialog = new CityPickerDialog();
+                    dialog.setTargetFragment(ActivityListFragment.this, REQUEST_CODE_CITY_DIALOG);
+                    dialog.show(fm, KEY_CITY_PICKER_DIALOG);
+                }
+                else if (mTabName.equals(LanguageHelper.getString(LanguageHelper.KEY_CATEGORY,
+                        getActivity())))
+                {
+                    DialogFragment dialog = new CategoryPickerDialog();
+                    dialog.setTargetFragment(ActivityListFragment.this,
+                            REQUEST_CODE_CATEGORY_DIALOG);
+                    dialog.show(fm, KEY_CATEGORY_PICKER_DIALOG);
+                }
+            }
+        });
 
         setupAdapter(mArrayAdapter);
 
@@ -120,6 +159,24 @@ public class ActivityListFragment extends ListFragment
         {
             LogpieLog.d(TAG, "List is null!");
             mListView.setAdapter(null);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        if (requestCode == REQUEST_CODE_CITY_DIALOG)
+        {
+            mCity = data.getStringExtra(CityPickerDialog.KEY_CITY);
+            new FetchItemsTask().execute(mTabName);
+        }
+        if (requestCode == REQUEST_CODE_CATEGORY_DIALOG)
+        {
+            mCategory = data.getStringExtra(CategoryPickerDialog.KEY_CATEGORY);
+            mSubcategory = data.getStringExtra(CategoryPickerDialog.KEY_SUBCATEGORY);
+            new FetchItemsTask().execute(mTabName);
         }
     }
 
@@ -253,14 +310,14 @@ public class ActivityListFragment extends ListFragment
             else if (tab.equals(city))
             {
                 ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
-                        ActivityManager.MODE_INITIAL, null,
+                        ActivityManager.MODE_INITIAL, mCity,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(category))
             {
                 ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
-                        ActivityManager.MODE_INITIAL, "3", null,
+                        ActivityManager.MODE_INITIAL, mCategory, mSubcategory,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }

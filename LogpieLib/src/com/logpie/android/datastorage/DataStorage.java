@@ -39,22 +39,22 @@ public class DataStorage
      */
     public void registerUser(Bundle bundle, LogpieCallback callback)
     {
-        mSQLStorage.insert(bundle, "user", callback);
+        mSQLStorage.insert(bundle, DatabaseSchema.SCHEMA_TABLE_USER, callback);
     }
 
     public void registerOrganization(Bundle bundle, LogpieCallback callback)
     {
-        mSQLStorage.insert(bundle, "organization", callback);
+        mSQLStorage.insert(bundle, DatabaseSchema.SCHEMA_TABLE_ORGANIZATION, callback);
     }
 
     public void createActivity(Bundle bundle, LogpieCallback callback)
     {
-        mSQLStorage.insert(bundle, "activity", callback);
+        mSQLStorage.insert(bundle, DatabaseSchema.SCHEMA_TABLE_ACTIVITY, callback);
     }
 
     public void createComment(Bundle bundle, LogpieCallback callback)
     {
-        mSQLStorage.insert(bundle, "comment", callback);
+        mSQLStorage.insert(bundle, DatabaseSchema.SCHEMA_TABLE_COMMENT, callback);
     }
 
     /**
@@ -68,7 +68,7 @@ public class DataStorage
         // TODO
         String whereClause = bundle.getString(KEY_WHERE_CLAUSE);
         String[] whereArgs = new String[2];
-        mSQLStorage.update("user", bundle, whereClause, whereArgs);
+        mSQLStorage.update(DatabaseSchema.SCHEMA_TABLE_USER, bundle, whereClause, whereArgs);
     }
 
     public void updateOrganizationProfile(Bundle bundle, LogpieCallback callback)
@@ -76,7 +76,8 @@ public class DataStorage
         // TODO
         String whereClause = bundle.getString(KEY_WHERE_CLAUSE);
         String[] whereArgs = new String[2];
-        mSQLStorage.update("organization", bundle, whereClause, whereArgs);
+        mSQLStorage
+                .update(DatabaseSchema.SCHEMA_TABLE_ORGANIZATION, bundle, whereClause, whereArgs);
     }
 
     public void editActivity(Bundle bundle, LogpieCallback callback)
@@ -94,7 +95,8 @@ public class DataStorage
     {
         String[] columns = new String[3];
         String[] selectionArgs = new String[1];
-        return mSQLStorage.query("user", columns, key, selectionArgs, null, null, null);
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_USER, columns, key, selectionArgs,
+                null, null, null);
     }
 
     public Bundle findOrganizationByKey(String key)
@@ -115,7 +117,70 @@ public class DataStorage
     public void deleteActivity(String id)
     {
         String[] whereArgs = new String[2];
-        mSQLStorage.delete("activity", id, whereArgs);
+        mSQLStorage.delete(DatabaseSchema.SCHEMA_TABLE_ACTIVITY, id, whereArgs);
         // TODO: delete all comments in this activity
+    }
+
+    public Bundle getProvinceList()
+    {
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_CITY_PROVINCE };
+        String groupBy = DatabaseSchema.SCHEMA_CITY_PROVINCE;
+        String orderBy = "length(" + DatabaseSchema.SCHEMA_CITY_PROVINCE + ")";
+
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_CITY, columns, null, null, groupBy,
+                null, orderBy);
+    }
+
+    public Bundle getCityList(String province)
+    {
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_CITY_CITY };
+        String whereClause = DatabaseSchema.SCHEMA_CITY_PROVINCE + " = ?";
+        String[] whereArgs = new String[] { province };
+
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_CITY, columns, whereClause, whereArgs,
+                null, null, null);
+    }
+
+    public Bundle getCategoryList()
+    {
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_CATEGORY_CID,
+                DatabaseSchema.SCHEMA_CATEGORY_CATEGORYCN,
+                DatabaseSchema.SCHEMA_CATEGORY_CATEGORYUS };
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_CATEGORY, columns, null, null, null,
+                null, null);
+    }
+
+    public Bundle getSubcategoryList(String categoryID)
+    {
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYCN,
+                DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYUS };
+        String whereClause = DatabaseSchema.SCHEMA_SUBCATEGORY_PARENT + " = ?";
+        String[] whereArgs = new String[] { categoryID };
+
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_SUBCATEGORY, columns, whereClause,
+                whereArgs, null, null, null);
+    }
+
+    public Bundle getCategoryId(String category)
+    {
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_CATEGORY_CID };
+        String whereClause = DatabaseSchema.SCHEMA_CATEGORY_CATEGORYCN + " = ? OR "
+                + DatabaseSchema.SCHEMA_CATEGORY_CATEGORYUS + " = ?";
+        String[] whereArgs = new String[] { category, category };
+
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_CATEGORY, columns, whereClause,
+                whereArgs, null, null, null);
+    }
+
+    public Bundle getSubcategoryId(String subcategory, String categoryID)
+    {
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_SUBCATEGORY_CID };
+        String whereClause = "(" + DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYCN + " = ? OR "
+                + DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYUS + " = ?) AND "
+                + DatabaseSchema.SCHEMA_SUBCATEGORY_PARENT + " = ?";
+        String[] whereArgs = new String[] { subcategory, subcategory, categoryID };
+
+        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_SUBCATEGORY, columns, whereClause,
+                whereArgs, null, null, null);
     }
 }

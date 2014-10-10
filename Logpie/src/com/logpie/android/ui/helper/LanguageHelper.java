@@ -6,12 +6,13 @@ import android.content.Context;
 
 import com.logpie.android.R;
 import com.logpie.android.datastorage.LogpieSystemSetting;
+import com.logpie.android.logic.CategoryManager;
 import com.logpie.android.util.LogpieLog;
 
 public class LanguageHelper
 {
     private final static String TAG = LanguageHelper.class.getName();
-    private static boolean sIsChinese;
+    public static boolean sIsChinese;
 
     /**
      * Key for every Logpie system setting
@@ -65,13 +66,26 @@ public class LanguageHelper
     public final static String KEY_SYSTEM_LANGUAGE_SETTING_LABEL = "settings_system_language_setting_label";
     public final static String KEY_SYSTEM_VERSION_SETTING_LABEL = "settings_system_version_setting_label";
     public final static String KEY_SYSTEM_ABOUT_SETTING_LABEL = "settings_system_about_setting_label";
+
     // For dialog edit text hint
     public final static String KEY_SETTING_NICKNAME_DIALOG_HINT = "settings_nickname_dialog_hint";
+
     // For gender string
     public final static String KEY_GENDER_MALE = "gender_male";
     public final static String KEY_GENDER_FEMALE = "gender_female";
+
     // For language showing string
     public final static String KEY_LANGUAGE_SHOWING_STRING = "language_showing_string";
+
+    // Dialog
+    public final static String KEY_CITY_PICKER_TITLE = "city_picker_title";
+    public final static String KEY_CATEGORY_PICKER_TITLE = "category_picker_title";
+    public final static String KEY_CATEGORY_GROUP = "category_group";
+    public final static String KEY_SUBCATEGORY_GROUP = "subcategory_group";
+
+    // Common Button
+    public final static String KEY_BUTTON_CANCEL = "button_cancel";
+    public final static String KEY_BUTTON_OK = "button_ok";
 
     /**
      * Initialize the language of Logpie
@@ -162,17 +176,17 @@ public class LanguageHelper
             return switchLanguage(R.string.month_cn, R.string.month_us);
         case KEY_YEAR:
             return switchLanguage(R.string.year_cn, R.string.year_us);
-            // Action Bar String
 
-            // LogpieActivityDetailActivity
+            // Logpie Activity Detail Activity
         case KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL:
             return switchLanguage(R.string.action_bar_string_activity_detail_cn,
                     R.string.action_bar_string_activity_detail_us);
-            // LogpieSettingsActivity
+
+            // Logpie Settings Activity
         case KEY_ACTION_BAR_STRING_SETTINGS:
             return switchLanguage(R.string.action_bar_string_settings_cn,
                     R.string.action_bar_string_settings_us);
-            // LogpieSettingsPageLabels:
+            // Logpie Settings Page Labels:
         case KEY_USER_PROFILE_PHOTO_SETTING_LABEL:
             return switchLanguage(R.string.settings_label_user_profile_photo_cn,
                     R.string.settings_label_user_profile_photo_us);
@@ -197,19 +211,35 @@ public class LanguageHelper
         case KEY_SYSTEM_ABOUT_SETTING_LABEL:
             return switchLanguage(R.string.settings_label_system_about_cn,
                     R.string.settings_label_system_about_us);
+
             // Setting Page nickname Dialog edit text hint
         case KEY_SETTING_NICKNAME_DIALOG_HINT:
             return switchLanguage(R.string.settings_dialog_user_nickname_hint_cn,
                     R.string.settings_dialog_user_nickname_hint_us);
+
             // For gender string
         case KEY_GENDER_MALE:
             return switchLanguage(R.string.gender_male_cn, R.string.gender_male_us);
         case KEY_GENDER_FEMALE:
             return switchLanguage(R.string.gender_female_cn, R.string.gender_female_us);
+
             // For language showing string
         case KEY_LANGUAGE_SHOWING_STRING:
             return switchLanguage(R.string.language_showing_string_cn,
                     R.string.language_showing_string_us);
+
+            // Picker Title
+        case KEY_CITY_PICKER_TITLE:
+            return switchLanguage(R.string.title_city_picker_cn, R.string.title_city_picker_us);
+        case KEY_CATEGORY_PICKER_TITLE:
+            return switchLanguage(R.string.title_category_picker_cn,
+                    R.string.title_category_picker_us);
+
+            // Common Buttons
+        case KEY_BUTTON_CANCEL:
+            return switchLanguage(R.string.button_cancel_cn, R.string.button_cancel_us);
+        case KEY_BUTTON_OK:
+            return switchLanguage(R.string.button_ok_cn, R.string.button_ok_us);
         default:
             LogpieLog.d(TAG, "Failed to find the key when setting the language.");
             return -1;
@@ -218,6 +248,27 @@ public class LanguageHelper
 
     public static String getString(String key, Context context)
     {
+        switch (key)
+        {
+        case KEY_CATEGORY_GROUP:
+            if (sIsChinese)
+            {
+                return CategoryManager.KEY_CATEGORY_GROUP_CN;
+            }
+            else
+            {
+                return CategoryManager.KEY_CATEGORY_GROUP_US;
+            }
+        case KEY_SUBCATEGORY_GROUP:
+            if (sIsChinese)
+            {
+                return CategoryManager.KEY_SUBCATEGORY_GROUP_CN;
+            }
+            else
+            {
+                return CategoryManager.KEY_SUBCATEGORY_GROUP_US;
+            }
+        }
         return context.getResources().getString(getId(key, context));
     }
 
