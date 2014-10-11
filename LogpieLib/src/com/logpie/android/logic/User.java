@@ -26,11 +26,11 @@ import com.logpie.commonlib.ResponseKeys;
  */
 public abstract class User
 {
-    public static String KEY_USER_ID = "com.logpie.user.uid";
-    public static String KEY_USER_NICKNAME = "com.logpie.user.nickname";
-    public static String KEY_USER_GENDER = "com.logpie.user.gender";
-    public static String KEY_USER_EMAIL = "com.logpie.user.email";
-    public static String KEY_USER_CITY = "com.logpie.user.city";
+    public static String KEY_USER_ID = "uid";
+    public static String KEY_USER_NICKNAME = "nickname";
+    public static String KEY_USER_GENDER = "gender";
+    public static String KEY_USER_EMAIL = "email";
+    public static String KEY_USER_CITY = "city";
 
     private static String TAG = User.class.getName();
     protected UserProfile mUserProfile;
@@ -365,25 +365,26 @@ public abstract class User
         JSONObject updateKeyValueJSON = new JSONObject();
         try
         {
-            updateKeyValueJSON.put(key, value);
+            updateKeyValueJSON.put(RequestKeys.KEY_UPDATE_COLUMN, key);
+            updateKeyValueJSON.put(RequestKeys.KEY_UPDATE_VALUE, value);
         } catch (JSONException e)
         {
             LogpieLog.e(TAG, "JSONException happened when build the update JSON.", e);
         }
         updateKeyValueJSONArray.put(updateKeyValueJSON);
 
-        JSONArray constaintKeyValueJSONArray = new JSONArray();
-        JSONObject constaintKeyValueJSON = new JSONObject();
+        JSONArray constraintKeyValueJSONArray = new JSONArray();
+        JSONObject constraintKeyValueJSON = new JSONObject();
         try
         {
-            constaintKeyValueJSON.put(RequestKeys.KEY_CONSTRAINT_COLUMN, RequestKeys.KEY_UID);
-            constaintKeyValueJSON.put(RequestKeys.KEY_CONSTRAINT_OPERATOR, RequestKeys.KEY_EQUAL);
-            constaintKeyValueJSON.put(RequestKeys.KEY_CONSTRAINT_VALUE, mUserProfile.getUserId());
+            constraintKeyValueJSON.put(RequestKeys.KEY_CONSTRAINT_COLUMN, RequestKeys.KEY_UID);
+            constraintKeyValueJSON.put(RequestKeys.KEY_CONSTRAINT_OPERATOR, RequestKeys.KEY_EQUAL);
+            constraintKeyValueJSON.put(RequestKeys.KEY_CONSTRAINT_VALUE, mUserProfile.getUserId());
         } catch (JSONException e)
         {
             LogpieLog.e(TAG, "JSONException happened when build the constaint JSON.", e);
         }
-        constaintKeyValueJSONArray.put(updateKeyValueJSON);
+        constraintKeyValueJSONArray.put(constraintKeyValueJSON);
 
         JSONObject requestJSON = new JSONObject();
         try
@@ -392,7 +393,7 @@ public abstract class User
             requestJSON.put(RequestKeys.KEY_REQUEST_TYPE, RequestKeys.REQUEST_TYPE_UPDATE);
             requestJSON.put(RequestKeys.KEY_REQUEST_ID, UUID.randomUUID());
             requestJSON.put(RequestKeys.KEY_UPDATE_KEYVALUE_PAIR, updateKeyValueJSONArray);
-            requestJSON.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constaintKeyValueJSONArray);
+            requestJSON.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValueJSONArray);
 
         } catch (JSONException e)
         {

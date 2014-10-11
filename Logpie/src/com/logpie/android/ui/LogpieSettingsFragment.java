@@ -23,6 +23,7 @@ import com.logpie.android.ui.helper.LogpieDialogHelper.LogpieEditTextDialogCallb
 import com.logpie.android.ui.helper.LogpieDialogHelper.LogpiePickerDialogCallback;
 import com.logpie.android.util.BuildInfo;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.commonlib.RequestKeys;
 
 /**
  * This fragment will show the Logpie Settings page.
@@ -204,7 +205,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
         String[] genderStoreValue = new String[] { String.valueOf(true), String.valueOf(false) };
         mUserGenderUnit.setOnClickListener(getPickerListener(mContext,
                 LanguageHelper.KEY_USER_GENDER_SETTING_LABEL, mUserGenderUnit,
-                User.KEY_USER_GENDER, genderShowChoice, genderStoreValue, false));
+                RequestKeys.KEY_GENDER, genderShowChoice, genderStoreValue, false));
     }
 
     private void setupEmailUnit(View view)
@@ -224,7 +225,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
         mUserNicknameUnit.setOnClickListener(getEditTextListener(mContext,
                 LanguageHelper.KEY_USER_NICKNAME_SETTING_LABEL,
                 LanguageHelper.KEY_SETTING_NICKNAME_DIALOG_HINT, mUserNicknameUnit,
-                User.KEY_USER_NICKNAME, false));
+                RequestKeys.KEY_NICKNAME, false));
         mUserNicknameUnit.setTextValue(mUser.getUserProfile().getUserName());
     }
 
