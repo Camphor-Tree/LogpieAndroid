@@ -25,6 +25,8 @@
 	<string name="action_create_activity_us">Create Activity</string>
 	<string name="action_settings_cn">设置</string>
 	<string name="action_settings_us">Settings</string>
+	<string name="action_bar_string_create_activity_cn">创建/报告 活动</string>
+	<string name="action_bar_string_create_activity_us">Create/Report Activity</string>
 
 	<!-- Navigation in Square Page -->
 	<string name="navigation_nearby_mode_cn">附近</string>
@@ -102,6 +104,18 @@
     <!-- Language Showing String -->
     <string name="language_showing_string_cn">中文</string>
     <string name="language_showing_string_us">English</string>
+    
+    <!-- Date/Timer Picker Title -->
+    <string name="date_picker_title_string_cn">请选择一个日期</string>
+    <string name="date_picker_title_string_us">Please pick a date</string>
+    <string name="time_picker_title_string_cn">请选择一个时间</string>
+    <string name="time_picker_title_string_us">Please pick a time</string>
+    
+    <!-- Dialog Positive/Negative button String -->
+    <string name="dialog_positive_button_string_cn">确定</string>
+    <string name="dialog_positive_button_string_us">Ok</string>
+    <string name="dialog_negative_button_string_cn">取消</string>
+    <string name="dialog_negative_button_string_us">Cancel</string>
 
 	<!-- Time Unit -->
 	<!-- TODO: handle the s -->

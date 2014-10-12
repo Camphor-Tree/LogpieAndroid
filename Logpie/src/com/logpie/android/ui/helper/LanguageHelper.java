@@ -6,7 +6,6 @@ import android.content.Context;
 
 import com.logpie.android.R;
 import com.logpie.android.datastorage.LogpieSystemSetting;
-import com.logpie.android.logic.CategoryManager;
 import com.logpie.android.util.LogpieLog;
 
 public class LanguageHelper
@@ -56,6 +55,7 @@ public class LanguageHelper
     // ActionBar String
     public final static String KEY_ACTION_BAR_STRING_ACTIVITY_DETAIL = "action_bar_string_activity_detail";
     public final static String KEY_ACTION_BAR_STRING_SETTINGS = "action_bar_string_settings";
+    public final static String KEY_ACTION_BAR_STRING_CREATE_ACTIVITY = "action_bar_string_create_activity";
 
     // For Settings page
     public final static String KEY_USER_PROFILE_PHOTO_SETTING_LABEL = "settings_user_profile_photo_setting_label";
@@ -86,6 +86,9 @@ public class LanguageHelper
     // Common Button
     public final static String KEY_BUTTON_CANCEL = "button_cancel";
     public final static String KEY_BUTTON_OK = "button_ok";
+    // For Date Picker dialog title string
+    public final static String KEY_DATE_PICKER_DIALOG_TITLE_STRING = "date_picker_dialog_title_string";
+    public final static String KEY_TIME_PICKER_DIALOG_TITLE_STRING = "time_picker_dialog_title_string";
 
     /**
      * Initialize the language of Logpie
@@ -186,7 +189,10 @@ public class LanguageHelper
         case KEY_ACTION_BAR_STRING_SETTINGS:
             return switchLanguage(R.string.action_bar_string_settings_cn,
                     R.string.action_bar_string_settings_us);
-            // Logpie Settings Page Labels:
+        case KEY_ACTION_BAR_STRING_CREATE_ACTIVITY:
+            return switchLanguage(R.string.action_bar_string_create_activity_cn,
+                    R.string.action_bar_string_create_activity_us);
+            // LogpieSettingsPageLabels:
         case KEY_USER_PROFILE_PHOTO_SETTING_LABEL:
             return switchLanguage(R.string.settings_label_user_profile_photo_cn,
                     R.string.settings_label_user_profile_photo_us);
@@ -240,6 +246,14 @@ public class LanguageHelper
             return switchLanguage(R.string.button_cancel_cn, R.string.button_cancel_us);
         case KEY_BUTTON_OK:
             return switchLanguage(R.string.button_ok_cn, R.string.button_ok_us);
+            // For Date Picker title string
+        case KEY_DATE_PICKER_DIALOG_TITLE_STRING:
+            return switchLanguage(R.string.date_picker_title_string_cn,
+                    R.string.date_picker_title_string_us);
+        case KEY_TIME_PICKER_DIALOG_TITLE_STRING:
+            return switchLanguage(R.string.time_picker_title_string_cn,
+                    R.string.time_picker_title_string_us);
+
         default:
             LogpieLog.d(TAG, "Failed to find the key when setting the language.");
             return -1;

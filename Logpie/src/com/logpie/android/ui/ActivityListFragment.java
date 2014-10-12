@@ -234,22 +234,22 @@ public class ActivityListFragment extends ListFragment
             nickname.setText(activity.getmUserName());
 
             TextView createTime = (TextView) v.findViewById(R.id.activity_list_create_time);
-            createTime.setText(LogpieActivity.getFormatDate(activity.getmCreateTime()));
+            createTime.setText(activity.getCreateTime().getDateTimeString());
 
             TextView description = (TextView) v.findViewById(R.id.activity_list_description);
             description.setText(activity.getmDescription());
 
             TextView location = (TextView) v.findViewById(R.id.activity_list_location);
-            location.setText(activity.getmLocation().getAddress());
+            location.setText(activity.getLocation().getAddress());
 
             TextView city = (TextView) v.findViewById(R.id.activity_list_city);
-            city.setText(activity.getmLocation().getCity());
+            city.setText(activity.getLocation().getCity());
 
             TextView startTime = (TextView) v.findViewById(R.id.activity_list_start_time);
-            startTime.setText(LogpieActivity.getFormatDate(activity.getmStartTime()));
+            startTime.setText(activity.getStartTime().getDateTimeString());
 
             TextView endTime = (TextView) v.findViewById(R.id.activity_list_end_time);
-            endTime.setText(LogpieActivity.getFormatDate(activity.getmEndTime()));
+            endTime.setText(activity.getEndTime().getDateTimeString());
 
             TextView like = (TextView) v.findViewById(R.id.activity_list_count_like);
             like.setText(String.valueOf(activity.getmCountLike()));

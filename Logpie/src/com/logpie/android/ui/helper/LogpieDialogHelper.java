@@ -1,12 +1,19 @@
 package com.logpie.android.ui.helper;
 
+import java.util.Date;
+
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.text.InputType;
+import android.widget.DatePicker;
 import android.widget.EditText;
+
+import com.logpie.android.util.LogpieDateTime;
 
 /**
  * This class is used to help build the diaglogs in Logpie.
@@ -16,6 +23,8 @@ import android.widget.EditText;
  */
 public class LogpieDialogHelper
 {
+    private static final int YEAR_1900 = 1900;
+
     public interface LogpieEditTextDialogCallback
     {
         void onSelect(final String text);
@@ -96,5 +105,46 @@ public class LogpieDialogHelper
 
         });
         builder.show();
+    }
+
+    public interface LogpieDatePickerDialogCallback
+    {
+        void onSelectDate(final LogpieDateTime date);
+
+        void onCancel();
+    }
+
+    private static class LogpieDatePickerDialogCallbackAdapter implements OnDateSetListener
+    {
+        private LogpieDatePickerDialogCallback mCallback;
+
+        LogpieDatePickerDialogCallbackAdapter(LogpieDatePickerDialogCallback callback)
+        {
+            mCallback = callback;
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+        {
+            if (mCallback != null)
+            {
+                mCallback.onSelectDate(new LogpieDateTime(year, monthOfYear, dayOfMonth));
+            }
+        }
+    }
+
+    public static void openDatePickerDialog(final Context context, final Date initialDate,
+            final LogpieDatePickerDialogCallback callback)
+    {
+        int year = initialDate.getYear();
+        int month = initialDate.getMonth();
+        int day = initialDate.getDay();
+        OnDateSetListener listener = new LogpieDatePickerDialogCallbackAdapter(callback);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, 0, listener, year, month,
+                day);
+        // Set the dialog title
+        datePickerDialog.setTitle(LanguageHelper.getString(
+                LanguageHelper.KEY_DATE_PICKER_DIALOG_TITLE_STRING, context));
+        datePickerDialog.show();
     }
 }

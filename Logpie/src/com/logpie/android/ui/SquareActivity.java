@@ -84,7 +84,8 @@ public class SquareActivity extends ActionBarActivity
         {
         case R.id.action_create_activity:
         {
-            // TODO: open create activity page
+            // Open the settings page
+            ActivityOpenHelper.openActivity(this, LogpieCreateActivityActivity.class);
             break;
         }
         case R.id.action_settings:

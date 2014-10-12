@@ -1,10 +1,8 @@
 package com.logpie.android.logic;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONException;
@@ -13,6 +11,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.commonlib.ResponseKeys;
 
@@ -34,12 +33,21 @@ public class LogpieActivity implements Parcelable
     private String mUserName;
     private String mDescription;
     private LogpieLocation mLocation;
-    private Date mCreateTime;
-    private Date mStartTime;
-    private Date mEndTime;
+    private LogpieDateTime mCreateTime;
+    private LogpieDateTime mStartTime;
+    private LogpieDateTime mEndTime;
     private int mCountLike;
     private int mCountDislike;
     private List<Comment> mComments;
+
+    /**
+     * This is used to create a new activity
+     */
+    public LogpieActivity()
+    {
+        mStartTime = new LogpieDateTime();
+        mEndTime = new LogpieDateTime();
+    }
 
     /**
      * This is used when create an activity
@@ -51,28 +59,29 @@ public class LogpieActivity implements Parcelable
      * @param startTime
      * @param endTime
      */
-    public LogpieActivity(String aid, String uid, String userName, String description,
-            LogpieLocation location, Date startTime, Date endTime)
+    public LogpieActivity(String uid, String userName, String description, LogpieLocation location,
+            LogpieDateTime startTime, LogpieDateTime endTime, LogpieDateTime createTime)
     {
-        mActivityID = aid;
         mUserID = uid;
         mUserName = userName;
         mDescription = description;
         mLocation = location;
         mStartTime = startTime;
         mEndTime = endTime;
+        mCreateTime = createTime;
 
         // set default value
         mUserAvatar = DEFAULT_AVATAR;
-        mCreateTime = new Date();
+        mCreateTime = createTime;
         mCountLike = 0;
         mCountDislike = 0;
         mComments = new ArrayList<Comment>();
     }
 
     public LogpieActivity(String aid, String uid, String userName, String userAvatar,
-            String description, LogpieLocation location, Date startTime, Date endTime,
-            Date createTime, int countLike, int countDislike, List<Comment> comments)
+            String description, LogpieLocation location, LogpieDateTime startTime,
+            LogpieDateTime endTime, LogpieDateTime createTime, int countLike, int countDislike,
+            List<Comment> comments)
     {
         mActivityID = aid;
         mUserID = uid;
@@ -112,9 +121,9 @@ public class LogpieActivity implements Parcelable
             LogpieLocation location = new LogpieLocation(null, null,
                     data.getString(ResponseKeys.KEY_LOCATION),
                     data.getString(ResponseKeys.KEY_CITY));
-            Date startTime = getFormatDate(data.getString(ResponseKeys.KEY_START_TIME));
-            Date endTime = getFormatDate(data.getString(ResponseKeys.KEY_END_TIME));
-            Date createTime = getFormatDate(data.getString(ResponseKeys.KEY_CREATE_TIME));
+            LogpieDateTime startTime = getFormatDate(data.getString(ResponseKeys.KEY_START_TIME));
+            LogpieDateTime endTime = getFormatDate(data.getString(ResponseKeys.KEY_END_TIME));
+            LogpieDateTime createTime = getFormatDate(data.getString(ResponseKeys.KEY_CREATE_TIME));
 
             // Optional parameters
             String userAvatar = data.has(ResponseKeys.KEY_AID) ? data
@@ -146,6 +155,15 @@ public class LogpieActivity implements Parcelable
                     e);
         }
         return null;
+    }
+
+    /**
+     * set the current time to the create time. This should be called when the
+     * user click create activity.
+     */
+    public void setCreateTime()
+    {
+        mCreateTime = new LogpieDateTime();
     }
 
     public String getmActivityID()
@@ -193,66 +211,59 @@ public class LogpieActivity implements Parcelable
         return mDescription;
     }
 
-    public void setmDescription(String mDescription)
+    public void setDescription(String mDescription)
     {
         this.mDescription = mDescription;
     }
 
-    public LogpieLocation getmLocation()
+    public LogpieLocation getLocation()
     {
         return mLocation;
     }
 
-    public void setmLocation(LogpieLocation mLocation)
+    public void setLocation(LogpieLocation mLocation)
     {
         this.mLocation = mLocation;
     }
 
-    public Date getmCreateTime()
+    public LogpieDateTime getCreateTime()
     {
         return mCreateTime;
     }
 
-    public void setmCreateTime(Date mCreateTime)
+    public void setCreateTime(LogpieDateTime CreateTime)
     {
         this.mCreateTime = mCreateTime;
     }
 
-    public Date getmStartTime()
+    public LogpieDateTime getStartTime()
     {
         return mStartTime;
     }
 
-    public void setmStartTime(Date mStartTime)
+    public void setStartTime(LogpieDateTime mStartTime)
     {
         this.mStartTime = mStartTime;
     }
 
-    public Date getmEndTime()
+    public LogpieDateTime getEndTime()
     {
         return mEndTime;
     }
 
-    public void setmEndTime(Date mEndTime)
+    public String getStartDateFormatString()
+    {
+        return mStartTime.getDateString();
+    }
+
+    public void setEndTime(LogpieDateTime mEndTime)
     {
         this.mEndTime = mEndTime;
     }
 
-    public static String getFormatDate(Date date)
+    public static LogpieDateTime getFormatDate(String s) throws ParseException
     {
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd HH:mm");
-        return dateFormat.format(date);
-    }
-
-    public static String getFormatTime(Date date)
-    {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        return dateFormat.format(date);
-    }
-
-    public static Date getFormatDate(String s) throws ParseException
-    {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(s);
+        return new LogpieDateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(s));
     }
 
     public int getmCountLike()
@@ -311,8 +322,9 @@ public class LogpieActivity implements Parcelable
         dest.writeString(mUserID);
         dest.writeString(mUserName);
         dest.writeString(mDescription);
-        dest.writeString(getFormatDate(mStartTime));
-        dest.writeString(getFormatDate(mEndTime));
+        dest.writeParcelable(mStartTime, flags);
+        dest.writeParcelable(mEndTime, flags);
+        dest.writeParcelable(mCreateTime, flags);
         dest.writeInt(mCountLike);
         dest.writeInt(mCountDislike);
         dest.writeParcelable(mLocation, flags);
@@ -325,20 +337,12 @@ public class LogpieActivity implements Parcelable
         mUserID = in.readString();
         mUserName = in.readString();
         mDescription = in.readString();
-        try
-        {
-            mStartTime = getFormatDate(in.readString());
-            mEndTime = getFormatDate(in.readString());
-        } catch (ParseException e)
-        {
-            LogpieLog.e(TAG,
-                    "ParseException happened when parse a date from String type to Date type.");
-            e.printStackTrace();
-        }
+        mStartTime = in.readParcelable(getClass().getClassLoader());
+        mEndTime = in.readParcelable(getClass().getClassLoader());
+        mCreateTime = in.readParcelable(getClass().getClassLoader());
         mCountLike = in.readInt();
         mCountDislike = in.readInt();
         mLocation = in.readParcelable(getClass().getClassLoader());
-
     }
 
 }

@@ -75,11 +75,11 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         // Set activity descryption
         mUIHolder.mActivityDescryptionTextView.setText(mLogpieActivity.getmDescription());
         // Set the activity time
-        String startTime = LogpieActivity.getFormatDate(mLogpieActivity.getmStartTime());
-        String endTime = LogpieActivity.getFormatDate(mLogpieActivity.getmEndTime());
+        String startTime = mLogpieActivity.getStartTime().getDateTimeString();
+        String endTime = mLogpieActivity.getEndTime().getDateTimeString();
         mUIHolder.mActivityTimeTextView.setText(startTime + " ~ " + endTime);
         // Set the activity location
-        mUIHolder.mActivityLocationTextView.setText(mLogpieActivity.getmLocation().getAddress());
+        mUIHolder.mActivityLocationTextView.setText(mLogpieActivity.getLocation().getAddress());
         // Set the activity count like
         mUIHolder.mActivityCountLikeTextView.setText(Integer.toString(mLogpieActivity
                 .getmCountLike()));

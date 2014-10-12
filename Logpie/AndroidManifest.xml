@@ -40,6 +40,10 @@
             android:name="com.logpie.android.ui.LogpieSettingsActivity"
             android:theme="@style/LogpieBaseTheme" >
         </activity>
+        <activity
+            android:name="com.logpie.android.ui.LogpieCreateActivityActivity"
+            android:theme="@style/LogpieBaseTheme" >
+        </activity>
 		
 		
 	</application>
