@@ -34,7 +34,7 @@ public class LogpieDateTime implements Parcelable
         mDate = new Date();
         mYear = mDate.getYear() + 1900;
         mMonth = mDate.getMonth();
-        mDay = mDate.getDay();
+        mDay = mDate.getDate();
         mHour = mDate.getHours();
         mMinute = mDate.getMinutes();
     }
@@ -44,20 +44,17 @@ public class LogpieDateTime implements Parcelable
         mDate = date;
         mYear = date.getYear() + 1900;
         mMonth = date.getMonth();
-        mDay = date.getDay();
+        mDay = date.getDate();
         mHour = date.getHours();
         mMinute = date.getMinutes();
     }
 
-    public LogpieDateTime(int year, int month, int day)
+    public LogpieDateTime(int year, int month, int day, int hour, int minute)
     {
-        mYear = year;
-        mMonth = month;
-        mDay = day;
         // The year in OnDateSet is the actual year, like:2014. But the
         // constructor for the Date is actually the year from 1900. So need
         // to substract 1900 to get the number.
-        mDate = new Date(year - 1900, month, day);
+        this(new Date(year - 1900, month, day));
     }
 
     public synchronized void setTime(int hour, int minute)
@@ -66,6 +63,78 @@ public class LogpieDateTime implements Parcelable
         mMinute = minute;
         mDate.setHours(hour);
         mDate.setMinutes(minute);
+    }
+
+    public synchronized void setDate(int year, int month, int day)
+    {
+        mYear = year;
+        mMonth = month;
+        mDay = day;
+        mDate.setYear(year - 1900);
+        mDate.setMonth(month);
+        mDate.setDate(day);
+    }
+
+    public synchronized void setLogpieDateTime(final LogpieDateTime dateTime)
+    {
+        mYear = dateTime.getYear();
+        mMonth = dateTime.getMonth();
+        mDay = dateTime.getDay();
+        mHour = dateTime.getHour();
+        mMinute = dateTime.getMinute();
+        mDate.setYear(mYear - 1900);
+        mDate.setMonth(mMonth);
+        mDate.setDate(mDay);
+        mDate.setHours(mHour);
+        mDate.setMinutes(mMinute);
+    }
+
+    public boolean after(LogpieDateTime dateTime)
+    {
+        if (dateTime == null || mDate == null)
+        {
+            throw new IllegalArgumentException("dateTime used to cpmpare can not be null!");
+        }
+        return mDate.getTime() > dateTime.getDate().getTime();
+    }
+
+    public boolean before(LogpieDateTime dateTime)
+    {
+        if (dateTime == null || mDate == null)
+        {
+            throw new IllegalArgumentException("dateTime used to cpmpare can not be null!");
+        }
+        return mDate.getTime() < dateTime.getDate().getTime();
+    }
+
+    public int getHour()
+    {
+        return mHour;
+    }
+
+    public int getMinute()
+    {
+        return mMinute;
+    }
+
+    public Date getDate()
+    {
+        return mDate;
+    }
+
+    public int getYear()
+    {
+        return mYear;
+    }
+
+    public int getMonth()
+    {
+        return mMonth;
+    }
+
+    public int getDay()
+    {
+        return mDay;
     }
 
     public String getDateString()

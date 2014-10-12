@@ -1,7 +1,5 @@
 package com.logpie.android.ui;
 
-import java.util.Date;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -27,6 +25,9 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
     private Context mContext;
     private LogpieActivity mLogpieActivity;
     private CreateActivityUIHolder mUiHolder;
+
+    private LogpieDateTime mStartDateTime;
+    private LogpieDateTime mEndDateTime;
     // indicate start/end date/time is editing
     private int tag = 4;
     private int first_time_in = 0;
@@ -38,7 +39,16 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
         // Initialize a LogpieActivity. This is used to store the activity
         // attributes.
         mContext = getActivity();
+
         mLogpieActivity = new LogpieActivity();
+
+        // Initialize the start/end date time
+        mStartDateTime = new LogpieDateTime();
+        mEndDateTime = new LogpieDateTime();
+        // mEndDateTime.setLogpieDateTime(mStartDateTime);
+
+        mLogpieActivity.setStartTime(mStartDateTime);
+        mLogpieActivity.setEndTime(mEndDateTime);
     }
 
     @Override
@@ -47,36 +57,77 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
     {
         View view = inflater.inflate(R.layout.fragment_create_activity, parent, false);
         initilizeUI(view);
+        syncStartTimeEndTimeEditText(true);
         setupDatePicker();
+
         return view;
     }
 
     private void setupDatePicker()
     {
-        mUiHolder.mStartDateEditText.setOnClickListener(new OnClickListener()
+        setUpDatePicker(mUiHolder.mStartDateEditText, true, mStartDateTime);
+        setUpDatePicker(mUiHolder.mEndDateEditText, false, mEndDateTime);
+    }
+
+    private void setUpDatePicker(final View view, final boolean isStartDate,
+            final LogpieDateTime logpieDateTime)
+    {
+        view.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                LogpieDialogHelper.openDatePickerDialog(mContext, new Date(),
+                LogpieDialogHelper.openDatePickerDialog(mContext, new LogpieDateTime(),
                         new LogpieDatePickerDialogCallback()
                         {
-                            @Override
-                            public void onSelectDate(LogpieDateTime date)
-                            {
-                                mLogpieActivity.setStartTime(date);
-                                mUiHolder.mStartDateEditText.setText(date.getDateString());
-                            }
-
                             @Override
                             public void onCancel()
                             {
                                 LogpieLog.i(TAG, "User canceled");
                             }
+
+                            @Override
+                            public void onSelectDate(int year, int month, int day)
+                            {
+
+                                logpieDateTime.setDate(year, month, day);
+                                // If the start date is before currentTime,
+                                // setback the start time to currentTime
+                                LogpieDateTime currentTime = new LogpieDateTime();
+                                if (logpieDateTime.before(currentTime))
+                                {
+                                    logpieDateTime.setLogpieDateTime(currentTime);
+                                }
+                                // TODO: show a toast to give user a hint.
+                                syncStartTimeEndTimeEditText(isStartDate);
+                            }
                         });
 
             }
         });
+    }
+
+    private void syncStartTimeEndTimeEditText(boolean isChangingStartTime)
+    {
+        if (mStartDateTime.after(mEndDateTime))
+        {
+            if (isChangingStartTime)
+            {
+                // Here we always make sure the end time is always after the
+                // start time.
+                mEndDateTime.setLogpieDateTime(mStartDateTime);
+            }
+            else
+            {
+                mStartDateTime.setLogpieDateTime(mEndDateTime);
+            }
+        }
+        // Update the UI
+        mUiHolder.mStartDateEditText.setText(mStartDateTime.getDateString());
+        mUiHolder.mStartTimeEditText.setText(mStartDateTime.getTimeString());
+
+        mUiHolder.mEndDateEditText.setText(mEndDateTime.getDateString());
+        mUiHolder.mEndTimeEditText.setText(mEndDateTime.getTimeString());
     }
 
     private void initilizeUI(View parentView)

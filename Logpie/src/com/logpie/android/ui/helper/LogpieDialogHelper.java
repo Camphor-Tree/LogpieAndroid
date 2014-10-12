@@ -1,7 +1,5 @@
 package com.logpie.android.ui.helper;
 
-import java.util.Date;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
@@ -109,7 +107,7 @@ public class LogpieDialogHelper
 
     public interface LogpieDatePickerDialogCallback
     {
-        void onSelectDate(final LogpieDateTime date);
+        void onSelectDate(int year, int monthOfYear, int dayOfMonth);
 
         void onCancel();
     }
@@ -128,13 +126,13 @@ public class LogpieDialogHelper
         {
             if (mCallback != null)
             {
-                mCallback.onSelectDate(new LogpieDateTime(year, monthOfYear, dayOfMonth));
+                mCallback.onSelectDate(year, monthOfYear, dayOfMonth);
             }
         }
     }
 
-    public static void openDatePickerDialog(final Context context, final Date initialDate,
-            final LogpieDatePickerDialogCallback callback)
+    public static void openDatePickerDialog(final Context context,
+            final LogpieDateTime initialDate, final LogpieDatePickerDialogCallback callback)
     {
         int year = initialDate.getYear();
         int month = initialDate.getMonth();
