@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.logpie.android.R;
@@ -68,7 +68,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
     private static class SettingUnit
     {
         // The whole linear layout for one single setting unit
-        LinearLayout mLinearLayout;
+        RelativeLayout mLayout;
         // The label textview
         TextView mLabelTextView;
         // The value view. (For ProfilePhoto it is ImageView, for other fields
@@ -86,7 +86,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                 final String labelNameKey, final Class<? extends View> resourceType)
         {
 
-            mLinearLayout = (LinearLayout) parentView.findViewById(linearLayoutResource);
+            mLayout = (RelativeLayout) parentView.findViewById(linearLayoutResource);
             mLabelTextView = (TextView) parentView.findViewById(labelResource);
             if (contentResource != -1)
             {
@@ -111,7 +111,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
         /* package-private */void setOnClickListener(final View.OnClickListener onClickListener)
         {
             mOnClickListener = onClickListener;
-            mLinearLayout.setOnClickListener(mOnClickListener);
+            mLayout.setOnClickListener(mOnClickListener);
         }
     }
 

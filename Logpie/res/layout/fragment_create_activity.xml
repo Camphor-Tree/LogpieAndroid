@@ -1,194 +1,184 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/createActivityFragmentView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
-  
-    <LinearLayout
-        android:id="@+id/layout_newevent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/border_solid_grey">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/createActivityFragmentView"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin" >
 
-        <EditText
-	        android:id="@+id/create_activity_description_edit_text"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="top"
-	        android:hint="写下您的活动描述......"
-	        android:inputType="textMultiLine"
-	        android:lines="8" >
-	        <requestFocus />
-	    </EditText>
-    </LinearLayout>
-    
-    
-    <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:layout_below="@+id/layout_newevent"
-            android:scrollbars="none" >
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:orientation="vertical">         
+	<LinearLayout
+		android:id="@+id/layout_newevent"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="24dp"
+		android:background="@drawable/border_solid_grey" >
 
-        <EditText
-            android:id="@+id/create_activity_address_edit_text"
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/border_dash_purple"
-            android:drawableLeft="@android:drawable/ic_menu_compass"
-            android:ems="10"
-            android:hint="地址"
-            android:inputType="textAutoCorrect"
-            android:singleLine="true" >
-            
-        </EditText>
+		<EditText
+			android:id="@+id/create_activity_description_edit_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@null"
+			android:fontFamily="微软雅黑"
+			android:gravity="top"
+			android:inputType="textMultiLine"
+			android:lines="8"
+			android:padding="4dp" >
 
-        <LinearLayout
-            android:id="@+id/create_activity_start_time_linear_layout"
-            android:layout_width="fill_parent"
-            android:background="@drawable/border_dash_purple"
-            android:layout_marginTop="10dp"
-            android:layout_height="48dp">
-            <TextView
-                android:id="@+id/create_activity_start_time_label_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="开始时间"
-                android:gravity="center"
-                android:textColor="@color/Gray"
-                android:textSize="17sp"
-                android:drawableLeft="@android:drawable/ic_menu_month"></TextView>
-            <EditText
-                android:id="@+id/create_activity_start_date_edit_text"
-                android:layout_width="fill_parent"
-                android:layout_height="48dp"
-                android:layout_weight="2"
-                android:ems="10"
-                android:background="@null"
-                android:focusable="false"
-                android:gravity="center"
-                android:singleLine="true" >
-            </EditText>
+			<requestFocus />
+		</EditText>
+	</LinearLayout>
 
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/layout_newevent"
+		android:layout_marginTop="16dp"
+		android:scrollbars="none" >
 
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical" >
 
-            <EditText
-            android:id="@+id/create_activity_start_time_edit_text"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_weight="2.4"
-            android:ems="10"
-            android:gravity="center"
-            android:background="@null"
-            android:focusable="false"
-            android:inputType="text"
-            android:singleLine="true" >
-        </EditText>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/create_activity_end_time_linear_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/border_dash_purple"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/create_activity_end_time_label_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="结束时间"
-                android:gravity="center"
-                android:textColor="@color/Gray"
-                android:textSize="17sp"
-                android:drawableLeft="@android:drawable/ic_menu_recent_history"></TextView>
-	         <EditText
-	            android:id="@+id/create_activity_end_date_edit_text"
-	            android:layout_width="fill_parent"
-	            android:layout_height="48dp"
-	            android:layout_weight="2"
-	            android:ems="10"
-	            android:gravity="center"
-	            android:background="@null"
-	            android:focusable="false"
-	            android:inputType="text"
-	            android:singleLine="true" >
-	        </EditText>
+			<EditText
+				android:id="@+id/create_activity_address_edit_text"
+				android:layout_width="match_parent"
+				android:layout_height="48dp"
+				android:drawableLeft="@drawable/ic_action_place"
+				android:drawablePadding="8dp"
+				android:fontFamily="微软雅黑"
+				android:inputType="textAutoCorrect"
+				android:singleLine="true" >
+			</EditText>
 
-	         <EditText
-	            android:id="@+id/create_activity_end_time_edit_text"
-	            android:layout_width="fill_parent"
-	            android:layout_height="45dp"
-	            android:layout_weight="2.4"
-	            android:ems="10"
-	            android:gravity="center"
-	            android:background="@null"
-	            android:focusable="false"
-	            android:inputType="text"
-	            android:singleLine="true" >
-	        </EditText>
-        </LinearLayout>
+			<LinearLayout
+				android:id="@+id/create_activity_start_time_linear_layout"
+				android:layout_width="match_parent"
+				android:layout_height="48dp"
+				android:layout_marginTop="16dp" >
 
-        <LinearLayout
-        android:id="@+id/create_activity_city_category_linear_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/border_dash_purple"
-        android:orientation="horizontal" >
-        <TextView
-            android:id="@+id/create_activity_city_text_view"
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/border_dash_purple"
-            android:layout_weight="1"
-            android:drawableLeft="@android:drawable/ic_menu_compass"
-            android:ems="10"
-            android:gravity="center"
-            android:text="城市 "
-            android:textColor="@color/Gray"
-            android:textSize="17sp"
-            android:inputType="textAutoCorrect"
-            android:singleLine="true" >
-        </TextView>
-        <TextView
-            android:id="@+id/create_activity_category_text_view"
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:drawableRight="@android:drawable/ic_media_next"
-            android:ems="10"
-            android:gravity="center"
-            android:textSize="17sp"
-            android:focusable="false"
-            android:clickable="true"
-            android:text="类别"
-            android:textColor="@color/Gray"
-            android:singleLine="true" >
-        </TextView>
-    </LinearLayout>
+				<TextView
+					android:id="@+id/create_activity_start_time_label_text_view"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="16dp"
+					android:drawableLeft="@drawable/ic_action_time"
+					android:drawablePadding="8dp"
+					android:fontFamily="微软雅黑"
+					android:gravity="center"
+					android:textColor="#666666"
+					android:textSize="18sp" >
+				</TextView>
 
+				<EditText
+					android:id="@+id/create_activity_start_date_edit_text"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="@null"
+					android:focusable="false"
+					android:gravity="center"
+					android:inputType="text"
+					android:singleLine="true" >
+				</EditText>
 
-</LinearLayout>
-</ScrollView>
-    <LinearLayout
-        android:id="@+id/create_activity_create_button_linear_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="0dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
-            <ImageButton
-                android:id="@+id/create_activity_create_image_button"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:src="@drawable/ic_menu_add" />
-    </LinearLayout>
+				<EditText
+					android:id="@+id/create_activity_start_time_edit_text"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="@null"
+					android:focusable="false"
+					android:gravity="center"
+					android:inputType="text"
+					android:singleLine="true" >
+				</EditText>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/create_activity_end_time_linear_layout"
+				android:layout_width="match_parent"
+				android:layout_height="48dp"
+				android:orientation="horizontal" >
+
+				<TextView
+					android:id="@+id/create_activity_end_time_label_text_view"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="16dp"
+					android:drawableLeft="@drawable/ic_action_time"
+					android:drawablePadding="8dp"
+					android:fontFamily="微软雅黑"
+					android:gravity="center"
+					android:textColor="#666666"
+					android:textSize="18sp" >
+				</TextView>
+
+				<EditText
+					android:id="@+id/create_activity_end_date_edit_text"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="@null"
+					android:focusable="false"
+					android:gravity="center"
+					android:inputType="text"
+					android:singleLine="true" >
+				</EditText>
+
+				<EditText
+					android:id="@+id/create_activity_end_time_edit_text"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="@null"
+					android:focusable="false"
+					android:gravity="center"
+					android:inputType="text"
+					android:singleLine="true" >
+				</EditText>
+			</LinearLayout>
+
+			<RelativeLayout
+				android:id="@+id/create_activity_city_category_linear_layout"
+				android:layout_width="match_parent"
+				android:layout_height="48dp"
+				android:layout_marginTop="16dp"
+				android:orientation="horizontal" >
+
+				<TextView
+					android:id="@+id/create_activity_city_text_view"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="8dp"
+					android:clickable="true"
+					android:drawableLeft="@drawable/ic_action_map"
+					android:drawablePadding="16dp"
+					android:fontFamily="微软雅黑"
+					android:gravity="center"
+					android:singleLine="true"
+					android:textSize="18sp" >
+				</TextView>
+
+				<TextView
+					android:id="@+id/create_activity_category_text_view"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_alignParentRight="true"
+					android:layout_marginRight="8dp"
+					android:clickable="true"
+					android:drawableLeft="@drawable/ic_action_category"
+					android:drawablePadding="16dp"
+					android:fontFamily="微软雅黑"
+					android:gravity="center"
+					android:singleLine="true"
+					android:textSize="18sp" >
+				</TextView>
+			</RelativeLayout>
+		</LinearLayout>
+	</ScrollView>
+
 </RelativeLayout>

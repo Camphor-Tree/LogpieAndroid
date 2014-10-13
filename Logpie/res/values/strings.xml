@@ -21,12 +21,12 @@
 	<string name="back_cn">返回</string>
 
 	<!-- ActionBar in Square Page -->
-	<string name="action_create_activity_cn">发起活动</string>
-	<string name="action_create_activity_us">Create Activity</string>
+	<string name="action_create_activity_cn">新建</string>
+	<string name="action_create_activity_us">Add</string>
 	<string name="action_settings_cn">设置</string>
 	<string name="action_settings_us">Settings</string>
-	<string name="action_bar_string_create_activity_cn">创建/报告 活动</string>
-	<string name="action_bar_string_create_activity_us">Create/Report Activity</string>
+	<string name="action_bar_string_create_activity_cn">创建活动</string>
+	<string name="action_bar_string_create_activity_us">Create an Activity</string>
 
 	<!-- Navigation in Square Page -->
 	<string name="navigation_nearby_mode_cn">附近</string>
@@ -38,15 +38,15 @@
 
 	<!-- ActionBar in Activity Detail Page -->
 	<string name="action_bar_string_activity_detail_cn">活动详情</string>
-	<string name="action_bar_string_activity_detail_us">Activty Detail</string>
+	<string name="action_bar_string_activity_detail_us">Activty Details</string>
 	<string name="action_bar_string_settings_cn">设置</string>
-    <string name="action_bar_string_settings_us">Settings</string>
+	<string name="action_bar_string_settings_us">Settings</string>
 
 	<!-- City/Category Picker Dialog -->
 	<string name="title_city_picker_cn">选择城市</string>
-	<string name="title_city_picker_us">Choose A City</string>
+	<string name="title_city_picker_us">Pick a City</string>
 	<string name="title_category_picker_cn">选择分类</string>
-	<string name="title_category_picker_us">Choose A Category</string>
+	<string name="title_category_picker_us">Pick a Category</string>
 
 	<!-- Common Button -->
 	<string name="button_cancel_cn">取消</string>
@@ -73,49 +73,59 @@
 	<!-- Listview in Square Page -->
 	<string name="activity_empty_cn">没有发现活动</string>
 	<string name="activity_empty_us">Not found an activity yet</string>
-	
+
 	<!-- Settings page -->
 	<string name="settings_label_user_profile_photo_cn">头像</string>
 	<string name="settings_label_user_profile_photo_us">Profile Photo</string>
 	<string name="settings_label_user_nickname_cn">昵称</string>
-    <string name="settings_label_user_nickname_us">Nicakname</string>
-    <string name="settings_label_user_email_cn">邮箱</string>
-    <string name="settings_label_user_email_us">Email</string>
-    <string name="settings_label_user_gender_cn">性别</string>
-    <string name="settings_label_user_gender_us">Gender</string>
-    <string name="settings_label_user_city_cn">城市</string>
-    <string name="settings_label_user_city_us">City</string>
-    <string name="settings_label_system_language_cn">语言</string>
-    <string name="settings_label_system_language_us">Language</string>
-    <string name="settings_label_system_version_cn">版本</string>
-    <string name="settings_label_system_version_us">Version</string>
-    <string name="settings_label_system_about_cn">关于 Logpie</string>
-    <string name="settings_label_system_about_us">About Logpie</string>
-    <!-- Settings dialog edit text hint -->
-    <string name="settings_dialog_user_nickname_hint_cn">输入一个好记的昵称</string>
-    <string name="settings_dialog_user_nickname_hint_us">Enter a name easy to remember</string>
-    
-    <!-- Gender String -->
-    <string name="gender_male_cn">男</string>
-    <string name="gender_male_us">Male</string>
-    <string name="gender_female_cn">女</string>
-    <string name="gender_female_us">Female</string>
-    
-    <!-- Language Showing String -->
-    <string name="language_showing_string_cn">中文</string>
-    <string name="language_showing_string_us">English</string>
-    
-    <!-- Date/Timer Picker Title -->
-    <string name="date_picker_title_string_cn">请选择一个日期</string>
-    <string name="date_picker_title_string_us">Please pick a date</string>
-    <string name="time_picker_title_string_cn">请选择一个时间</string>
-    <string name="time_picker_title_string_us">Please pick a time</string>
-    
-    <!-- Dialog Positive/Negative button String -->
-    <string name="dialog_positive_button_string_cn">确定</string>
-    <string name="dialog_positive_button_string_us">Ok</string>
-    <string name="dialog_negative_button_string_cn">取消</string>
-    <string name="dialog_negative_button_string_us">Cancel</string>
+	<string name="settings_label_user_nickname_us">Nicakname</string>
+	<string name="settings_label_user_email_cn">邮箱</string>
+	<string name="settings_label_user_email_us">Email</string>
+	<string name="settings_label_user_gender_cn">性别</string>
+	<string name="settings_label_user_gender_us">Gender</string>
+	<string name="settings_label_user_city_cn">城市</string>
+	<string name="settings_label_user_city_us">City</string>
+	<string name="settings_label_system_language_cn">语言</string>
+	<string name="settings_label_system_language_us">LANGUAGE</string>
+	<string name="settings_label_system_version_cn">版本</string>
+	<string name="settings_label_system_version_us">VERSION</string>
+	<string name="settings_label_system_about_cn">关于LOGPIE</string>
+	<string name="settings_label_system_about_us">ABOUT LOGPIE</string>
+	<!-- Settings dialog edit text hint -->
+	<string name="settings_dialog_user_nickname_hint_cn">输入一个好记的昵称</string>
+	<string name="settings_dialog_user_nickname_hint_us">Enter a name easy to remember</string>
+
+	<!-- Creating Page -->
+	<string name="creating_activity_description_cn">输入活动详情...</string>
+	<string name="creating_activity_description_us">Enter the description of your activity...</string>
+	<string name="creating_activity_location_cn">输入地址</string>
+	<string name="creating_activity_location_us">Enter the address</string>
+	<string name="creating_activity_start_time_cn">开始时间</string>
+	<string name="creating_activity_start_time_us">Start time</string>
+	<string name="creating_activity_end_time_cn">结束时间</string>
+	<string name="creating_activity_end_time_us">End time</string>
+
+	<!-- Gender String -->
+	<string name="gender_male_cn">男</string>
+	<string name="gender_male_us">Male</string>
+	<string name="gender_female_cn">女</string>
+	<string name="gender_female_us">Female</string>
+
+	<!-- Language Showing String -->
+	<string name="language_showing_string_cn">中文</string>
+	<string name="language_showing_string_us">English</string>
+
+	<!-- Date/Timer Picker Title -->
+	<string name="date_picker_title_string_cn">请选择一个日期</string>
+	<string name="date_picker_title_string_us">Please pick a date</string>
+	<string name="time_picker_title_string_cn">请选择一个时间</string>
+	<string name="time_picker_title_string_us">Please pick a time</string>
+
+	<!-- Dialog Positive/Negative button String -->
+	<string name="dialog_positive_button_string_cn">确定</string>
+	<string name="dialog_positive_button_string_us">Ok</string>
+	<string name="dialog_negative_button_string_cn">取消</string>
+	<string name="dialog_negative_button_string_us">Cancel</string>
 
 	<!-- Time Unit -->
 	<!-- TODO: handle the s -->
@@ -131,6 +141,5 @@
 	<string name="year_us">year</string>
 	<string name="action_settings">Settings</string>
 	<string name="title_activity_square">SquareActivity</string>
-	<string name="hello_world">Hello world!</string>
 
 </resources>

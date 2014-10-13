@@ -58,7 +58,7 @@ public class LanguageHelper
     public final static String KEY_ACTION_BAR_STRING_SETTINGS = "action_bar_string_settings";
     public final static String KEY_ACTION_BAR_STRING_CREATE_ACTIVITY = "action_bar_string_create_activity";
 
-    // For Settings page
+    // For Settings Page
     public final static String KEY_USER_PROFILE_PHOTO_SETTING_LABEL = "settings_user_profile_photo_setting_label";
     public final static String KEY_USER_NICKNAME_SETTING_LABEL = "settings_user_nickname_setting_label";
     public final static String KEY_USER_EMAIL_SETTING_LABEL = "settings_user_email_setting_label";
@@ -67,6 +67,12 @@ public class LanguageHelper
     public final static String KEY_SYSTEM_LANGUAGE_SETTING_LABEL = "settings_system_language_setting_label";
     public final static String KEY_SYSTEM_VERSION_SETTING_LABEL = "settings_system_version_setting_label";
     public final static String KEY_SYSTEM_ABOUT_SETTING_LABEL = "settings_system_about_setting_label";
+
+    // For Creating Page
+    public final static String KEY_DESCRIPTION_HINT = "creating_activity_description";
+    public final static String KEY_LOCATION_HINT = "creating_activity_location";
+    public final static String KEY_START_TIME_HINT = "creating_activity_start_time";
+    public final static String KEY_END_TIME_HINT = "creating_activity_end_time";
 
     // For dialog edit text hint
     public final static String KEY_SETTING_NICKNAME_DIALOG_HINT = "settings_nickname_dialog_hint";
@@ -234,6 +240,20 @@ public class LanguageHelper
         case KEY_LANGUAGE_SHOWING_STRING:
             return switchLanguage(R.string.language_showing_string_cn,
                     R.string.language_showing_string_us);
+
+            // Creating Activity Page
+        case KEY_DESCRIPTION_HINT:
+            return switchLanguage(R.string.creating_activity_description_cn,
+                    R.string.creating_activity_description_us);
+        case KEY_LOCATION_HINT:
+            return switchLanguage(R.string.creating_activity_location_cn,
+                    R.string.creating_activity_location_us);
+        case KEY_START_TIME_HINT:
+            return switchLanguage(R.string.creating_activity_start_time_cn,
+                    R.string.creating_activity_start_time_us);
+        case KEY_END_TIME_HINT:
+            return switchLanguage(R.string.creating_activity_end_time_cn,
+                    R.string.creating_activity_end_time_us);
 
             // Picker Title
         case KEY_CITY_PICKER_TITLE:

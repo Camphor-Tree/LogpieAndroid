@@ -35,8 +35,8 @@
 			android:layout_marginTop="4dp"
 			android:layout_toLeftOf="@id/activity_list_more_functions"
 			android:layout_toRightOf="@id/activity_list_user_avatar"
-			android:fontFamily="微软雅黑"
-			android:textStyle="bold" />
+			android:textColor="#003366"
+			android:textSize="18sp" />
 
 		<TextView
 			android:id="@+id/activity_list_create_time"
@@ -46,7 +46,8 @@
 			android:layout_marginLeft="8dp"
 			android:layout_toLeftOf="@id/activity_list_more_functions"
 			android:layout_toRightOf="@id/activity_list_user_avatar"
-			android:fontFamily="微软雅黑" />
+			android:fontFamily="微软雅黑"
+			android:textColor="#D3D3D3" />
 	</RelativeLayout>
 
 	<LinearLayout
@@ -69,15 +70,15 @@
 			android:textSize="18sp" />
 	</LinearLayout>
 
-	<RelativeLayout
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="24dp" >
+		android:layout_height="24dp"
+		android:orientation="horizontal" >
 
 		<ImageView
 			android:id="@+id/activity_list_ic_location"
 			android:layout_width="20dp"
 			android:layout_height="20dp"
-			android:layout_alignParentLeft="true"
 			android:layout_marginLeft="8dp"
 			android:layout_marginRight="8dp"
 			android:src="@drawable/ic_action_map" />
@@ -89,9 +90,9 @@
 			android:layout_marginBottom="2dp"
 			android:layout_marginRight="8dp"
 			android:layout_marginTop="2dp"
-			android:layout_toRightOf="@id/activity_list_ic_location"
 			android:fontFamily="微软雅黑"
-			android:lines="1" />
+			android:lines="1"
+			android:textColor="#3F3F3F" />
 
 		<TextView
 			android:id="@+id/activity_list_city"
@@ -99,20 +100,23 @@
 			android:layout_height="20dp"
 			android:layout_marginBottom="2dp"
 			android:layout_marginTop="2dp"
-			android:layout_toRightOf="@id/activity_list_location"
 			android:fontFamily="微软雅黑"
-			android:lines="1" />
+			android:lines="1"
+			android:textColor="#3F3F3F" />
+	</LinearLayout>
 
-		<TextView
-			android:id="@+id/activity_list_end_time"
-			android:layout_width="wrap_content"
-			android:layout_height="20dp"
-			android:layout_alignParentRight="true"
-			android:layout_marginBottom="2dp"
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="24dp"
+		android:orientation="horizontal" >
+
+		<ImageView
+			android:id="@+id/activity_list_ic_time"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginLeft="8dp"
 			android:layout_marginRight="8dp"
-			android:layout_marginTop="2dp"
-			android:fontFamily="微软雅黑"
-			android:lines="1" />
+			android:src="@drawable/ic_action_time" />
 
 		<TextView
 			android:id="@+id/activity_list_start_time"
@@ -121,18 +125,31 @@
 			android:layout_marginBottom="2dp"
 			android:layout_marginRight="8dp"
 			android:layout_marginTop="2dp"
-			android:layout_toLeftOf="@id/activity_list_end_time"
 			android:fontFamily="微软雅黑"
-			android:lines="1" />
+			android:lines="1"
+			android:textColor="#3F3F3F" />
 
-		<ImageView
-			android:id="@+id/activity_list_ic_time"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="20dp"
+			android:layout_marginBottom="2dp"
 			android:layout_marginRight="8dp"
-			android:layout_toLeftOf="@id/activity_list_start_time"
-			android:src="@drawable/ic_action_time" />
-	</RelativeLayout>
+			android:layout_marginTop="2dp"
+			android:fontFamily="微软雅黑"
+			android:lines="1"
+			android:text="~"
+			android:textColor="#3F3F3F" />
+
+		<TextView
+			android:id="@+id/activity_list_end_time"
+			android:layout_width="wrap_content"
+			android:layout_height="20dp"
+			android:layout_marginBottom="2dp"
+			android:layout_marginTop="2dp"
+			android:fontFamily="微软雅黑"
+			android:lines="1"
+			android:textColor="#3F3F3F" />
+	</LinearLayout>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -156,7 +173,8 @@
 			android:layout_marginTop="2dp"
 			android:layout_toRightOf="@id/activity_list_ic_count_like"
 			android:fontFamily="微软雅黑"
-			android:lines="1" />
+			android:lines="1"
+			android:textColor="#D3D3D3" />
 
 		<ImageView
 			android:id="@+id/activity_list_ic_count_dislike"
@@ -176,7 +194,8 @@
 			android:layout_marginTop="2dp"
 			android:layout_toRightOf="@id/activity_list_ic_count_dislike"
 			android:fontFamily="微软雅黑"
-			android:lines="1" />
+			android:lines="1"
+			android:textColor="#D3D3D3" />
 
 		<TextView
 			android:id="@+id/activity_list_comment"
@@ -196,7 +215,7 @@
 			android:layout_height="24dp"
 			android:layout_marginRight="8dp"
 			android:layout_toLeftOf="@id/activity_list_comment"
-			android:src="@drawable/ic_action_comment" />
+			android:src="@drawable/ic_action_category" />
 	</RelativeLayout>
 
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.logpie.android.R;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.ui.base.LogpieBaseFragment;
+import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper.LogpieDatePickerDialogCallback;
 import com.logpie.android.util.LogpieDateTime;
@@ -135,14 +136,27 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
         mUiHolder = new CreateActivityUIHolder();
         mUiHolder.mDescriptionEditText = (EditText) parentView
                 .findViewById(R.id.create_activity_description_edit_text);
+        mUiHolder.mDescriptionEditText.setHint(LanguageHelper.getId(
+                LanguageHelper.KEY_DESCRIPTION_HINT, mContext));
 
         mUiHolder.mAddressEditText = (EditText) parentView
                 .findViewById(R.id.create_activity_address_edit_text);
+        mUiHolder.mAddressEditText.setHint(LanguageHelper.getId(LanguageHelper.KEY_LOCATION_HINT,
+                mContext));
 
+        mUiHolder.mStartTimeLabel = (TextView) parentView
+                .findViewById(R.id.create_activity_start_time_label_text_view);
+        mUiHolder.mStartTimeLabel.setText(LanguageHelper.getId(LanguageHelper.KEY_START_TIME_HINT,
+                mContext));
         mUiHolder.mStartDateEditText = (EditText) parentView
                 .findViewById(R.id.create_activity_start_date_edit_text);
         mUiHolder.mStartTimeEditText = (EditText) parentView
                 .findViewById(R.id.create_activity_start_time_edit_text);
+
+        mUiHolder.mEndTimeLabel = (TextView) parentView
+                .findViewById(R.id.create_activity_end_time_label_text_view);
+        mUiHolder.mEndTimeLabel.setText(LanguageHelper.getId(LanguageHelper.KEY_END_TIME_HINT,
+                mContext));
         mUiHolder.mEndDateEditText = (EditText) parentView
                 .findViewById(R.id.create_activity_end_date_edit_text);
         mUiHolder.mEndTimeEditText = (EditText) parentView
@@ -150,8 +164,12 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
 
         mUiHolder.mCityTextView = (TextView) parentView
                 .findViewById(R.id.create_activity_city_text_view);
+        mUiHolder.mCityTextView.setHint(LanguageHelper.getId(LanguageHelper.KEY_CITY_PICKER_TITLE,
+                mContext));
         mUiHolder.mCategoryTextView = (TextView) parentView
                 .findViewById(R.id.create_activity_category_text_view);
+        mUiHolder.mCategoryTextView.setHint(LanguageHelper.getId(
+                LanguageHelper.KEY_CATEGORY_PICKER_TITLE, mContext));
 
     }
 
@@ -165,6 +183,9 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
         private EditText mDescriptionEditText;
 
         private EditText mAddressEditText;
+
+        private TextView mStartTimeLabel;
+        private TextView mEndTimeLabel;
 
         private EditText mStartDateEditText;
         private EditText mStartTimeEditText;
