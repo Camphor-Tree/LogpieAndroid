@@ -28,8 +28,10 @@ import com.logpie.android.util.LogpieLog;
 public class CategoryPickerDialog extends DialogFragment
 {
     private static final String TAG = CategoryPickerDialog.class.getName();
-    public static final String KEY_CATEGORY = "category";
-    public static final String KEY_SUBCATEGORY = "subcategory";
+    public static final String KEY_CATEGORY_ID = "category_id";
+    public static final String KEY_SUBCATEGORY_ID = "subcategory_id";
+    public static final String KEY_CATEGORY_STRING = "category_string";
+    public static final String KEY_SUBCATEGORY_STRING = "subcategory_string";
 
     private ExpandableListView mListView;
     private SimpleExpandableListAdapter mAdapter;
@@ -140,8 +142,10 @@ public class CategoryPickerDialog extends DialogFragment
         LogpieLog.d(TAG, "get categoryId: " + categoryID + " subcategoryId: " + subcategoryID);
 
         Intent i = new Intent();
-        i.putExtra(KEY_CATEGORY, categoryID);
-        i.putExtra(KEY_SUBCATEGORY, subcategoryID);
+        i.putExtra(KEY_CATEGORY_ID, categoryID);
+        i.putExtra(KEY_SUBCATEGORY_ID, subcategoryID);
+        i.putExtra(KEY_CATEGORY_STRING, category);
+        i.putExtra(KEY_SUBCATEGORY_STRING, subcategory);
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);
     }
 }

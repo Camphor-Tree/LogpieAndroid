@@ -32,6 +32,7 @@ import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.NormalUser;
 import com.logpie.android.logic.User;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.ui.helper.LogpieDialogHelper;
 import com.logpie.android.ui.layout.LogpieRefreshLayout;
 import com.logpie.android.ui.layout.LogpieRefreshLayout.PullToRefreshCallback;
 import com.logpie.android.util.LogpieLog;
@@ -45,10 +46,6 @@ import com.logpie.android.util.LogpieLog;
 public class ActivityListFragment extends ListFragment
 {
     private static final String TAG = ActivityListFragment.class.getName();
-    private static final String KEY_CITY_PICKER_DIALOG = "city_picker_dialog";
-    private static final String KEY_CATEGORY_PICKER_DIALOG = "category_picker_dialog";
-    private static final int REQUEST_CODE_CITY_DIALOG = 0;
-    private static final int REQUEST_CODE_CATEGORY_DIALOG = 1;
 
     private LogpieRefreshLayout mRefreshableView;
     private ListView mListView;
@@ -99,7 +96,6 @@ public class ActivityListFragment extends ListFragment
         mButton = (Button) v.findViewById(R.id.picker_button);
         mButton.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
@@ -108,16 +104,17 @@ public class ActivityListFragment extends ListFragment
                         .getString(LanguageHelper.KEY_CITY, getActivity())))
                 {
                     DialogFragment dialog = new CityPickerDialog();
-                    dialog.setTargetFragment(ActivityListFragment.this, REQUEST_CODE_CITY_DIALOG);
-                    dialog.show(fm, KEY_CITY_PICKER_DIALOG);
+                    dialog.setTargetFragment(ActivityListFragment.this,
+                            LogpieDialogHelper.REQUEST_CODE_CITY_DIALOG);
+                    dialog.show(fm, LogpieDialogHelper.KEY_CITY_PICKER_DIALOG);
                 }
                 else if (mTabName.equals(LanguageHelper.getString(LanguageHelper.KEY_CATEGORY,
                         getActivity())))
                 {
                     DialogFragment dialog = new CategoryPickerDialog();
                     dialog.setTargetFragment(ActivityListFragment.this,
-                            REQUEST_CODE_CATEGORY_DIALOG);
-                    dialog.show(fm, KEY_CATEGORY_PICKER_DIALOG);
+                            LogpieDialogHelper.REQUEST_CODE_CATEGORY_DIALOG);
+                    dialog.show(fm, LogpieDialogHelper.KEY_CATEGORY_PICKER_DIALOG);
                 }
             }
         });
@@ -167,15 +164,15 @@ public class ActivityListFragment extends ListFragment
     {
         if (resultCode != Activity.RESULT_OK)
             return;
-        if (requestCode == REQUEST_CODE_CITY_DIALOG)
+        if (requestCode == LogpieDialogHelper.REQUEST_CODE_CITY_DIALOG)
         {
             mCity = data.getStringExtra(CityPickerDialog.KEY_CITY);
             new FetchItemsTask().execute(mTabName);
         }
-        if (requestCode == REQUEST_CODE_CATEGORY_DIALOG)
+        if (requestCode == LogpieDialogHelper.REQUEST_CODE_CATEGORY_DIALOG)
         {
-            mCategory = data.getStringExtra(CategoryPickerDialog.KEY_CATEGORY);
-            mSubcategory = data.getStringExtra(CategoryPickerDialog.KEY_SUBCATEGORY);
+            mCategory = data.getStringExtra(CategoryPickerDialog.KEY_CATEGORY_ID);
+            mSubcategory = data.getStringExtra(CategoryPickerDialog.KEY_SUBCATEGORY_ID);
             new FetchItemsTask().execute(mTabName);
         }
     }

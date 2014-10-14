@@ -4,12 +4,16 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.text.InputType;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.logpie.android.util.LogpieDateTime;
 
@@ -21,6 +25,13 @@ import com.logpie.android.util.LogpieDateTime;
  */
 public class LogpieDialogHelper
 {
+    // This is used to distinguish the all these dialog fragment (Like city
+    // picker dialog, category picker dialog)
+    public static final int REQUEST_CODE_CITY_DIALOG = 0;
+    public static final int REQUEST_CODE_CATEGORY_DIALOG = 1;
+    public static final String KEY_CITY_PICKER_DIALOG = "city_picker_dialog";
+    public static final String KEY_CATEGORY_PICKER_DIALOG = "category_picker_dialog";
+
     private static final int YEAR_1900 = 1900;
 
     public interface LogpieEditTextDialogCallback
@@ -140,9 +151,55 @@ public class LogpieDialogHelper
         OnDateSetListener listener = new LogpieDatePickerDialogCallbackAdapter(callback);
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, 0, listener, year, month,
                 day);
+        setTitleAndShow(context, LanguageHelper.KEY_DATE_PICKER_DIALOG_TITLE_STRING,
+                datePickerDialog);
+    }
+
+    public interface LogpieTimePickerDialogCallback
+    {
+        void onSelectTime(int hour, int minute);
+
+        void onCancel();
+    }
+
+    private static class LogpieTimePickerDialogCallbackAdapter implements OnTimeSetListener
+    {
+        private LogpieTimePickerDialogCallback mCallback;
+
+        LogpieTimePickerDialogCallbackAdapter(LogpieTimePickerDialogCallback callback)
+        {
+            mCallback = callback;
+        }
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+        {
+            if (mCallback != null)
+            {
+                mCallback.onSelectTime(hourOfDay, minute);
+            }
+
+        }
+    }
+
+    public static void openTimePickerDialog(final Context context,
+            final LogpieDateTime initialDate, final LogpieTimePickerDialogCallback callback)
+    {
+        int hour = initialDate.getHour();
+        int minute = initialDate.getMinute();
+
+        OnTimeSetListener listener = new LogpieTimePickerDialogCallbackAdapter(callback);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, listener, hour, minute,
+                true);
+        setTitleAndShow(context, LanguageHelper.KEY_TIME_PICKER_DIALOG_TITLE_STRING,
+                timePickerDialog);
+    }
+
+    private static void setTitleAndShow(final Context context, final String languageKey,
+            Dialog timePickerDialog)
+    {
         // Set the dialog title
-        datePickerDialog.setTitle(LanguageHelper.getString(
-                LanguageHelper.KEY_DATE_PICKER_DIALOG_TITLE_STRING, context));
-        datePickerDialog.show();
+        timePickerDialog.setTitle(LanguageHelper.getString(languageKey, context));
+        timePickerDialog.show();
     }
 }

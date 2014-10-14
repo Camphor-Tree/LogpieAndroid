@@ -24,7 +24,9 @@ public class LogpieDateTime implements Parcelable
 
     private Date mDate;
     private DateFormat mDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-    private DateFormat mTimeFormat = new SimpleDateFormat("hh:mm");
+    // Here we must use "HH" to enable 24-hour format. If "hh", then it will
+    // just use 12-hour format.
+    private DateFormat mTimeFormat = new SimpleDateFormat("HH:mm");
 
     /**
      * Build the default LogpieDateTime using current date and time.

@@ -258,6 +258,35 @@ public class ActivityManager
         }
     }
 
+    public void createActivity(final LogpieActivity logpieActivity, final LogpieCallback callback)
+    {
+        JSONObject postData = new JSONObject();
+
+        GenericConnection connection = new GenericConnection();
+        connection.initialize(ServiceURL.ActivityService, mContext);
+
+        try
+        {
+            postData.put(RequestKeys.KEY_REQUEST_SERVICE, RequestKeys.SERVICE_CREATE_ACTIVITY);
+            postData.put(RequestKeys.KEY_REQUEST_TYPE, RequestKeys.REQUEST_TYPE_INSERT);
+            ArrayList<String> values = logpieActivity.getCreateAcitivtyValues();
+            if (values == null)
+            {
+                LogpieLog.e(TAG, "The values of the LogpieActivity is null!");
+                return;
+            }
+            JSONArray insertKeyValuePair = JSONHelper.buildInsertKeyValue(
+                    logpieActivity.getCreateAcitivtyKeys(), values);
+            postData.put(RequestKeys.KEY_INSERT_KEYVALUE_PAIR, insertKeyValuePair);
+
+        } catch (JSONException e)
+        {
+            LogpieLog.e(TAG, "JSONException happened when create activity!");
+            return;
+        }
+        connection.send(callback);
+    }
+
     private void switchMode(int mode, ArrayList<String> column, ArrayList<String> operator,
             ArrayList<String> value)
     {

@@ -13,6 +13,7 @@ import android.os.Parcelable;
 
 import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.commonlib.RequestKeys;
 import com.logpie.commonlib.ResponseKeys;
 
 // TODO: remove all the set method. All the member variable should be final.
@@ -32,6 +33,10 @@ public class LogpieActivity implements Parcelable
     private String mUserID;
     private String mUserName;
     private String mDescription;
+    private String mCategoryId;
+    private String mCategoryString;
+    private String mSubCategoryId;
+    private String mSubCategoryString;
     private LogpieLocation mLocation;
     private LogpieDateTime mCreateTime;
     private LogpieDateTime mStartTime;
@@ -226,14 +231,24 @@ public class LogpieActivity implements Parcelable
         this.mLocation = mLocation;
     }
 
+    public void setCity(final String city)
+    {
+        if (mLocation == null)
+        {
+            mLocation = new LogpieLocation(city);
+            return;
+        }
+        this.mLocation.setCity(city);
+    }
+
     public LogpieDateTime getCreateTime()
     {
         return mCreateTime;
     }
 
-    public void setCreateTime(LogpieDateTime CreateTime)
+    public void setCreateTime(LogpieDateTime createTime)
     {
-        this.mCreateTime = mCreateTime;
+        this.mCreateTime = createTime;
     }
 
     public LogpieDateTime getStartTime()
@@ -343,6 +358,87 @@ public class LogpieActivity implements Parcelable
         mCountLike = in.readInt();
         mCountDislike = in.readInt();
         mLocation = in.readParcelable(getClass().getClassLoader());
+    }
+
+    public ArrayList<String> getCreateAcitivtyValues()
+    {
+        ArrayList<String> createActivityValues = new ArrayList<String>();
+        createActivityValues.add(RequestKeys.KEY_UID);
+        createActivityValues.add(mDescription);
+        createActivityValues.add(mLocation.getAddress());
+        if (mLocation.getLatitude() != null && mLocation.getLongitude() != null)
+        {
+            createActivityValues.add(RequestKeys.KEY_LATITUDE);
+            createActivityValues.add(RequestKeys.KEY_LONGITUDE);
+        }
+        createActivityValues.add(mStartTime.getDateTimeString());
+        createActivityValues.add(mEndTime.getDateTimeString());
+        createActivityValues.add(mLocation.getCity());
+        createActivityValues.add(mCategoryId);
+        createActivityValues.add(mSubCategoryId);
+        return createActivityValues;
+    }
+
+    public ArrayList<String> getCreateAcitivtyKeys()
+    {
+        ArrayList<String> createActivityKeys = new ArrayList<String>();
+        createActivityKeys.add(RequestKeys.KEY_UID);
+        createActivityKeys.add(RequestKeys.KEY_DESCRIPTION);
+        createActivityKeys.add(RequestKeys.KEY_LOCATION);
+        if (mLocation.getLatitude() != null && mLocation.getLongitude() != null)
+        {
+            createActivityKeys.add(RequestKeys.KEY_LATITUDE);
+            createActivityKeys.add(RequestKeys.KEY_LONGITUDE);
+        }
+        createActivityKeys.add(RequestKeys.KEY_LOCATION);
+        createActivityKeys.add(RequestKeys.KEY_START_TIME);
+        createActivityKeys.add(RequestKeys.KEY_END_TIME);
+        // we don't pass the create time to server, server will just use the
+        // current time.
+        createActivityKeys.add(RequestKeys.KEY_CITY);
+        createActivityKeys.add(RequestKeys.KEY_CATEGORY);
+        createActivityKeys.add(RequestKeys.KEY_SUBCATEGORY);
+        return createActivityKeys;
+    }
+
+    public String getCategoryId()
+    {
+        return mCategoryId;
+    }
+
+    public void setCategoryId(String categoryId)
+    {
+        mCategoryId = categoryId;
+    }
+
+    public String getCategoryString()
+    {
+        return mCategoryString;
+    }
+
+    public void setCategoryString(String categoryString)
+    {
+        mCategoryString = categoryString;
+    }
+
+    public String getSubCategoryId()
+    {
+        return mSubCategoryId;
+    }
+
+    public void setSubCategoryId(String subCategoryId)
+    {
+        mSubCategoryId = subCategoryId;
+    }
+
+    public String getSubCategoryString()
+    {
+        return mSubCategoryString;
+    }
+
+    public void setSubCategoryString(String subCategoryString)
+    {
+        mSubCategoryString = subCategoryString;
     }
 
 }

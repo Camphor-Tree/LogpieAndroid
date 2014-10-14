@@ -9,6 +9,14 @@ import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.logic.CategoryManager;
 import com.logpie.android.util.LogpieLog;
 
+/**
+ * This class is used to get the UI string based on the system setting for
+ * language. The format shoule be:
+ * LanguageHelper.getString(LanguageHelper.KEY_XXXXX, context);
+ * 
+ * @author yilei
+ * 
+ */
 public class LanguageHelper
 {
     private final static String TAG = LanguageHelper.class.getName();
@@ -68,12 +76,6 @@ public class LanguageHelper
     public final static String KEY_SYSTEM_VERSION_SETTING_LABEL = "settings_system_version_setting_label";
     public final static String KEY_SYSTEM_ABOUT_SETTING_LABEL = "settings_system_about_setting_label";
 
-    // For Creating Page
-    public final static String KEY_DESCRIPTION_HINT = "creating_activity_description";
-    public final static String KEY_LOCATION_HINT = "creating_activity_location";
-    public final static String KEY_START_TIME_HINT = "creating_activity_start_time";
-    public final static String KEY_END_TIME_HINT = "creating_activity_end_time";
-
     // For dialog edit text hint
     public final static String KEY_SETTING_NICKNAME_DIALOG_HINT = "settings_nickname_dialog_hint";
 
@@ -96,6 +98,13 @@ public class LanguageHelper
     // For Date Picker dialog title string
     public final static String KEY_DATE_PICKER_DIALOG_TITLE_STRING = "date_picker_dialog_title_string";
     public final static String KEY_TIME_PICKER_DIALOG_TITLE_STRING = "time_picker_dialog_title_string";
+    // For CreateActivity Page
+    public final static String KEY_CREATE_ACTIVTY_DESCRIPTION_HINT = "create_activity_description_hint";
+    public final static String KEY_CREATE_ACTIVTY_ADDRESS_HINT = "create_activity_address_hint";
+    public final static String KEY_CREATE_ACTIVTY_START_TIME_LABEL = "create_activity_start_time_label";
+    public final static String KEY_CREATE_ACTIVTY_END_TIME_LABEL = "create_activity_end_time_label";
+    public final static String KEY_CREATE_ACTIVTY_CITY_LABEL = "create_activity_city_label";
+    public final static String KEY_CREATE_ACTIVTY_CATEGORY_LABEL = "create_activity_category_label";
 
     /**
      * Initialize the language of Logpie
@@ -241,20 +250,6 @@ public class LanguageHelper
             return switchLanguage(R.string.language_showing_string_cn,
                     R.string.language_showing_string_us);
 
-            // Creating Activity Page
-        case KEY_DESCRIPTION_HINT:
-            return switchLanguage(R.string.creating_activity_description_cn,
-                    R.string.creating_activity_description_us);
-        case KEY_LOCATION_HINT:
-            return switchLanguage(R.string.creating_activity_location_cn,
-                    R.string.creating_activity_location_us);
-        case KEY_START_TIME_HINT:
-            return switchLanguage(R.string.creating_activity_start_time_cn,
-                    R.string.creating_activity_start_time_us);
-        case KEY_END_TIME_HINT:
-            return switchLanguage(R.string.creating_activity_end_time_cn,
-                    R.string.creating_activity_end_time_us);
-
             // Picker Title
         case KEY_CITY_PICKER_TITLE:
             return switchLanguage(R.string.title_city_picker_cn, R.string.title_city_picker_us);
@@ -274,6 +269,24 @@ public class LanguageHelper
         case KEY_TIME_PICKER_DIALOG_TITLE_STRING:
             return switchLanguage(R.string.time_picker_title_string_cn,
                     R.string.time_picker_title_string_us);
+        case KEY_CREATE_ACTIVTY_DESCRIPTION_HINT:
+            return switchLanguage(R.string.create_activity_description_hint_cn,
+                    R.string.create_activity_description_hint_us);
+        case KEY_CREATE_ACTIVTY_ADDRESS_HINT:
+            return switchLanguage(R.string.create_activity_address_hint_cn,
+                    R.string.create_activity_address_hint_us);
+        case KEY_CREATE_ACTIVTY_START_TIME_LABEL:
+            return switchLanguage(R.string.create_activity_start_time_label_cn,
+                    R.string.create_activity_start_time_label_us);
+        case KEY_CREATE_ACTIVTY_END_TIME_LABEL:
+            return switchLanguage(R.string.create_activity_end_time_label_cn,
+                    R.string.create_activity_end_time_label_us);
+        case KEY_CREATE_ACTIVTY_CITY_LABEL:
+            return switchLanguage(R.string.create_activity_city_label_cn,
+                    R.string.create_activity_city_label_us);
+        case KEY_CREATE_ACTIVTY_CATEGORY_LABEL:
+            return switchLanguage(R.string.create_activity_category_label_cn,
+                    R.string.create_activity_category_label_us);
 
         default:
             LogpieLog.d(TAG, "Failed to find the key when setting the language.");

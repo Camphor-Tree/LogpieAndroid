@@ -60,7 +60,7 @@ public class LogpieLocation implements Parcelable
     /**
      * @return the latitude
      */
-    public double getLatitude()
+    public Double getLatitude()
     {
         return mLatitude;
     }
@@ -77,7 +77,7 @@ public class LogpieLocation implements Parcelable
     /**
      * @return the longitude
      */
-    public double getLongitude()
+    public Double getLongitude()
     {
         return mLongitude;
     }
@@ -112,8 +112,7 @@ public class LogpieLocation implements Parcelable
     {
         if (mLatitude != null && mLongitude != null)
         {
-            LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", "
-                    + "mLongitude");
+            LogpieLog.d(TAG, "Output latitude & longitude: " + mLatitude + ", " + "mLongitude");
             return GisAPIHelper.getCityFromLatLon(mLatitude, mLongitude);
         }
         else
