@@ -18,6 +18,8 @@ public class BaiduAPIHelper
     private static String TAG = BaiduAPIHelper.class.getName();
     private static String APIkey = "q8GK6Ou4uk92xewM8Mgyemtv";
 
+    private static String KEY_FORMATTED_ADDRESS = "formatted_address";
+
     private static String buildQueryReverseGeocodingURL(final String lat, final String lon)
     {
         if (lat == null || lon == null)
@@ -55,6 +57,58 @@ public class BaiduAPIHelper
      */
     public static String getCityFromLatLon(final Double lat, final Double lon)
     {
+        JSONObject result = queryBaiduServerForReverseGeocodingResult(lat, lon);
+
+        return parseBaiduReverseGeocodingResult(result, "addressComponent", "city");
+    }
+
+    private static String parseBaiduReverseGeocodingResult(final JSONObject result,
+            final String keyWanted, final String subKey)
+    {
+        try
+        {
+            if (checkWhetherSuccess(result))
+            {
+                JSONObject resultJSON = result.getJSONObject("result");
+                String resultValue = null;
+                if (!TextUtils.isEmpty(subKey))
+                {
+                    JSONObject addressComponentJSON = resultJSON.getJSONObject(keyWanted);
+                    resultValue = addressComponentJSON.getString(subKey);
+                }
+                else
+                {
+                    resultValue = resultJSON.getString(keyWanted);
+                }
+
+                if (TextHelper.checkIfNull(resultValue))
+                {
+                    return null;
+                }
+                else
+                {
+                    return resultValue;
+                }
+            }
+            else
+            {
+                LogpieLog.e(TAG, "Baidu Server's error");
+                return null;
+            }
+        } catch (JSONException e)
+        {
+
+            LogpieLog
+                    .e(TAG,
+                            "JSONException when reading the response data. May because Baidu Server's response format is not as expected",
+                            e);
+            return null;
+        }
+    }
+
+    private static JSONObject queryBaiduServerForReverseGeocodingResult(final Double lat,
+            final Double lon)
+    {
         if (lat == null || lon == null)
         {
             LogpieLog.e(TAG,
@@ -74,37 +128,14 @@ public class BaiduAPIHelper
         // renderReverse&&renderReverse(), need to remove that first.
         String resultAfterCutHead = removeHeaderInResult(resultString);
         JSONObject result = getResultJSON(resultAfterCutHead);
+        return result;
+    }
 
-        try
-        {
-            if (checkWhetherSuccess(result))
-            {
-                JSONObject resultJSON = result.getJSONObject("result");
-                JSONObject addressComponentJSON = resultJSON.getJSONObject("addressComponent");
-                String city = addressComponentJSON.getString("city");
-                if (TextHelper.checkIfNull(city))
-                {
-                    return null;
-                }
-                else
-                {
-                    return city;
-                }
-            }
-            else
-            {
-                LogpieLog.e(TAG, "Baidu Server's error");
-                return null;
-            }
-        } catch (JSONException e)
-        {
+    public static String getAddressFromLatLon(final Double lat, final Double lon)
+    {
+        JSONObject result = queryBaiduServerForReverseGeocodingResult(lat, lon);
 
-            LogpieLog
-                    .e(TAG,
-                            "JSONException when reading the response data. May because Baidu Server's response format is not as expected",
-                            e);
-            return null;
-        }
+        return parseBaiduReverseGeocodingResult(result, KEY_FORMATTED_ADDRESS, null);
     }
 
     public static LogpieLocation getLatLonFromAddressAndCity(final String address, final String city)

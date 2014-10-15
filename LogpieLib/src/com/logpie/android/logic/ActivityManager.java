@@ -284,6 +284,7 @@ public class ActivityManager
             LogpieLog.e(TAG, "JSONException happened when create activity!");
             return;
         }
+        connection.setRequestData(postData);
         connection.send(callback);
     }
 

@@ -171,47 +171,47 @@ public class LogpieActivity implements Parcelable
         mCreateTime = new LogpieDateTime();
     }
 
-    public String getmActivityID()
+    public String getActivityID()
     {
         return mActivityID;
     }
 
-    public void setmActivityID(String mActivityID)
+    public void setActivityID(String mActivityID)
     {
         this.mActivityID = mActivityID;
     }
 
-    public String getmUserAvatar()
+    public String getUserAvatar()
     {
         return mUserAvatar;
     }
 
-    public void setmUserAvatar(String mUserAvatar)
+    public void setUserAvatar(String mUserAvatar)
     {
         this.mUserAvatar = mUserAvatar;
     }
 
-    public String getmUserID()
+    public String getUserID()
     {
         return mUserID;
     }
 
-    public void setmUserID(String mUserID)
+    public void setUserID(String mUserID)
     {
         this.mUserID = mUserID;
     }
 
-    public String getmUserName()
+    public String getUserName()
     {
         return mUserName;
     }
 
-    public void setmUserName(String mUserName)
+    public void setUserName(String mUserName)
     {
         this.mUserName = mUserName;
     }
 
-    public String getmDescription()
+    public String getDescription()
     {
         return mDescription;
     }
@@ -229,6 +229,16 @@ public class LogpieActivity implements Parcelable
     public void setLocation(LogpieLocation mLocation)
     {
         this.mLocation = mLocation;
+    }
+
+    public void setAddress(final String address)
+    {
+        if (mLocation == null)
+        {
+            mLocation = new LogpieLocation();
+        }
+        this.mLocation.setAddress(address);
+
     }
 
     public void setCity(final String city)
@@ -281,32 +291,32 @@ public class LogpieActivity implements Parcelable
         return new LogpieDateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(s));
     }
 
-    public int getmCountLike()
+    public int getCountLike()
     {
         return mCountLike;
     }
 
-    public void setmCountLike(int mCountLike)
+    public void setCountLike(int mCountLike)
     {
         this.mCountLike = mCountLike;
     }
 
-    public int getmCountDislike()
+    public int getCountDislike()
     {
         return mCountDislike;
     }
 
-    public void setmCountDislike(int mCountDislike)
+    public void setCountDislike(int mCountDislike)
     {
         this.mCountDislike = mCountDislike;
     }
 
-    public List<Comment> getmComments()
+    public List<Comment> getComments()
     {
         return mComments;
     }
 
-    public void setmComments(List<Comment> mComments)
+    public void setComments(List<Comment> mComments)
     {
         this.mComments = mComments;
     }
@@ -363,13 +373,14 @@ public class LogpieActivity implements Parcelable
     public ArrayList<String> getCreateAcitivtyValues()
     {
         ArrayList<String> createActivityValues = new ArrayList<String>();
-        createActivityValues.add(RequestKeys.KEY_UID);
+        createActivityValues.add(mUserID);
+        createActivityValues.add(mUserName);
         createActivityValues.add(mDescription);
         createActivityValues.add(mLocation.getAddress());
         if (mLocation.getLatitude() != null && mLocation.getLongitude() != null)
         {
-            createActivityValues.add(RequestKeys.KEY_LATITUDE);
-            createActivityValues.add(RequestKeys.KEY_LONGITUDE);
+            createActivityValues.add(mLocation.getLatitude().toString());
+            createActivityValues.add(mLocation.getLongitude().toString());
         }
         createActivityValues.add(mStartTime.getDateTimeString());
         createActivityValues.add(mEndTime.getDateTimeString());
@@ -383,6 +394,7 @@ public class LogpieActivity implements Parcelable
     {
         ArrayList<String> createActivityKeys = new ArrayList<String>();
         createActivityKeys.add(RequestKeys.KEY_UID);
+        createActivityKeys.add(RequestKeys.KEY_NICKNAME);
         createActivityKeys.add(RequestKeys.KEY_DESCRIPTION);
         createActivityKeys.add(RequestKeys.KEY_LOCATION);
         if (mLocation.getLatitude() != null && mLocation.getLongitude() != null)
@@ -390,7 +402,6 @@ public class LogpieActivity implements Parcelable
             createActivityKeys.add(RequestKeys.KEY_LATITUDE);
             createActivityKeys.add(RequestKeys.KEY_LONGITUDE);
         }
-        createActivityKeys.add(RequestKeys.KEY_LOCATION);
         createActivityKeys.add(RequestKeys.KEY_START_TIME);
         createActivityKeys.add(RequestKeys.KEY_END_TIME);
         // we don't pass the create time to server, server will just use the

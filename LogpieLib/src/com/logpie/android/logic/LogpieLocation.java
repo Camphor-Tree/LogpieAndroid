@@ -20,9 +20,14 @@ public class LogpieLocation implements Parcelable
     private String mAddress;
     private String mCity;
 
-    public LogpieLocation(String address)
+    public LogpieLocation()
     {
-        mAddress = address;
+
+    }
+
+    public LogpieLocation(String city)
+    {
+        mCity = city;
     }
 
     public LogpieLocation(Double lat, Double lon, String address, String city)

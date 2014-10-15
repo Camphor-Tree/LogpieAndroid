@@ -1,14 +1,19 @@
 package com.logpie.android.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,7 +21,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.logpie.android.R;
+import com.logpie.android.exception.ThreadException;
+import com.logpie.android.gis.BaiduAPIHelper;
+import com.logpie.android.gis.GISManager;
 import com.logpie.android.logic.ActivityManager;
+import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.LogpieLocation;
 import com.logpie.android.ui.base.LogpieBaseFragment;
@@ -28,6 +37,7 @@ import com.logpie.android.ui.helper.LogpieToastHelper;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
+import com.logpie.android.util.ThreadHelper;
 
 /**
  * This fragment is used to show the CreateActivity page.
@@ -39,20 +49,37 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
 {
     private static final String TAG = LogpieCreateActivityFragment.class.getName();
     private Context mContext;
+    private AuthManager mAuthManager;
     private LogpieActivity mLogpieActivity;
     private CreateActivityUIHolder mUiHolder;
 
     private LogpieDateTime mStartDateTime;
     private LogpieDateTime mEndDateTime;
 
+    // This is to make sure the current location address doesn't get changed. If
+    // changed, shouldn't use current location for the activity
+    private volatile String mCurrentLocationAddress;
+    private volatile boolean mIsUsingCurrentLocation;
+    private Double mCurrentLat;
+    private Double mCurrentLon;
+
     @Override
     public void handleOnCreate(Bundle savedInstanceState)
     {
+        // Show the menu item in the action bar
+        this.setHasOptionsMenu(true);
         // Initialize a LogpieActivity. This is used to store the activity
         // attributes.
         mContext = getActivity();
 
+        mAuthManager = AuthManager.getInstance(mContext);
+
         mLogpieActivity = new LogpieActivity();
+        // Setup creater information
+        String uid = mAuthManager.getUID();
+        String nickName = mAuthManager.getCurrentAccount().getNickname();
+        mLogpieActivity.setUserID(uid);
+        mLogpieActivity.setUserName(nickName);
 
         initializeTime();
     }
@@ -78,27 +105,101 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
         setupDatePicker();
         setupCityPicker();
         setupCategoryPicker();
+        setupAddressListener();
         return view;
     }
 
-    private void createActivityAction()
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.create_activity, menu);
+    }
 
-        ActivityManager.getInstance(mContext).createActivity(mLogpieActivity, new LogpieCallback()
+    @TargetApi(11)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+        case R.id.action_confirm_create_activity:
+        {
+            CreateActivityTask task = new CreateActivityTask();
+            task.execute();
+            return true;
+        }
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setupAddressListener()
+    {
+        mUiHolder.mAddressEditText.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
-            public void onSuccess(Bundle result)
+            public boolean onLongClick(View v)
             {
-                LogpieLog.d(TAG, "Create Activity succeed!");
-            }
+                LogpieLocation currentLocation = GISManager.getInstance(mContext)
+                        .getCurrentLocation();
+                if (currentLocation == null)
+                {
+                    LogpieToastHelper.showShortMessage(mContext,
+                            "Sorry, the current location is not available!");
+                    return false;
+                }
+                final Double lat = currentLocation.getLatitude();
+                final Double lon = currentLocation.getLongitude();
+                if (lat != null && lon != null)
+                {
+                    try
+                    {
+                        ThreadHelper.runOffMainThread(false, new Runnable()
+                        {
 
-            @Override
-            public void onError(Bundle errorMessage)
-            {
-                LogpieLog.d(TAG, "Create Activity error!");
+                            @Override
+                            public void run()
+                            {
+                                // try to revser geocoding first.
+                                mCurrentLocationAddress = BaiduAPIHelper.getAddressFromLatLon(lat,
+                                        lon);
+                                if (mCurrentLocationAddress == null)
+                                {
+                                    LogpieLog
+                                            .d(TAG, "Rever geocoding fail! use lat lon as address");
+                                    mCurrentLocationAddress = "latitude:" + lat + " longitude:"
+                                            + lon;
+                                }
+                                mIsUsingCurrentLocation = true;
+                                mCurrentLat = lat;
+                                mCurrentLon = lon;
+                                ThreadHelper.runOnMainThread(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        LogpieToastHelper.showShortMessage(mContext,
+                                                "Using current location as the activity location");
+                                        mUiHolder.mAddressEditText.setText(mCurrentLocationAddress);
+                                    }
+                                });
+                            }
+                        });
+                    } catch (ThreadException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    LogpieToastHelper.showShortMessage(mContext,
+                            "Sorry, the current location is not available!");
+                    return false;
+                }
             }
         });
-
     }
 
     private void setupCategoryPicker()
@@ -148,7 +249,8 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                                 {
                                     logpieDateTime.setLogpieDateTime(currentTime);
                                 }
-                                // TODO: show a toast to give user a hint.
+                                LogpieToastHelper.showLongMessage(mContext,
+                                        "Cannot set the start time before current time");
                                 syncStartTimeEndTimeEditText(isStartDate);
                             }
                         });
@@ -341,33 +443,129 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
 
     }
 
-    private void handleCreateActivity()
+    /**
+     * handle the create activity.
+     */
+    private void createActivityAction()
+    {
+        // Read the information from the ui.
+        boolean isParameterValid = handleCreateActivity();
+        if (!isParameterValid)
+        {
+            return;
+        }
+
+        LogpieLocation activityLocation = mLogpieActivity.getLocation();
+        String city = activityLocation.getCity();
+        String address = activityLocation.getAddress();
+
+        // If user long-click the address and didn't change the auto-generated
+        // address, then just use the lat lon.
+        if (mIsUsingCurrentLocation && TextUtils.equals(mCurrentLocationAddress.trim(), address))
+        {
+            activityLocation.setLatitude(mCurrentLat);
+            activityLocation.setLongitude(mCurrentLon);
+        }
+        else
+        {
+            // If user use his own address, or modified the address, then try to
+            // geocoding to get the coordinates for the activity
+            if (!TextUtils.isEmpty(address))
+            {
+                LogpieLocation location = BaiduAPIHelper.getLatLonFromAddressAndCity(address, city);
+                Double lat = location.getLatitude();
+                Double lon = location.getLongitude();
+                if (lat != null && lon != null)
+                {
+                    activityLocation.setLatitude(lat);
+                    activityLocation.setLatitude(lon);
+                }
+                else
+                {
+                    LogpieLog.e(TAG, "Geocoding fail!");
+                }
+            }
+            else
+            {
+                LogpieLog.e(TAG, "The addreess cannot be null");
+                return;
+            }
+        }
+
+        ActivityManager.getInstance(mContext).createActivity(mLogpieActivity, new LogpieCallback()
+        {
+            @Override
+            public void onSuccess(Bundle result)
+            {
+                LogpieLog.d(TAG, "Create Activity succeed!");
+                LogpieToastHelper.showShortMessage(mContext, "Create activity succeed!");
+                getActivity().finish();
+            }
+
+            @Override
+            public void onError(Bundle errorMessage)
+            {
+                LogpieLog.d(TAG, "Create Activity error!");
+                LogpieToastHelper.showShortMessage(mContext,
+                        "Error happend when creating activity, please try later!");
+            }
+        });
+    }
+
+    /**
+     * Get all the parameters from UI and check whether all the parameters are
+     * legel.
+     * 
+     * @return whether the parameters are legel
+     */
+    private boolean handleCreateActivity()
     {
         String description = mUiHolder.mDescriptionEditText.getText().toString().trim();
         String address = mUiHolder.mAddressEditText.getText().toString().trim();
         LogpieDateTime startTime = mStartDateTime;
         LogpieDateTime endTime = mEndDateTime;
-        String city = mUiHolder.mCityTextView.getText().toString().trim();
-        String category = mUiHolder.mCategoryTextView.getText().toString().trim();
 
         if (TextUtils.isEmpty(description))
         {
-            LogpieToastHelper.showLongMessage(mContext, "The description can not be empty");
+            LogpieToastHelper.showShortMessage(mContext, "The description can not be empty");
             LogpieLog.d(TAG, "The description can not be empty");
-            return;
+            return false;
         }
         if (TextUtils.isEmpty(address))
         {
-            LogpieToastHelper.showLongMessage(mContext, "The address can not be empty");
+            LogpieToastHelper.showShortMessage(mContext, "The address can not be empty");
             LogpieLog.d(TAG, "The address can not be empty");
-            return;
+            return false;
+        }
+
+        if (startTime.before(new LogpieDateTime()))
+        {
+            LogpieToastHelper.showShortMessage(mContext,
+                    "Cannot create activity before current time");
+            LogpieLog.d(TAG, "Cannot create activity before current time");
+            return false;
+        }
+
+        if (mLogpieActivity.getCategoryString() == null)
+        {
+            LogpieToastHelper.showShortMessage(mContext, "Please choose a category!");
+            LogpieLog.d(TAG, "Category cannot be null!");
+            return false;
+        }
+
+        LogpieLocation location = mLogpieActivity.getLocation();
+        if (location == null || TextUtils.isEmpty(location.getCity()))
+        {
+            LogpieToastHelper.showShortMessage(mContext, "Please choose a city!");
+            LogpieLog.d(TAG, "City cannot be null");
+            return false;
         }
         mLogpieActivity.setDescription(description);
-        mLogpieActivity.setLocation(new LogpieLocation(address));
+        mLogpieActivity.setAddress(address);
         mLogpieActivity.setStartTime(startTime);
         mLogpieActivity.setEndTime(endTime);
         mLogpieActivity.setCreateTime();
-
+        return true;
     }
 
     private static class CreateActivityUIHolder
@@ -385,6 +583,16 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
 
         private TextView mCityTextView;
         private TextView mCategoryTextView;
+    }
+
+    class CreateActivityTask extends AsyncTask<Object, Object, Object>
+    {
+        @Override
+        protected Object doInBackground(Object... params)
+        {
+            createActivityAction();
+            return null;
+        }
     }
 
 }

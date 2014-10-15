@@ -71,9 +71,9 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
     {
         // TODO: Setup the user icon
         // Set user name
-        mUIHolder.mUserNameTextView.setText(mLogpieActivity.getmUserName());
+        mUIHolder.mUserNameTextView.setText(mLogpieActivity.getUserName());
         // Set activity descryption
-        mUIHolder.mActivityDescryptionTextView.setText(mLogpieActivity.getmDescription());
+        mUIHolder.mActivityDescryptionTextView.setText(mLogpieActivity.getDescription());
         // Set the activity time
         String startTime = mLogpieActivity.getStartTime().getDateTimeString();
         String endTime = mLogpieActivity.getEndTime().getDateTimeString();
@@ -82,10 +82,10 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         mUIHolder.mActivityLocationTextView.setText(mLogpieActivity.getLocation().getAddress());
         // Set the activity count like
         mUIHolder.mActivityCountLikeTextView.setText(Integer.toString(mLogpieActivity
-                .getmCountLike()));
+                .getCountLike()));
         // Set the activity count dislike
         mUIHolder.mActivityCountDislikeTextView.setText(Integer.toString(mLogpieActivity
-                .getmCountDislike()));
+                .getCountDislike()));
     }
 
     private void setUpUIHolder(View view)

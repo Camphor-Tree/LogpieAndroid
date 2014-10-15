@@ -8,10 +8,11 @@ import org.json.JSONObject;
 
 import com.logpie.commonlib.RequestKeys;
 
+//TODO: refactory this class to use Map<String,String>
 public class JSONHelper
 {
-    public static JSONArray buildInsertKeyValue(ArrayList<String> columns,
-            ArrayList<String> values) throws JSONException
+    public static JSONArray buildInsertKeyValue(ArrayList<String> columns, ArrayList<String> values)
+            throws JSONException
     {
         JSONArray array = new JSONArray();
         for (int i = 0; i < columns.size(); i++)
@@ -19,12 +20,13 @@ public class JSONHelper
             JSONObject o = new JSONObject();
             o.put(RequestKeys.KEY_INSERT_COLUMN, columns.get(i));
             o.put(RequestKeys.KEY_INSERT_VALUE, values.get(i));
+            array.put(o);
         }
         return array;
     }
 
-    public static JSONArray buildUpdateKeyValue(ArrayList<String> columns,
-            ArrayList<String> values) throws JSONException
+    public static JSONArray buildUpdateKeyValue(ArrayList<String> columns, ArrayList<String> values)
+            throws JSONException
     {
         JSONArray array = new JSONArray();
         for (int i = 0; i < columns.size(); i++)
@@ -32,6 +34,7 @@ public class JSONHelper
             JSONObject o = new JSONObject();
             o.put(RequestKeys.KEY_UPDATE_COLUMN, columns.get(i));
             o.put(RequestKeys.KEY_UPDATE_VALUE, values.get(i));
+            array.put(0);
         }
         return array;
     }
@@ -48,6 +51,7 @@ public class JSONHelper
         {
             JSONObject o = new JSONObject();
             o.put(RequestKeys.KEY_QUERY_COLUMN, columns.get(i));
+            array.put(o);
         }
         return array;
     }

@@ -228,13 +228,13 @@ public class ActivityListFragment extends ListFragment
             ImageView avatar = (ImageView) v.findViewById(R.id.activity_list_user_avatar);
 
             TextView nickname = (TextView) v.findViewById(R.id.activity_list_user_nickname);
-            nickname.setText(activity.getmUserName());
+            nickname.setText(activity.getUserName());
 
             TextView createTime = (TextView) v.findViewById(R.id.activity_list_create_time);
             createTime.setText(activity.getCreateTime().getDateTimeString());
 
             TextView description = (TextView) v.findViewById(R.id.activity_list_description);
-            description.setText(activity.getmDescription());
+            description.setText(activity.getDescription());
 
             TextView location = (TextView) v.findViewById(R.id.activity_list_location);
             location.setText(activity.getLocation().getAddress());
@@ -249,10 +249,10 @@ public class ActivityListFragment extends ListFragment
             endTime.setText(activity.getEndTime().getDateTimeString());
 
             TextView like = (TextView) v.findViewById(R.id.activity_list_count_like);
-            like.setText(String.valueOf(activity.getmCountLike()));
+            like.setText(String.valueOf(activity.getCountLike()));
 
             TextView dislike = (TextView) v.findViewById(R.id.activity_list_count_dislike);
-            dislike.setText(String.valueOf(activity.getmCountDislike()));
+            dislike.setText(String.valueOf(activity.getCountDislike()));
 
             TextView comment = (TextView) v.findViewById(R.id.activity_list_comment);
 

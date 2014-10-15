@@ -69,7 +69,7 @@ public class SquareActivity extends ActionBarActivity
         LogpieLog.d(TAG, "Call onCreateOptionsMenu!");
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        // inflater.inflate(R.menu.squre, menu);
+        // inflater.inflate(R.menu.square, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

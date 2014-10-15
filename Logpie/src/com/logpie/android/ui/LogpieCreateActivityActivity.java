@@ -13,6 +13,7 @@ import com.logpie.android.ui.helper.LanguageHelper;
  */
 public class LogpieCreateActivityActivity extends LogpieSingleFragmentActivity
 {
+    private static final String TAG = LogpieCreateActivityActivity.class.getName();
 
     @Override
     protected Fragment createFragment()
