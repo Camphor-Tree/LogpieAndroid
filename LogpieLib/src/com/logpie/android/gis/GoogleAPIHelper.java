@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.logpie.android.connection.SimpleAPIConnection;
@@ -40,8 +41,8 @@ public class GoogleAPIHelper
                 queryAddress, APIkey);
     }
 
-    /* package-private */static LogpieLocation getLatLonFromAddressAndCity(final String address,
-            final String city)
+    /* package-private */static LogpieLocation getLatLonFromAddressAndCity(Context context,
+            final String address, final String city)
     {
         String queryURL = buildQueryGeocodingURL(address, city);
         String resultString = SimpleAPIConnection.doGetQuery(queryURL);
@@ -69,7 +70,7 @@ public class GoogleAPIHelper
                 JSONObject location = geometry.getJSONObject("location");
                 Double lat = location.getDouble("lat");
                 Double lon = location.getDouble("lng");
-                return new LogpieLocation(lat, lon, address, city);
+                return new LogpieLocation(context, lat, lon, address, city);
             }
             else
             {

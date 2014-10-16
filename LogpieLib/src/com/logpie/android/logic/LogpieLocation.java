@@ -1,5 +1,6 @@
 package com.logpie.android.logic;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,32 +16,37 @@ import com.logpie.android.util.LogpieLog;
 public class LogpieLocation implements Parcelable
 {
     private static String TAG = LogpieLocation.class.getName();
+    private Context mContext;
     private Double mLatitude;
     private Double mLongitude;
     private String mAddress;
     private String mCity;
+    private String mCityId;
 
-    public LogpieLocation()
+    public LogpieLocation(Context context)
     {
-
+        mContext = context;
     }
 
-    public LogpieLocation(String city)
+    public LogpieLocation(Context context, String city)
     {
-        mCity = city;
+        mContext = context;
+        setCity(city);
     }
 
-    public LogpieLocation(Double lat, Double lon, String address, String city)
+    public LogpieLocation(Context context, Double lat, Double lon, String address, String city)
     {
+        mContext = context;
         mLatitude = lat;
         mLongitude = lon;
         mAddress = address;
-        mCity = city;
+        setCity(city);
     }
 
     public void setCity(String city)
     {
         mCity = city;
+        mCityId = getCityId(city);
     }
 
     public String getCity()
@@ -113,6 +119,16 @@ public class LogpieLocation implements Parcelable
         mAddress = address;
     }
 
+    public String getCityId()
+    {
+        return mCityId;
+    }
+
+    public void setCityId(String cityId)
+    {
+        mCityId = cityId;
+    }
+
     public String getCurrentCity()
     {
         if (mLatitude != null && mLongitude != null)
@@ -124,6 +140,26 @@ public class LogpieLocation implements Parcelable
         {
             return null;
         }
+    }
+
+    public String getCityById(String cityId)
+    {
+        String city = CityManager.getInstance(mContext).getCityById(cityId);
+        if (city == null || city.equals(""))
+        {
+            LogpieLog.e(TAG, "Cannot get the city name by using id " + cityId);
+        }
+        return city;
+    }
+
+    public String getCityId(String city)
+    {
+        String cityId = CityManager.getInstance(mContext).getCityId(city);
+        if (cityId == null || cityId.equals(""))
+        {
+            LogpieLog.e(TAG, "Cannot get the city id by using the name " + city);
+        }
+        return cityId;
     }
 
     @Override
@@ -152,6 +188,7 @@ public class LogpieLocation implements Parcelable
         dest.writeDouble(mLongitude.doubleValue());
         dest.writeString(mAddress);
         dest.writeString(mCity);
+        dest.writeString(mCityId);
     }
 
     private LogpieLocation(Parcel in)
@@ -160,5 +197,6 @@ public class LogpieLocation implements Parcelable
         mLongitude = Double.valueOf(in.readDouble());
         mAddress = in.readString();
         mCity = in.readString();
+        mCityId = in.readString();
     }
 }

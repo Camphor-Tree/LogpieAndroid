@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.logpie.android.connection.SimpleAPIConnection;
@@ -138,8 +139,8 @@ public class BaiduAPIHelper
         return parseBaiduReverseGeocodingResult(result, KEY_FORMATTED_ADDRESS, null);
     }
 
-    /* package-private */static LogpieLocation getLatLonFromAddressAndCity(final String address,
-            final String city)
+    /* package-private */static LogpieLocation getLatLonFromAddressAndCity(Context context,
+            final String address, final String city)
     {
         String queryURL = buildQueryGeocodingURL(address, city);
         if (queryURL == null)
@@ -169,8 +170,8 @@ public class BaiduAPIHelper
                 }
                 else
                 {
-                    return new LogpieLocation(Double.valueOf(latitude), Double.valueOf(longitude),
-                            address, city);
+                    return new LogpieLocation(context, Double.valueOf(latitude),
+                            Double.valueOf(longitude), address, city);
                 }
             }
             else

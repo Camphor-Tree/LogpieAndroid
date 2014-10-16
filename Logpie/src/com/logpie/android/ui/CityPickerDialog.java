@@ -28,6 +28,7 @@ import com.logpie.android.util.LogpieLog;
 public class CityPickerDialog extends DialogFragment
 {
     private static final String TAG = CityPickerDialog.class.getName();
+    public static final String KEY_CITY_ID = "city_id";
     public static final String KEY_CITY = "city";
 
     private ExpandableListView mListView;
@@ -79,11 +80,11 @@ public class CityPickerDialog extends DialogFragment
 
         mAdapter = new SimpleExpandableListAdapter(getActivity(), mGroupData,
                 R.layout.layout_expandable_list_group,
-                new String[] { CityManager.KEY_PROVINCE_GROUP },
+                new String[] { CityManager.KEY_PROVINCE_STRING },
                 new int[] { R.id.expandable_list_group_text }, mChildData,
-                R.layout.layout_expandable_list_child, new String[] { CityManager.KEY_CITY_GROUP,
-                        CityManager.KEY_CITY_GROUP }, new int[] { R.id.expandable_list_group_text,
-                        R.id.expandable_list_child_text });
+                R.layout.layout_expandable_list_child, new String[] {
+                        CityManager.KEY_PROVINCE_STRING, CityManager.KEY_CITY_STRING }, new int[] {
+                        R.id.expandable_list_group_text, R.id.expandable_list_child_text });
         mListView.setAdapter(mAdapter);
 
         mListView.setOnChildClickListener(new OnChildClickListener()
@@ -97,16 +98,17 @@ public class CityPickerDialog extends DialogFragment
 
                 HashMap<String, String> hs = (HashMap<String, String>) parent
                         .getExpandableListAdapter().getChild(groupPosition, childPosition);
-                String city = hs.get(KEY_CITY);
+                String cityID = hs.get(CityManager.KEY_CITY_ID);
+                String city = hs.get(CityManager.KEY_CITY_STRING);
                 if (city == null)
                 {
                     LogpieLog.e(TAG, "city data is null.");
-                    sendResult(Activity.RESULT_CANCELED, city);
+                    sendResult(Activity.RESULT_CANCELED, cityID, city);
                 }
                 else
                 {
                     LogpieLog.d("CityPickerDialog", "child city is: " + city);
-                    sendResult(Activity.RESULT_OK, city);
+                    sendResult(Activity.RESULT_OK, cityID, city);
                 }
                 getDialog().dismiss();
                 return true;
@@ -118,7 +120,7 @@ public class CityPickerDialog extends DialogFragment
         return builder.create();
     }
 
-    private void sendResult(int resultCode, String city)
+    private void sendResult(int resultCode, String cityID, String city)
     {
         if (getTargetFragment() == null)
         {
@@ -127,6 +129,7 @@ public class CityPickerDialog extends DialogFragment
         }
 
         Intent i = new Intent();
+        i.putExtra(KEY_CITY_ID, cityID);
         i.putExtra(KEY_CITY, city);
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);
     }

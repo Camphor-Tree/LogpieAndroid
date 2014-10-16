@@ -133,7 +133,8 @@ public class DataStorage
 
     public Bundle getCityList(String province)
     {
-        String[] columns = new String[] { DatabaseSchema.SCHEMA_CITY_CITY };
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_CITY_CID,
+                DatabaseSchema.SCHEMA_CITY_CITY };
         String whereClause = DatabaseSchema.SCHEMA_CITY_PROVINCE + " = ?";
         String[] whereArgs = new String[] { province };
 
@@ -152,33 +153,11 @@ public class DataStorage
 
     public Bundle getSubcategoryList(String categoryID)
     {
-        String[] columns = new String[] { DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYCN,
+        String[] columns = new String[] { DatabaseSchema.SCHEMA_SUBCATEGORY_CID,
+                DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYCN,
                 DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYUS };
         String whereClause = DatabaseSchema.SCHEMA_SUBCATEGORY_PARENT + " = ?";
         String[] whereArgs = new String[] { categoryID };
-
-        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_SUBCATEGORY, columns, whereClause,
-                whereArgs, null, null, null);
-    }
-
-    public Bundle getCategoryId(String category)
-    {
-        String[] columns = new String[] { DatabaseSchema.SCHEMA_CATEGORY_CID };
-        String whereClause = DatabaseSchema.SCHEMA_CATEGORY_CATEGORYCN + " = ? OR "
-                + DatabaseSchema.SCHEMA_CATEGORY_CATEGORYUS + " = ?";
-        String[] whereArgs = new String[] { category, category };
-
-        return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_CATEGORY, columns, whereClause,
-                whereArgs, null, null, null);
-    }
-
-    public Bundle getSubcategoryId(String subcategory, String categoryID)
-    {
-        String[] columns = new String[] { DatabaseSchema.SCHEMA_SUBCATEGORY_CID };
-        String whereClause = "(" + DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYCN + " = ? OR "
-                + DatabaseSchema.SCHEMA_SUBCATEGORY_SUBCATEGORYUS + " = ?) AND "
-                + DatabaseSchema.SCHEMA_SUBCATEGORY_PARENT + " = ?";
-        String[] whereArgs = new String[] { subcategory, subcategory, categoryID };
 
         return mSQLStorage.query(DatabaseSchema.SCHEMA_TABLE_SUBCATEGORY, columns, whereClause,
                 whereArgs, null, null, null);

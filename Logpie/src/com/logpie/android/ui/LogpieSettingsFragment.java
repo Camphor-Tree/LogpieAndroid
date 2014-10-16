@@ -236,6 +236,19 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                 R.id.settings_user_profile_photo_label_text_view,
                 R.id.settings_user_profile_photo_image_view,
                 LanguageHelper.KEY_USER_PROFILE_PHOTO_SETTING_LABEL, ImageView.class);
+
+        mUserProfilePhotoUnit.mContent.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        // TODO: Set photo
+        // ((ImageView) mUserProfilePhotoUnit.mContent).setImageResource(null);
     }
 
     private View.OnClickListener getEditTextListener(final Context context,

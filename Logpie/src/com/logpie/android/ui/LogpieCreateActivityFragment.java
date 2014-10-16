@@ -161,8 +161,8 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                             public void run()
                             {
                                 // try to revser geocoding first.
-                                mCurrentLocationAddress = GisAPIHelper.getAddressFromLatLon(lat,
-                                        lon);
+                                mCurrentLocationAddress = GisAPIHelper.getAddressFromLatLon(
+                                        mContext, lat, lon);
                                 if (mCurrentLocationAddress == null)
                                 {
                                     LogpieLog
@@ -249,8 +249,6 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                                 {
                                     logpieDateTime.setLogpieDateTime(currentTime);
                                 }
-                                LogpieToastHelper.showLongMessage(mContext,
-                                        "Cannot set the start time before current time");
                                 syncStartTimeEndTimeEditText(isStartDate);
                             }
                         });
@@ -347,7 +345,7 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
             if (!TextUtils.isEmpty(city))
             {
                 mUiHolder.mCityTextView.setText(city);
-                mLogpieActivity.setCity(city);
+                mLogpieActivity.setCity(mContext, city);
             }
             else
             {
@@ -364,7 +362,14 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                     .getStringExtra(CategoryPickerDialog.KEY_SUBCATEGORY_STRING);
             if (!TextUtils.isEmpty(categoryId) && !TextUtils.isEmpty(categoryString))
             {
-                mUiHolder.mCategoryTextView.setText(categoryString + ":" + subCategoryString);
+                if (subCategoryString == null || subCategoryString.equals(""))
+                {
+                    mUiHolder.mCategoryTextView.setText(categoryString);
+                }
+                else
+                {
+                    mUiHolder.mCategoryTextView.setText(categoryString + ": " + subCategoryString);
+                }
                 mLogpieActivity.setCategoryId(categoryId);
                 mLogpieActivity.setSubCategoryId(subCategoryId);
                 mLogpieActivity.setCategoryString(categoryString);
@@ -472,17 +477,25 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
             // geocoding to get the coordinates for the activity
             if (!TextUtils.isEmpty(address))
             {
-                LogpieLocation location = GisAPIHelper.getLatLonFromAddressAndCity(address, city);
-                Double lat = location.getLatitude();
-                Double lon = location.getLongitude();
-                if (lat != null && lon != null)
+                LogpieLocation location = GisAPIHelper.getLatLonFromAddressAndCity(mContext,
+                        address, city);
+                if (location == null)
                 {
-                    activityLocation.setLatitude(lat);
-                    activityLocation.setLatitude(lon);
+                    LogpieLog.e(TAG, "Geocoding fail!");
                 }
                 else
                 {
-                    LogpieLog.e(TAG, "Geocoding fail!");
+                    Double lat = location.getLatitude();
+                    Double lon = location.getLongitude();
+                    if (lat != null && lon != null)
+                    {
+                        activityLocation.setLatitude(lat);
+                        activityLocation.setLatitude(lon);
+                    }
+                    else
+                    {
+                        LogpieLog.e(TAG, "Geocoding fail!");
+                    }
                 }
             }
             else
@@ -561,7 +574,7 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
             return false;
         }
         mLogpieActivity.setDescription(description);
-        mLogpieActivity.setAddress(address);
+        mLogpieActivity.setAddress(mContext, address);
         mLogpieActivity.setStartTime(startTime);
         mLogpieActivity.setEndTime(endTime);
         mLogpieActivity.setCreateTime();

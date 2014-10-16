@@ -35,9 +35,8 @@ public class GISManager
     private GISManager(Context context)
     {
         mContext = context;
-        mCurrentLocation = new LogpieLocation(null, null, null, null);
-        mLocationManager = (LocationManager) context
-                .getSystemService(Context.LOCATION_SERVICE);
+        mCurrentLocation = new LogpieLocation(context, null, null, null, null);
+        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         /**
          * LogpieLocationListener keep an instance of GISManager. it will update
@@ -73,9 +72,8 @@ public class GISManager
             else
             {
                 mIsLocationAvailable = false;
-                LogpieLog
-                        .e(TAG,
-                                "mLocationManger is null & mContext is also null! This should be a bug.");
+                LogpieLog.e(TAG,
+                        "mLocationManger is null & mContext is also null! This should be a bug.");
                 return;
             }
         }

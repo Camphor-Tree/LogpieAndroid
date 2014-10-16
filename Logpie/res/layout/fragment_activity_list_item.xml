@@ -28,12 +28,33 @@
 			android:src="@drawable/ic_action_more_functions" />
 
 		<TextView
+			android:id="@+id/activity_list_category"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="8dp"
+			android:layout_marginTop="2dp"
+			android:layout_toLeftOf="@id/activity_list_more_functions"
+			android:paddingLeft="4dp"
+			android:paddingRight="4dp"
+			android:textColor="#FFFFFF" />
+
+		<TextView
+			android:id="@+id/activity_list_subcategory"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="8dp"
+			android:layout_marginTop="2dp"
+			android:layout_toLeftOf="@id/activity_list_category"
+			android:paddingLeft="4dp"
+			android:paddingRight="4dp"
+			android:textColor="#FFFFFF" />
+
+		<TextView
 			android:id="@+id/activity_list_user_nickname"
 			android:layout_width="wrap_content"
 			android:layout_height="24dp"
 			android:layout_marginLeft="8dp"
 			android:layout_marginTop="4dp"
-			android:layout_toLeftOf="@id/activity_list_more_functions"
 			android:layout_toRightOf="@id/activity_list_user_avatar"
 			android:textColor="#003366"
 			android:textSize="18sp" />

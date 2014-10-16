@@ -1,5 +1,7 @@
 package com.logpie.android.gis;
 
+import android.content.Context;
+
 import com.logpie.android.logic.LogpieLocation;
 import com.logpie.android.util.LogpieLog;
 
@@ -44,12 +46,14 @@ public class GisAPIHelper
         }
     }
 
-    public static LogpieLocation getLatLonFromAddressAndCity(final String address, final String city)
+    public static LogpieLocation getLatLonFromAddressAndCity(Context context, final String address,
+            final String city)
     {
-        LogpieLocation googleResult = GoogleAPIHelper.getLatLonFromAddressAndCity(address, city);
+        LogpieLocation googleResult = GoogleAPIHelper.getLatLonFromAddressAndCity(context, address,
+                city);
         if (googleResult == null)
         {
-            return BaiduAPIHelper.getLatLonFromAddressAndCity(address, city);
+            return BaiduAPIHelper.getLatLonFromAddressAndCity(context, address, city);
         }
         else
         {

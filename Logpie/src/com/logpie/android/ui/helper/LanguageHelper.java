@@ -91,6 +91,9 @@ public class LanguageHelper
     public final static String KEY_CATEGORY_PICKER_TITLE = "category_picker_title";
     public final static String KEY_CATEGORY_GROUP = "category_group";
     public final static String KEY_SUBCATEGORY_GROUP = "subcategory_group";
+    public final static String KEY_PHOTO_PICKER_TITLE = "photo_picker_title";
+    public final static String KEY_TAKE_PHOTO = "take_photo";
+    public final static String KEY_FROM_GALLERY = "from_gallery";
 
     // Common Button
     public final static String KEY_BUTTON_CANCEL = "button_cancel";
@@ -256,6 +259,14 @@ public class LanguageHelper
         case KEY_CATEGORY_PICKER_TITLE:
             return switchLanguage(R.string.title_category_picker_cn,
                     R.string.title_category_picker_us);
+        case KEY_PHOTO_PICKER_TITLE:
+            return switchLanguage(R.string.title_photo_picker_cn, R.string.title_photo_picker_us);
+
+            // For Photo Choose way
+        case KEY_TAKE_PHOTO:
+            return switchLanguage(R.string.take_photo_cn, R.string.take_photo_us);
+        case KEY_FROM_GALLERY:
+            return switchLanguage(R.string.choose_from_gallery_cn, R.string.choose_from_gallery_us);
 
             // Common Buttons
         case KEY_BUTTON_CANCEL:
@@ -301,20 +312,20 @@ public class LanguageHelper
         case KEY_CATEGORY_GROUP:
             if (sIsChinese)
             {
-                return CategoryManager.KEY_CATEGORY_GROUP_CN;
+                return CategoryManager.KEY_CATEGORY_STRING_CN;
             }
             else
             {
-                return CategoryManager.KEY_CATEGORY_GROUP_US;
+                return CategoryManager.KEY_CATEGORY_STRING_US;
             }
         case KEY_SUBCATEGORY_GROUP:
             if (sIsChinese)
             {
-                return CategoryManager.KEY_SUBCATEGORY_GROUP_CN;
+                return CategoryManager.KEY_SUBCATEGORY_STRING_CN;
             }
             else
             {
-                return CategoryManager.KEY_SUBCATEGORY_GROUP_US;
+                return CategoryManager.KEY_SUBCATEGORY_STRING_US;
             }
         }
         return context.getResources().getString(getId(key, context));

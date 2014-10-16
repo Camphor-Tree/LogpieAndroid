@@ -15,28 +15,29 @@ import com.logpie.android.util.LogpieLog;
 public class CityManager
 {
     private static final String TAG = CityManager.class.getName();
-    public static final String KEY_PROVINCE_GROUP = "province";
-    public static final String KEY_CITY_GROUP = "city";
+
+    public static final String KEY_PROVINCE_STRING = "province_string";
+    public static final String KEY_CITY_ID = "city_id";
+    public static final String KEY_CITY_STRING = "city_string";
 
     private static CityManager sCityManager;
 
-    private static Context mContext;
-    private static List<Map<String, String>> mProvinceList;
-    private static List<List<Map<String, String>>> mCityList;
+    private Context mContext;
+    private List<Map<String, String>> mProvinceList;
+    private List<List<Map<String, String>>> mCityList;
 
-    private CityManager()
+    private CityManager(Context context)
     {
-
+        mContext = context;
+        mProvinceList = new ArrayList<Map<String, String>>();
+        mCityList = new ArrayList<List<Map<String, String>>>();
     }
 
     public static synchronized CityManager getInstance(Context context)
     {
         if (sCityManager == null)
         {
-            sCityManager = new CityManager();
-            mContext = context;
-            mProvinceList = new ArrayList<Map<String, String>>();
-            mCityList = new ArrayList<List<Map<String, String>>>();
+            sCityManager = new CityManager(context);
         }
         return sCityManager;
     }
@@ -58,6 +59,36 @@ public class CityManager
         }
 
         return mCityList;
+    }
+
+    public String getCityById(String cityId)
+    {
+        for (List<Map<String, String>> list : mCityList)
+        {
+            for (Map<String, String> entry : list)
+            {
+                if (entry.get(KEY_CITY_ID).equals(cityId))
+                {
+                    return entry.get(KEY_CITY_STRING);
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getCityId(String city)
+    {
+        for (List<Map<String, String>> list : mCityList)
+        {
+            for (Map<String, String> entry : list)
+            {
+                if (entry.get(KEY_CITY_STRING).equals(city))
+                {
+                    return entry.get(KEY_CITY_ID);
+                }
+            }
+        }
+        return null;
     }
 
     public synchronized void setData()
@@ -86,7 +117,7 @@ public class CityManager
                     return;
                 }
                 HashMap<String, String> hs_p = new HashMap<String, String>();
-                hs_p.put(KEY_PROVINCE_GROUP, province);
+                hs_p.put(KEY_PROVINCE_STRING, province);
                 mProvinceList.add(hs_p);
 
                 // Set city
@@ -102,14 +133,16 @@ public class CityManager
                     record = cityBundle.getBundle(String.valueOf(j));
                     if (record.containsKey(DatabaseSchema.SCHEMA_CITY_CITY))
                     {
+                        String cityID = record.getString(DatabaseSchema.SCHEMA_CITY_CID);
                         String city = record.getString(DatabaseSchema.SCHEMA_CITY_CITY);
-                        if (city == null || city.equals(""))
+                        if (cityID == null || cityID.equals("") || city == null || city.equals(""))
                         {
-                            LogpieLog.e(TAG, "cannot get the city name from the record bundle.");
+                            LogpieLog.e(TAG, "cannot get the city id/name from the record bundle.");
                             return;
                         }
                         HashMap<String, String> hs_c = new HashMap<String, String>();
-                        hs_c.put(KEY_CITY_GROUP, city);
+                        hs_c.put(KEY_CITY_ID, cityID);
+                        hs_c.put(KEY_CITY_STRING, city);
                         cities.add(hs_c);
                     }
                 }

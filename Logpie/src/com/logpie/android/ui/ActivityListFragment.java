@@ -32,6 +32,7 @@ import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.NormalUser;
 import com.logpie.android.logic.User;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.ui.helper.LogpieColorHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper;
 import com.logpie.android.ui.layout.LogpieRefreshLayout;
 import com.logpie.android.ui.layout.LogpieRefreshLayout.PullToRefreshCallback;
@@ -65,6 +66,7 @@ public class ActivityListFragment extends ListFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        // Set option menu visible
         setHasOptionsMenu(true);
 
         user = NormalUser.getInstance(getActivity());
@@ -166,7 +168,7 @@ public class ActivityListFragment extends ListFragment
             return;
         if (requestCode == LogpieDialogHelper.REQUEST_CODE_CITY_DIALOG)
         {
-            mCity = data.getStringExtra(CityPickerDialog.KEY_CITY);
+            mCity = data.getStringExtra(CityPickerDialog.KEY_CITY_ID);
             new FetchItemsTask().execute(mTabName);
         }
         if (requestCode == LogpieDialogHelper.REQUEST_CODE_CATEGORY_DIALOG)
@@ -235,6 +237,17 @@ public class ActivityListFragment extends ListFragment
 
             TextView description = (TextView) v.findViewById(R.id.activity_list_description);
             description.setText(activity.getDescription());
+
+            TextView category = (TextView) v.findViewById(R.id.activity_list_category);
+            category.setText(activity.getCategoryString());
+            int color = LogpieColorHelper.getColorByCategoryTag(activity.getCategoryId());
+            category.setBackgroundResource(color);
+            if (activity.getSubCategoryString() != null)
+            {
+                TextView subcategory = (TextView) v.findViewById(R.id.activity_list_subcategory);
+                subcategory.setText(activity.getSubCategoryString());
+                subcategory.setBackgroundResource(color);
+            }
 
             TextView location = (TextView) v.findViewById(R.id.activity_list_location);
             location.setText(activity.getLocation().getAddress());

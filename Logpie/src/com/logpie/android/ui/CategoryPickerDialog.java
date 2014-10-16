@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.SimpleExpandableListAdapter;
 
 import com.logpie.android.R;
@@ -92,6 +93,40 @@ public class CategoryPickerDialog extends DialogFragment
                         R.id.expandable_list_child_text });
         mListView.setAdapter(mAdapter);
 
+        mListView.setOnGroupClickListener(new OnGroupClickListener()
+        {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition,
+                    long id)
+            {
+                if (groupPosition == (mGroupData.size() - 1))
+                {
+                    v.setBackgroundColor(getResources().getColor(R.color.LightGrey));
+                    HashMap<String, String> hs_c = (HashMap<String, String>) parent
+                            .getExpandableListAdapter().getGroup(groupPosition);
+                    String categoryID = hs_c.get(CategoryManager.KEY_CATEGORY_ID);
+                    String category = hs_c.get(LanguageHelper.getString(
+                            LanguageHelper.KEY_CATEGORY_GROUP, getActivity()));
+                    if (categoryID == null || category == null)
+                    {
+                        LogpieLog.e(TAG, "category data is null.");
+                        sendResult(Activity.RESULT_CANCELED, categoryID, category, null, null);
+                    }
+                    else
+                    {
+                        LogpieLog.d(TAG, "get category: " + category);
+                        sendResult(Activity.RESULT_OK, categoryID, category, null, null);
+                    }
+                    getDialog().dismiss();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
         mListView.setOnChildClickListener(new OnChildClickListener()
         {
             @SuppressWarnings("unchecked")
@@ -105,19 +140,23 @@ public class CategoryPickerDialog extends DialogFragment
                 HashMap<String, String> hs_s = (HashMap<String, String>) parent
                         .getExpandableListAdapter().getChild(groupPosition, childPosition);
 
+                String categoryID = hs_c.get(CategoryManager.KEY_CATEGORY_ID);
                 String category = hs_c.get(LanguageHelper.getString(
                         LanguageHelper.KEY_CATEGORY_GROUP, getActivity()));
+                String subcategoryID = hs_s.get(CategoryManager.KEY_SUBCATEGORY_ID);
                 String subcategory = hs_s.get(LanguageHelper.getString(
                         LanguageHelper.KEY_SUBCATEGORY_GROUP, getActivity()));
-                if (subcategory == null || category == null)
+                if (categoryID == null || category == null || subcategoryID == null
+                        || subcategory == null)
                 {
                     LogpieLog.e(TAG, "category/subcategory data is null.");
-                    sendResult(Activity.RESULT_CANCELED, category, subcategory);
+                    sendResult(Activity.RESULT_CANCELED, categoryID, category, subcategoryID,
+                            subcategory);
                 }
                 else
                 {
                     LogpieLog.d(TAG, "get category: " + category + " subcategory: " + subcategory);
-                    sendResult(Activity.RESULT_OK, category, subcategory);
+                    sendResult(Activity.RESULT_OK, categoryID, category, subcategoryID, subcategory);
                 }
                 getDialog().dismiss();
                 return true;
@@ -129,17 +168,14 @@ public class CategoryPickerDialog extends DialogFragment
         return builder.create();
     }
 
-    private void sendResult(int resultCode, String category, String subcategory)
+    private void sendResult(int resultCode, String categoryID, String category,
+            String subcategoryID, String subcategory)
     {
         if (getTargetFragment() == null)
         {
             LogpieLog.d(TAG, "target fragment is null.");
             return;
         }
-
-        String categoryID = mCategoryManager.getId(category, null);
-        String subcategoryID = mCategoryManager.getId(category, subcategory);
-        LogpieLog.d(TAG, "get categoryId: " + categoryID + " subcategoryId: " + subcategoryID);
 
         Intent i = new Intent();
         i.putExtra(KEY_CATEGORY_ID, categoryID);

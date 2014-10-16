@@ -3,14 +3,18 @@ package com.logpie.android.logic;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.commonlib.RequestKeys;
@@ -27,6 +31,7 @@ public class LogpieActivity implements Parcelable
 {
     private static final String TAG = LogpieActivity.class.getName();
     public static final String DEFAULT_AVATAR = "";
+    private static final String KEY_LANGUAGE = "com.logpie.android.language";
 
     private String mActivityID;
     private String mUserAvatar;
@@ -65,7 +70,8 @@ public class LogpieActivity implements Parcelable
      * @param endTime
      */
     public LogpieActivity(String uid, String userName, String description, LogpieLocation location,
-            LogpieDateTime startTime, LogpieDateTime endTime, LogpieDateTime createTime)
+            LogpieDateTime startTime, LogpieDateTime endTime, LogpieDateTime createTime,
+            String categoryId, String category)
     {
         mUserID = uid;
         mUserName = userName;
@@ -74,10 +80,14 @@ public class LogpieActivity implements Parcelable
         mStartTime = startTime;
         mEndTime = endTime;
         mCreateTime = createTime;
+        mCategoryId = categoryId;
+        mCategoryString = category;
 
         // set default value
         mUserAvatar = DEFAULT_AVATAR;
         mCreateTime = createTime;
+        mSubCategoryId = null;
+        mSubCategoryString = null;
         mCountLike = 0;
         mCountDislike = 0;
         mComments = new ArrayList<Comment>();
@@ -85,7 +95,8 @@ public class LogpieActivity implements Parcelable
 
     public LogpieActivity(String aid, String uid, String userName, String userAvatar,
             String description, LogpieLocation location, LogpieDateTime startTime,
-            LogpieDateTime endTime, LogpieDateTime createTime, int countLike, int countDislike,
+            LogpieDateTime endTime, LogpieDateTime createTime, String categoryId, String category,
+            String subCategoryId, String subCategory, int countLike, int countDislike,
             List<Comment> comments)
     {
         mActivityID = aid;
@@ -97,12 +108,16 @@ public class LogpieActivity implements Parcelable
         mStartTime = startTime;
         mEndTime = endTime;
         mCreateTime = createTime;
+        mCategoryId = categoryId;
+        mCategoryString = category;
+        mSubCategoryId = subCategoryId;
+        mSubCategoryString = subCategory;
         mCountLike = countLike;
         mCountDislike = countDislike;
         mComments = new ArrayList<Comment>(comments);
     }
 
-    public static LogpieActivity ActivityJSONHelper(JSONObject data)
+    public static LogpieActivity activityJSONHelper(JSONObject data, Context context)
     {
         if (data.isNull(ResponseKeys.KEY_AID) || data.isNull(ResponseKeys.KEY_UID)
                 || data.isNull(ResponseKeys.KEY_NICKNAME)
@@ -110,7 +125,8 @@ public class LogpieActivity implements Parcelable
                 || data.isNull(ResponseKeys.KEY_DESCRIPTION)
                 || data.isNull(ResponseKeys.KEY_LOCATION)
                 || data.isNull(ResponseKeys.KEY_START_TIME)
-                || data.isNull(ResponseKeys.KEY_END_TIME) || data.isNull(ResponseKeys.KEY_CITY))
+                || data.isNull(ResponseKeys.KEY_END_TIME) || data.isNull(ResponseKeys.KEY_CITY)
+                || data.isNull(ResponseKeys.KEY_CATEGORY_ID))
         {
             LogpieLog.e(TAG, "Missing the required key for create an activity.");
             return null;
@@ -123,16 +139,25 @@ public class LogpieActivity implements Parcelable
             String uid = data.getString(ResponseKeys.KEY_UID);
             String userName = data.getString(ResponseKeys.KEY_NICKNAME);
             String description = data.getString(ResponseKeys.KEY_DESCRIPTION);
-            LogpieLocation location = new LogpieLocation(null, null,
+            LogpieLocation location = new LogpieLocation(context, null, null,
                     data.getString(ResponseKeys.KEY_LOCATION),
                     data.getString(ResponseKeys.KEY_CITY));
             LogpieDateTime startTime = getFormatDate(data.getString(ResponseKeys.KEY_START_TIME));
             LogpieDateTime endTime = getFormatDate(data.getString(ResponseKeys.KEY_END_TIME));
             LogpieDateTime createTime = getFormatDate(data.getString(ResponseKeys.KEY_CREATE_TIME));
+            String categoryId = data.getString(ResponseKeys.KEY_CATEGORY_ID);
+            boolean isCN = LogpieSystemSetting.getInstance(context).getSystemSetting(KEY_LANGUAGE)
+                    .equals("chinese");
+            String category = CategoryManager.getInstance(context, isCN)
+                    .getCategoryById(categoryId);
 
             // Optional parameters
             String userAvatar = data.has(ResponseKeys.KEY_AID) ? data
                     .getString(ResponseKeys.KEY_AID) : DEFAULT_AVATAR;
+            String subCategoryId = data.has(ResponseKeys.KEY_SUBCATEGORY_ID) ? data
+                    .getString(ResponseKeys.KEY_SUBCATEGORY_ID) : null;
+            String subCategory = subCategoryId == null ? null : CategoryManager.getInstance(
+                    context, isCN).getSubcategoryById(subCategoryId);
             int countLike = data.has(ResponseKeys.KEY_COUNT_LIKE) ? Integer.valueOf(data
                     .getString(ResponseKeys.KEY_COUNT_LIKE)) : 0;
             int countDislike = data.has(ResponseKeys.KEY_COUNT_DISLIKE) ? Integer.valueOf(data
@@ -144,8 +169,8 @@ public class LogpieActivity implements Parcelable
             }
 
             LogpieActivity activity = new LogpieActivity(aid, uid, userName, userAvatar,
-                    description, location, startTime, endTime, createTime, countLike, countDislike,
-                    comments);
+                    description, location, startTime, endTime, createTime, categoryId, category,
+                    subCategoryId, subCategory, countLike, countDislike, comments);
 
             return activity;
         } catch (ParseException e)
@@ -231,21 +256,21 @@ public class LogpieActivity implements Parcelable
         this.mLocation = mLocation;
     }
 
-    public void setAddress(final String address)
+    public void setAddress(Context context, final String address)
     {
         if (mLocation == null)
         {
-            mLocation = new LogpieLocation();
+            mLocation = new LogpieLocation(context);
         }
         this.mLocation.setAddress(address);
 
     }
 
-    public void setCity(final String city)
+    public void setCity(Context context, final String city)
     {
         if (mLocation == null)
         {
-            mLocation = new LogpieLocation(city);
+            mLocation = new LogpieLocation(context, city);
             return;
         }
         this.mLocation.setCity(city);
@@ -370,24 +395,25 @@ public class LogpieActivity implements Parcelable
         mLocation = in.readParcelable(getClass().getClassLoader());
     }
 
-    public ArrayList<String> getCreateAcitivtyValues()
+    public Map<String, String> getCreateAcitivtyKeyValues()
     {
-        ArrayList<String> createActivityValues = new ArrayList<String>();
-        createActivityValues.add(mUserID);
-        createActivityValues.add(mUserName);
-        createActivityValues.add(mDescription);
-        createActivityValues.add(mLocation.getAddress());
+        Map<String, String> keyvalue = new HashMap<String, String>();
+        keyvalue.put(RequestKeys.KEY_UID, mUserID);
+        keyvalue.put(RequestKeys.KEY_NICKNAME, mUserName);
+        keyvalue.put(RequestKeys.KEY_DESCRIPTION, mDescription);
+        keyvalue.put(RequestKeys.KEY_LOCATION, mLocation.getAddress());
         if (mLocation.getLatitude() != null && mLocation.getLongitude() != null)
         {
-            createActivityValues.add(mLocation.getLatitude().toString());
-            createActivityValues.add(mLocation.getLongitude().toString());
+            keyvalue.put(RequestKeys.KEY_LATITUDE, mLocation.getLatitude().toString());
+            keyvalue.put(RequestKeys.KEY_LONGITUDE, mLocation.getLongitude().toString());
         }
-        createActivityValues.add(mStartTime.getDateTimeString());
-        createActivityValues.add(mEndTime.getDateTimeString());
-        createActivityValues.add(mLocation.getCity());
-        createActivityValues.add(mCategoryId);
-        createActivityValues.add(mSubCategoryId);
-        return createActivityValues;
+        keyvalue.put(RequestKeys.KEY_START_TIME, mStartTime.getDateTimeString());
+        keyvalue.put(RequestKeys.KEY_END_TIME, mEndTime.getDateTimeString());
+        // Here are city id, category id and subcategory id
+        keyvalue.put(RequestKeys.KEY_CITY, mLocation.getCityId());
+        keyvalue.put(RequestKeys.KEY_CATEGORY, mCategoryId);
+        keyvalue.put(RequestKeys.KEY_SUBCATEGORY, mSubCategoryId);
+        return keyvalue;
     }
 
     public ArrayList<String> getCreateAcitivtyKeys()

@@ -1,7 +1,9 @@
 package com.logpie.android.logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
@@ -72,9 +74,9 @@ public class ActivityManager
             JSONArray queryKey = JSONHelper.buildQueryKey(null);
             postData.put(RequestKeys.KEY_QUERY_KEY, queryKey);
 
-            ArrayList<String> column = new ArrayList<String>();
-            ArrayList<String> operator = new ArrayList<String>();
-            ArrayList<String> value = new ArrayList<String>();
+            Map<String, Map<String, String>> constraints = new HashMap<String, Map<String, String>>();
+            Map<String, String> map_lat = new HashMap<String, String>();
+            Map<String, String> map_lon = new HashMap<String, String>();
 
             lat = "1";
             lon = "2";
@@ -85,17 +87,14 @@ public class ActivityManager
                 return;
             }
 
-            column.add(RequestKeys.KEY_LATITUDE);
-            operator.add(RequestKeys.KEY_EQUAL);
-            value.add(lat);
-            column.add(RequestKeys.KEY_LONGITUDE);
-            operator.add(RequestKeys.KEY_EQUAL);
-            value.add(lon);
+            map_lat.put(RequestKeys.KEY_EQUAL, lat);
+            constraints.put(RequestKeys.KEY_LATITUDE, map_lat);
+            map_lon.put(RequestKeys.KEY_EQUAL, lon);
+            constraints.put(RequestKeys.KEY_LONGITUDE, map_lon);
 
-            switchMode(mode, column, operator, value);
+            switchMode(mode, constraints);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column, operator,
-                    value);
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
@@ -137,9 +136,8 @@ public class ActivityManager
             JSONArray queryKey = JSONHelper.buildQueryKey(null);
             postData.put(RequestKeys.KEY_QUERY_KEY, queryKey);
 
-            ArrayList<String> column = new ArrayList<String>();
-            ArrayList<String> operator = new ArrayList<String>();
-            ArrayList<String> value = new ArrayList<String>();
+            Map<String, Map<String, String>> constraints = new HashMap<String, Map<String, String>>();
+            Map<String, String> map = new HashMap<String, String>();
 
             if (city == null)
             {
@@ -160,14 +158,13 @@ public class ActivityManager
 
                 }
             }
-            column.add(RequestKeys.KEY_CITY);
-            operator.add(RequestKeys.KEY_EQUAL);
-            value.add(city);
 
-            switchMode(mode, column, operator, value);
+            map.put(RequestKeys.KEY_EQUAL, city);
+            constraints.put(RequestKeys.KEY_CITY, map);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column, operator,
-                    value);
+            switchMode(mode, constraints);
+
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
@@ -209,30 +206,28 @@ public class ActivityManager
             JSONArray queryKey = JSONHelper.buildQueryKey(null);
             postData.put(RequestKeys.KEY_QUERY_KEY, queryKey);
 
-            ArrayList<String> column = new ArrayList<String>();
-            ArrayList<String> operator = new ArrayList<String>();
-            ArrayList<String> value = new ArrayList<String>();
+            Map<String, Map<String, String>> constraints = new HashMap<String, Map<String, String>>();
+            Map<String, String> map_c = new HashMap<String, String>();
+            Map<String, String> map_s = new HashMap<String, String>();
 
             if (category == null)
             {
                 LogpieLog.e(TAG, "Cannot find the category");
                 return;
             }
-            column.add(RequestKeys.KEY_CATEGORY);
-            operator.add(RequestKeys.KEY_EQUAL);
-            value.add(category);
+
+            map_c.put(RequestKeys.KEY_EQUAL, category);
+            constraints.put(RequestKeys.KEY_CATEGORY, map_c);
 
             if (subCategory != null)
             {
-                column.add(RequestKeys.KEY_SUBCATEGORY);
-                operator.add(RequestKeys.KEY_EQUAL);
-                value.add(subCategory);
+                map_s.put(RequestKeys.KEY_EQUAL, subCategory);
+                constraints.put(RequestKeys.KEY_SUBCATEGORY, map_s);
             }
 
-            switchMode(mode, column, operator, value);
+            switchMode(mode, constraints);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(column, operator,
-                    value);
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
@@ -269,14 +264,13 @@ public class ActivityManager
         {
             postData.put(RequestKeys.KEY_REQUEST_SERVICE, RequestKeys.SERVICE_CREATE_ACTIVITY);
             postData.put(RequestKeys.KEY_REQUEST_TYPE, RequestKeys.REQUEST_TYPE_INSERT);
-            ArrayList<String> values = logpieActivity.getCreateAcitivtyValues();
-            if (values == null)
+            Map<String, String> keyvalues = logpieActivity.getCreateAcitivtyKeyValues();
+            if (keyvalues == null || keyvalues.isEmpty())
             {
-                LogpieLog.e(TAG, "The values of the LogpieActivity is null!");
+                LogpieLog.e(TAG, "The keys & values of the LogpieActivity is null!");
                 return;
             }
-            JSONArray insertKeyValuePair = JSONHelper.buildInsertKeyValue(
-                    logpieActivity.getCreateAcitivtyKeys(), values);
+            JSONArray insertKeyValuePair = JSONHelper.buildInsertKeyValue(keyvalues);
             postData.put(RequestKeys.KEY_INSERT_KEYVALUE_PAIR, insertKeyValuePair);
 
         } catch (JSONException e)
@@ -288,8 +282,7 @@ public class ActivityManager
         connection.send(callback);
     }
 
-    private void switchMode(int mode, ArrayList<String> column, ArrayList<String> operator,
-            ArrayList<String> value)
+    private void switchMode(int mode, Map<String, Map<String, String>> constraints)
     {
         switch (mode)
         {
@@ -298,9 +291,9 @@ public class ActivityManager
         case 1:
             if (mBottomActivityID > 0)
             {
-                column.add(RequestKeys.KEY_AID);
-                operator.add(RequestKeys.KEY_LESS_THAN);
-                value.add(String.valueOf(mBottomActivityID));
+                Map<String, String> map = new HashMap<String, String>();
+                map.put((RequestKeys.KEY_LESS_THAN), String.valueOf(mBottomActivityID));
+                constraints.put(RequestKeys.KEY_AID, map);
             }
             else
             {
@@ -310,9 +303,9 @@ public class ActivityManager
         case 2:
             if (mTopActivityID > 0)
             {
-                column.add(RequestKeys.KEY_AID);
-                operator.add(RequestKeys.KEY_MORE_THAN);
-                value.add(String.valueOf(mTopActivityID));
+                Map<String, String> map = new HashMap<String, String>();
+                map.put((RequestKeys.KEY_MORE_THAN), String.valueOf(mTopActivityID));
+                constraints.put(RequestKeys.KEY_AID, map);
             }
             else
             {
@@ -418,7 +411,7 @@ public class ActivityManager
                     LogpieLog.d(TAG, "Metadata has " + String.valueOf(metadata.length())
                             + " JSON objects.");
                     JSONObject o = metadata.getJSONObject(i);
-                    LogpieActivity activity = LogpieActivity.ActivityJSONHelper(o);
+                    LogpieActivity activity = LogpieActivity.activityJSONHelper(o, mContext);
                     activityList.add(activity);
                 }
                 return activityList;
