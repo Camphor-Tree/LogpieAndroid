@@ -161,8 +161,8 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                             public void run()
                             {
                                 // try to revser geocoding first.
-                                mCurrentLocationAddress = GisAPIHelper.getAddressFromLatLon(
-                                        mContext, lat, lon);
+                                mCurrentLocationAddress = GisAPIHelper.getAddressFromLatLon(lat,
+                                        lon);
                                 if (mCurrentLocationAddress == null)
                                 {
                                     LogpieLog
