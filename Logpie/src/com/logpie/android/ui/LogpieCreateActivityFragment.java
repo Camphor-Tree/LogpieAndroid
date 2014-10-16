@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.logpie.android.R;
 import com.logpie.android.exception.ThreadException;
-import com.logpie.android.gis.BaiduAPIHelper;
 import com.logpie.android.gis.GISManager;
+import com.logpie.android.gis.GisAPIHelper;
 import com.logpie.android.logic.ActivityManager;
 import com.logpie.android.logic.AuthManager;
 import com.logpie.android.logic.LogpieActivity;
@@ -161,7 +161,7 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                             public void run()
                             {
                                 // try to revser geocoding first.
-                                mCurrentLocationAddress = BaiduAPIHelper.getAddressFromLatLon(lat,
+                                mCurrentLocationAddress = GisAPIHelper.getAddressFromLatLon(lat,
                                         lon);
                                 if (mCurrentLocationAddress == null)
                                 {
@@ -472,7 +472,7 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
             // geocoding to get the coordinates for the activity
             if (!TextUtils.isEmpty(address))
             {
-                LogpieLocation location = BaiduAPIHelper.getLatLonFromAddressAndCity(address, city);
+                LogpieLocation location = GisAPIHelper.getLatLonFromAddressAndCity(address, city);
                 Double lat = location.getLatitude();
                 Double lon = location.getLongitude();
                 if (lat != null && lon != null)

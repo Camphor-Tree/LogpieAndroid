@@ -55,7 +55,7 @@ public class BaiduAPIHelper
      * @param lon
      * @return city of the given lat&lon
      */
-    public static String getCityFromLatLon(final Double lat, final Double lon)
+    /* package-private */static String getCityFromLatLon(final Double lat, final Double lon)
     {
         JSONObject result = queryBaiduServerForReverseGeocodingResult(lat, lon);
 
@@ -131,14 +131,15 @@ public class BaiduAPIHelper
         return result;
     }
 
-    public static String getAddressFromLatLon(final Double lat, final Double lon)
+    /* package-private */static String getAddressFromLatLon(final Double lat, final Double lon)
     {
         JSONObject result = queryBaiduServerForReverseGeocodingResult(lat, lon);
 
         return parseBaiduReverseGeocodingResult(result, KEY_FORMATTED_ADDRESS, null);
     }
 
-    public static LogpieLocation getLatLonFromAddressAndCity(final String address, final String city)
+    /* package-private */static LogpieLocation getLatLonFromAddressAndCity(final String address,
+            final String city)
     {
         String queryURL = buildQueryGeocodingURL(address, city);
         if (queryURL == null)
