@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import com.logpie.android.connection.GenericConnection;
 import com.logpie.android.datastorage.DataLevel;
 import com.logpie.android.datastorage.EncryptedDataStorage;
+import com.logpie.android.logic.AuthManager.AuthType;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.commonlib.EndPoint.ServiceURL;
@@ -66,14 +67,19 @@ public abstract class User
                     String accessToken = responseJSON.getString(ResponseKeys.KEY_ACCESS_TOKEN);
                     String refreshToken = responseJSON.getString(ResponseKeys.KEY_REFRESH_TOKEN);
                     String uid = responseJSON.getString(ResponseKeys.KEY_UID);
+                    String nickName = responseJSON.getString(ResponseKeys.KEY_NICKNAME);
+                    String gender = responseJSON.getString(ResponseKeys.KEY_GENDER);
+                    String city = responseJSON.getString(ResponseKeys.KEY_CITY);
+                    boolean genderBoolean = Boolean.getBoolean(gender);
                     boolean addAccountSuccess = mAuthManager.addAccount(new LogpieAccount(uid,
-                            email, "Tester name", accessToken, refreshToken));
+                            email, nickName, accessToken, refreshToken));
                     LogpieLog.d(TAG, "AuthManager addAccount result:" + addAccountSuccess);
                     if (!addAccountSuccess)
                     {
                         return;
                     }
-                    UserProfile userProfile = new UserProfile(uid, "Tester Name", true, email, null);
+                    UserProfile userProfile = new UserProfile(uid, nickName, genderBoolean, email,
+                            city);
                     setUserProfile(userProfile);
                 } catch (JSONException e)
                 {
@@ -90,7 +96,7 @@ public abstract class User
             }
         };
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService, mContext);
+        connection.initialize(ServiceURL.AuthenticationService, AuthType.NoAuth, mContext);
         JSONObject authenticateData = new JSONObject();
         try
         {
@@ -114,7 +120,7 @@ public abstract class User
         JSONObject AuthRegData = new JSONObject();
 
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService, mContext);
+        connection.initialize(ServiceURL.AuthenticationService, AuthType.NoAuth, mContext);
         try
         {
             AuthRegData.put("auth_type", "REGISTER");
@@ -360,7 +366,7 @@ public abstract class User
             final LogpieCallback callback)
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.CustomerService, mContext);
+        connection.initialize(ServiceURL.CustomerService, AuthType.NormalAuth, mContext);
         JSONArray updateKeyValueJSONArray = new JSONArray();
         JSONObject updateKeyValueJSON = new JSONObject();
         try

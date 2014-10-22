@@ -166,7 +166,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
      * STATUS_REFRESHING 和 STATUS_REFRESH_FINISHED >>>>>>> add activity list
      * fragment but still has some bugs in R file
      */
-    private int currentStatus = STATUS_REFRESH_FINISHED;;
+    private int currentStatus = STATUS_REFRESH_FINISHED;
 
     /**
      * <<<<<<< HEAD ��¼��һ�ε�״̬��ʲô����������ظ����� ======= 记录上一次的状态是什么，避免进行重复操作
@@ -438,8 +438,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             }
             else if (currentStatus == STATUS_REFRESHING)
             {
-                mDescriptionTextView.setText(LanguageHelper.getId(
-                        LanguageHelper.KEY_REFRESHING, getContext()));
+                mDescriptionTextView.setText(LanguageHelper.getId(LanguageHelper.KEY_REFRESHING,
+                        getContext()));
                 mProgressBar.setVisibility(View.VISIBLE);
                 mArrow.clearAnimation();
                 mArrow.setVisibility(View.GONE);
@@ -468,8 +468,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             fromDegrees = 0f;
             toDegrees = 180f;
         }
-        RotateAnimation animation = new RotateAnimation(fromDegrees, toDegrees, pivotX,
-                pivotY);
+        RotateAnimation animation = new RotateAnimation(fromDegrees, toDegrees, pivotX, pivotY);
         animation.setDuration(100);
         animation.setFillAfter(true);
         mArrow.startAnimation(animation);
@@ -479,8 +478,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     {
         mSystemSetting = LogpieSystemSetting.getInstance(context);
         // Attach the refresh header into the view.
-        mHeader = LayoutInflater.from(context).inflate(R.layout.layout_refresh_header,
-                null, true);
+        mHeader = LayoutInflater.from(context).inflate(R.layout.layout_refresh_header, null, true);
         mProgressBar = (ProgressBar) mHeader.findViewById(R.id.progress_bar);
         mArrow = (ImageView) mHeader.findViewById(R.id.arrow);
         mDescriptionTextView = (TextView) mHeader.findViewById(R.id.description);
@@ -496,8 +494,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
     private void setUpUpdateAtTextView(Context context)
     {
         long lastUpdateTime;
-        String lastUpdateTimeString = LogpieSystemSetting.getInstance(context)
-                .getSystemSetting(UPDATED_AT + mId);
+        String lastUpdateTimeString = LogpieSystemSetting.getInstance(context).getSystemSetting(
+                UPDATED_AT + mId);
         // If never update, set default to -1
         if (lastUpdateTimeString == null)
         {
@@ -507,8 +505,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
         {
             lastUpdateTime = Long.valueOf(lastUpdateTimeString);
         }
-        mUpdateAtTextView.setText(TimeHelper
-                .getElapsedTimeString(lastUpdateTime, context));
+        mUpdateAtTextView.setText(TimeHelper.getElapsedTimeString(lastUpdateTime, context));
     }
 
     class HideHeaderTask extends AsyncTask<Void, Integer, Integer>
@@ -583,8 +580,7 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
                 // More approaching the top margin, then reduce the
                 // accelerate_speed, but the speed should still increase.
                 // Note: the speed is negative number
-                speed = speed - (mHeaderLayoutParams.topMargin / topMargin)
-                        * INIT_ACCELERATE_SPEED;
+                speed = speed - (mHeaderLayoutParams.topMargin / topMargin) * INIT_ACCELERATE_SPEED;
                 sleep(10);
             }
             currentStatus = STATUS_REFRESHING;

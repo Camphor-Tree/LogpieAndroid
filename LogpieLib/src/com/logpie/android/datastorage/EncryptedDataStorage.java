@@ -67,10 +67,10 @@ public class EncryptedDataStorage
         return mKeyValueStorage.insert(entryBundle);
     }
 
-    public String getValue(final DataLevel datalevel, final String key)
+    public String getValue(final DataLevel dataLevel, final String key)
     {
         String value = null;
-        String rawValue = mKeyValueStorage.query(DataLevel.SYSTEM_LVL, key);
+        String rawValue = mKeyValueStorage.query(dataLevel, key);
         if (rawValue == null)
         {
             return null;

@@ -116,12 +116,6 @@ public class GenericConnection
         }
     }
 
-    public void initialize(ServiceURL serviceURL, Context context)
-    {
-        // Default is no auth.
-        initialize(serviceURL, AuthType.NoAuth, context);
-    }
-
     /**
      * Send data to the server, Based on the DoInput attribute to determine
      * whether need to return data or data. If need read response data, it will
@@ -348,7 +342,7 @@ public class GenericConnection
     private void retryConnection()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(mServiceURL, mContext);
+        connection.initialize(mServiceURL, mAuthType, mContext);
         connection.setRequestData(mRequestData);
         connection.setRetriable(false);
         connection.syncSendDataAndGetResult(mCallbackFuture);

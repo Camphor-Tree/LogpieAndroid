@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.logpie.android.connection.GenericConnection;
+import com.logpie.android.logic.AuthManager.AuthType;
 import com.logpie.android.util.JSONHelper;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
@@ -64,7 +65,7 @@ public class ActivityManager
 
         // TODO: Authenticate the token
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.ActivityService, mContext);
+        connection.initialize(ServiceURL.ActivityService, AuthType.NormalAuth, mContext);
 
         try
         {
@@ -126,7 +127,7 @@ public class ActivityManager
 
         // TODO: Authenticate the token
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.ActivityService, mContext);
+        connection.initialize(ServiceURL.ActivityService, AuthType.NormalAuth, mContext);
 
         try
         {
@@ -195,7 +196,7 @@ public class ActivityManager
 
         // TODO: Authenticate the token
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.ActivityService, mContext);
+        connection.initialize(ServiceURL.ActivityService, AuthType.NormalAuth, mContext);
 
         try
         {
@@ -258,7 +259,7 @@ public class ActivityManager
         JSONObject postData = new JSONObject();
 
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.ActivityService, mContext);
+        connection.initialize(ServiceURL.ActivityService, AuthType.NormalAuth, mContext);
 
         try
         {

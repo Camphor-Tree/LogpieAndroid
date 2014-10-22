@@ -26,7 +26,8 @@ public class BaiduAPIHelperTest extends AndroidTestCase
     {
         String address = "������ѧ";
         String city = "����";
-        LogpieLocation location = BaiduAPIHelper.getLatLonFromAddressAndCity(address, city);
+        LogpieLocation location = BaiduAPIHelper.getLatLonFromAddressAndCity(getContext(), address,
+                city);
         assertNotNull(location);
         assertEquals(location.getLongitude(), 120.62989618293);
         assertEquals(location.getLatitude(), 31.302686885837);

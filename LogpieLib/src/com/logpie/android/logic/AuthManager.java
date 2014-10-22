@@ -34,11 +34,11 @@ public class AuthManager
     }
 
     private final static String TAG = AuthManager.class.getName();
-    public final static String KEY_UID = "uid";
-    public final static String KEY_EMAIL = "email";
-    public final static String KEY_NICKNAME = "nickname";
-    public final static String KEY_ACCESS_TOKEN = "access_token";
-    public final static String KEY_REFRESH_TOKEN = "refresh_token";
+    public final static String KEY_UID = "AuthManager.uid";
+    public final static String KEY_EMAIL = "AuthManager.email";
+    public final static String KEY_NICKNAME = "AuthManager.nickname";
+    public final static String KEY_ACCESS_TOKEN = "AuthManager.access_token";
+    public final static String KEY_REFRESH_TOKEN = "AuthManager.refresh_token";
 
     private static AuthManager sAuthManager;
     private LogpieAccount mAccount;
@@ -74,11 +74,27 @@ public class AuthManager
                 return null;
             }
             String email = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
+            if (email == null)
+            {
+                return null;
+            }
             String nickname = mStorage.getValue(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);
+            if (nickname == null)
+            {
+                return null;
+            }
             String accessToken = mStorage
                     .getValue(DataLevel.USER_LVL, AuthManager.KEY_ACCESS_TOKEN);
+            if (accessToken == null)
+            {
+                return null;
+            }
             String refreshToken = mStorage.getValue(DataLevel.USER_LVL,
                     AuthManager.KEY_REFRESH_TOKEN);
+            if (refreshToken == null)
+            {
+                return null;
+            }
             mAccount = new LogpieAccount(userId, email, nickname, accessToken, refreshToken);
         }
         return mAccount;
@@ -246,7 +262,8 @@ public class AuthManager
         try
         {
             GenericConnection connection = new GenericConnection();
-            connection.initialize(ServiceURL.AuthenticationService, mContext);
+            connection.initialize(ServiceURL.AuthenticationService, AuthType.TokenExchange,
+                    mContext);
             tokenExchangeData.put(RequestKeys.KEY_REQUEST_TYPE, "TOKEN_EXCHANGE");
             tokenExchangeData.put(RequestKeys.KEY_DECLARE_UID, getUID());
             tokenExchangeData.put(RequestKeys.KEY_ACCESS_TOKEN, getAccessToken());

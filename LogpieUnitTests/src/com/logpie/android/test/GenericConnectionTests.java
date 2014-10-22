@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.test.AndroidTestCase;
 
 import com.logpie.android.connection.GenericConnection;
+import com.logpie.android.logic.AuthManager.AuthType;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.commonlib.EndPoint.ServiceURL;
@@ -83,7 +84,7 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testRocketService()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.RocektService, this.getContext());
+        connection.initialize(ServiceURL.RocektService, AuthType.NoAuth, this.getContext());
         try
         {
             connection.setRequestData(new JSONObject(testRocketData));
@@ -112,7 +113,7 @@ public class GenericConnectionTests extends AndroidTestCase
     private void testRocketService(final CountDownLatch latch, final AtomicInteger countSuccess)
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.RocektService, this.getContext());
+        connection.initialize(ServiceURL.RocektService, AuthType.NoAuth, this.getContext());
         try
         {
             connection.setRequestData(new JSONObject(testRocketData));
@@ -141,7 +142,7 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testAuthenticationServiceRegister()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService, this.getContext());
+        connection.initialize(ServiceURL.AuthenticationService, AuthType.NoAuth, this.getContext());
         try
         {
             JSONObject testAuthRegData = new JSONObject();
@@ -177,7 +178,7 @@ public class GenericConnectionTests extends AndroidTestCase
     public void testAuthenticationServiceLogin()
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.AuthenticationService, this.getContext());
+        connection.initialize(ServiceURL.AuthenticationService, AuthType.NoAuth, this.getContext());
         try
         {
             JSONObject testAuthLoginData = new JSONObject();

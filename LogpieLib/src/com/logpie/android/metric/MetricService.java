@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.logpie.android.connection.GenericConnection;
+import com.logpie.android.logic.AuthManager.AuthType;
 import com.logpie.android.util.BuildInfo;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
@@ -100,7 +101,8 @@ public class MetricService extends IntentService
     private void sendMetrics(JSONObject metricJSON)
     {
         GenericConnection connection = new GenericConnection();
-        connection.initialize(ServiceURL.RocektService, this.getApplicationContext());
+        connection.initialize(ServiceURL.RocektService, AuthType.NoAuth,
+                this.getApplicationContext());
         connection.setRequestData(metricJSON);
         connection.send(new LogpieCallback()
         {
