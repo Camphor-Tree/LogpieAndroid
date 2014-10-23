@@ -31,6 +31,7 @@ import com.logpie.android.logic.ActivityManager.ActivityCallback;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.NormalUser;
 import com.logpie.android.logic.User;
+import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.ui.helper.LogpieColorHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper;
@@ -48,6 +49,7 @@ public class ActivityListFragment extends ListFragment
 {
     private static final String TAG = ActivityListFragment.class.getName();
 
+    private Activity mActivity;
     private LogpieRefreshLayout mRefreshableView;
     private ListView mListView;
     private ActivityAdapter mArrayAdapter;
@@ -68,9 +70,9 @@ public class ActivityListFragment extends ListFragment
         super.onCreate(savedInstanceState);
         // Set option menu visible
         setHasOptionsMenu(true);
-
-        mUser = NormalUser.getInstance(getActivity());
-        mActivityManager = ActivityManager.getInstance(getActivity());
+        mActivity = getActivity();
+        mUser = NormalUser.getInstance(mActivity);
+        mActivityManager = ActivityManager.getInstance(mActivity);
 
         ActionBar bar = getActivity().getActionBar();
         mTabName = bar.getSelectedTab().getText().toString();
@@ -177,6 +179,20 @@ public class ActivityListFragment extends ListFragment
             mSubcategory = data.getStringExtra(CategoryPickerDialog.KEY_SUBCATEGORY_ID);
             new FetchItemsTask().execute(mTabName);
         }
+
+    }
+
+    @Override
+    public void onListItemClick(final ListView listView, View view, int position, long id)
+    {
+        LogpieActivity activity = ((ActivityAdapter) getListAdapter()).getItem(position);
+        if (activity != null)
+        {
+            ActivityOpenHelper.openActivityAndPassParameter(mActivity,
+                    LogpieActivityDetailActivity.class,
+                    LogpieActivityDetailActivity.KEY_DETAIL_ACTIVITY, activity);
+        }
+
     }
 
     @Override
