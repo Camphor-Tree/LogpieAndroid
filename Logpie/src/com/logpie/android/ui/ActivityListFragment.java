@@ -55,7 +55,7 @@ public class ActivityListFragment extends ListFragment
 
     private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
-    private User user;
+    private User mUser;
     private String mCity;
     private String mCategory;
     private String mSubcategory;
@@ -69,7 +69,7 @@ public class ActivityListFragment extends ListFragment
         // Set option menu visible
         setHasOptionsMenu(true);
 
-        user = NormalUser.getInstance(getActivity());
+        mUser = NormalUser.getInstance(getActivity());
         mActivityManager = ActivityManager.getInstance(getActivity());
 
         ActionBar bar = getActivity().getActionBar();
@@ -138,7 +138,7 @@ public class ActivityListFragment extends ListFragment
                     e.printStackTrace();
                 }
             }
-        }, 0);
+        }, mTabName);
 
         return v;
     }
@@ -193,7 +193,6 @@ public class ActivityListFragment extends ListFragment
         switch (item.getItemId())
         {
         case R.id.action_create_activity:
-
             return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -312,21 +311,21 @@ public class ActivityListFragment extends ListFragment
 
             if (tab.equals(nearby))
             {
-                ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null, null,
+                ActivityListFragment.this.mActivityManager.getNearbyActivityList(mUser, null, null,
                         ActivityManager.MODE_INITIAL,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(city))
             {
-                ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
+                ActivityListFragment.this.mActivityManager.getActivityListByCity(mUser,
                         ActivityManager.MODE_INITIAL, mCity,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(category))
             {
-                ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
+                ActivityListFragment.this.mActivityManager.getActivityListByCategory(mUser,
                         ActivityManager.MODE_INITIAL, mCategory, mSubcategory,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));

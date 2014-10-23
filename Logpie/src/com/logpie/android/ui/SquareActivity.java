@@ -17,7 +17,6 @@ import com.logpie.android.logic.CategoryManager;
 import com.logpie.android.logic.CityManager;
 import com.logpie.android.logic.LogpieAccount;
 import com.logpie.android.ui.helper.ActivityOpenHelper;
-import com.logpie.android.ui.helper.LanguageHelper;
 import com.logpie.android.ui.operation.BaseSquareMode;
 import com.logpie.android.ui.operation.CategoryMode;
 import com.logpie.android.ui.operation.CityMode;
@@ -65,7 +64,7 @@ public class SquareActivity extends ActionBarActivity
             // android.R.id.content as the container for each fragment
 
             // initialize category picker data and city picker data
-            CategoryManager.getInstance(this, LanguageHelper.sIsChinese).setData();
+            CategoryManager.getInstance(this).setData();
             CityManager.getInstance(this).setData();
         }
     }

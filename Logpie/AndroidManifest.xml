@@ -21,7 +21,8 @@
 		android:theme="@style/LogpieBaseTheme" >
 		<activity
 			android:name="com.logpie.android.ui.SquareActivity"
-			android:theme="@style/Theme.AppCompat.Light" >
+			android:theme="@style/Theme.AppCompat.Light"
+			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -30,19 +31,23 @@
 		</activity>
 		<activity
 			android:name="com.logpie.android.ui.AuthActivity"
-			android:theme="@style/LogpieNoTileBarTheme" >
+			android:theme="@style/LogpieNoTileBarTheme"
+			android:screenOrientation="portrait">
 		</activity>
 		<activity
 			android:name="com.logpie.android.ui.LogpieActivityDetailActivity"
-			android:theme="@style/LogpieBaseTheme" >
+			android:theme="@style/LogpieBaseTheme"
+			android:screenOrientation="portrait">
 		</activity>
 		<activity
             android:name="com.logpie.android.ui.LogpieSettingsActivity"
-            android:theme="@style/LogpieBaseTheme" >
+            android:theme="@style/LogpieBaseTheme"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.logpie.android.ui.LogpieCreateActivityActivity"
-            android:theme="@style/LogpieBaseTheme" >
+            android:theme="@style/LogpieBaseTheme"
+            android:screenOrientation="portrait">
         </activity>
 		
 		

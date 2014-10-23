@@ -25,6 +25,7 @@ public class LanguageHelper
     /**
      * Key for every Logpie system setting
      */
+    // TODO: deprecate this, move this to logpie lib.
     public final static String KEY_LANGUAGE = "com.logpie.android.language";
     public final static String ENGLISH = "english";
     public final static String CHINESE = "chinese";

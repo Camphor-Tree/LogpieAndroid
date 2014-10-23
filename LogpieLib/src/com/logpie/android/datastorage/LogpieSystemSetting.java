@@ -7,8 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.logpie.android.datastorage.DataLevel;
-import com.logpie.android.datastorage.EncryptedDataStorage;
 import com.logpie.android.util.LogpieLog;
 
 /**
@@ -24,6 +22,10 @@ public class LogpieSystemSetting
 
     private EncryptedDataStorage mEncryptedDataStorage;
     private ConcurrentHashMap<String, String> mSettingsMap;
+
+    public final static String KEY_LANGUAGE = "com.logpie.android.language";
+    public final static String ENGLISH = "english";
+    public final static String CHINESE = "chinese";
 
     private LogpieSystemSetting(Context context)
     {
@@ -71,14 +73,12 @@ public class LogpieSystemSetting
      */
     public boolean setSystemSetting(final String key, final String value)
     {
-        if (mSettingsMap.containsKey(key)
-                && TextUtils.equals(mSettingsMap.get(key), value))
+        if (mSettingsMap.containsKey(key) && TextUtils.equals(mSettingsMap.get(key), value))
         {
             // If the cache key,value already exist, then just return;
             return true;
         }
-        boolean success = mEncryptedDataStorage.setKeyValue(DataLevel.SYSTEM_LVL, key,
-                value);
+        boolean success = mEncryptedDataStorage.setKeyValue(DataLevel.SYSTEM_LVL, key, value);
         if (success)
         {
             mSettingsMap.put(key, value);

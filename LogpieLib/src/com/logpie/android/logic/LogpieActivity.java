@@ -14,7 +14,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
 import com.logpie.commonlib.RequestKeys;
@@ -146,18 +145,16 @@ public class LogpieActivity implements Parcelable
             LogpieDateTime endTime = getFormatDate(data.getString(ResponseKeys.KEY_END_TIME));
             LogpieDateTime createTime = getFormatDate(data.getString(ResponseKeys.KEY_CREATE_TIME));
             String categoryId = data.getString(ResponseKeys.KEY_CATEGORY_ID);
-            boolean isCN = LogpieSystemSetting.getInstance(context).getSystemSetting(KEY_LANGUAGE)
-                    .equals("chinese");
-            String category = CategoryManager.getInstance(context, isCN)
-                    .getCategoryById(categoryId);
+
+            String category = CategoryManager.getInstance(context).getCategoryById(categoryId);
 
             // Optional parameters
             String userAvatar = data.has(ResponseKeys.KEY_AID) ? data
                     .getString(ResponseKeys.KEY_AID) : DEFAULT_AVATAR;
             String subCategoryId = data.has(ResponseKeys.KEY_SUBCATEGORY_ID) ? data
                     .getString(ResponseKeys.KEY_SUBCATEGORY_ID) : null;
-            String subCategory = subCategoryId == null ? null : CategoryManager.getInstance(
-                    context, isCN).getSubcategoryById(subCategoryId);
+            String subCategory = subCategoryId == null ? null : CategoryManager
+                    .getInstance(context).getSubcategoryById(subCategoryId);
             int countLike = data.has(ResponseKeys.KEY_COUNT_LIKE) ? Integer.valueOf(data
                     .getString(ResponseKeys.KEY_COUNT_LIKE)) : 0;
             int countDislike = data.has(ResponseKeys.KEY_COUNT_DISLIKE) ? Integer.valueOf(data

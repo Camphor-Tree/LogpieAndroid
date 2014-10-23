@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import com.logpie.android.datastorage.DataStorage;
 import com.logpie.android.datastorage.DatabaseSchema;
+import com.logpie.android.datastorage.LogpieSystemSetting;
 import com.logpie.android.util.LogpieLog;
 
 public class CategoryManager
@@ -26,34 +27,33 @@ public class CategoryManager
     private static CategoryManager sCategoryManager;
 
     private Context mContext;
-    private boolean mIsCN;
     private List<Map<String, String>> mCategoryCNList;
     private List<Map<String, String>> mCategoryUSList;
     private List<List<Map<String, String>>> mSubcategoryCNList;
     private List<List<Map<String, String>>> mSubcategoryUSList;
 
-    private CategoryManager(Context context, boolean isCN)
+    private CategoryManager(Context context)
     {
         mContext = context;
-        mIsCN = isCN;
         mCategoryCNList = new ArrayList<Map<String, String>>();
         mCategoryUSList = new ArrayList<Map<String, String>>();
         mSubcategoryCNList = new ArrayList<List<Map<String, String>>>();
         mSubcategoryUSList = new ArrayList<List<Map<String, String>>>();
     }
 
-    public static synchronized CategoryManager getInstance(Context context, boolean isCN)
+    public static synchronized CategoryManager getInstance(Context context)
     {
         if (sCategoryManager == null)
         {
-            sCategoryManager = new CategoryManager(context, isCN);
+            sCategoryManager = new CategoryManager(context);
         }
         return sCategoryManager;
     }
 
     public List<Map<String, String>> getCategoryList()
     {
-        if (mIsCN)
+        boolean isCN = getCurrentLanguage();
+        if (isCN)
         {
             if (mCategoryCNList == null || mCategoryCNList.size() == 0)
             {
@@ -73,7 +73,8 @@ public class CategoryManager
 
     public List<List<Map<String, String>>> getSubcategoryList()
     {
-        if (mIsCN)
+        boolean isCN = getCurrentLanguage();
+        if (isCN)
         {
             if (mSubcategoryCNList == null || mSubcategoryCNList.size() == 0)
             {
@@ -91,9 +92,18 @@ public class CategoryManager
         }
     }
 
+    private boolean getCurrentLanguage()
+    {
+        boolean isCN = LogpieSystemSetting.getInstance(mContext)
+                .getSystemSetting(LogpieSystemSetting.KEY_LANGUAGE)
+                .equals(LogpieSystemSetting.CHINESE);
+        return isCN;
+    }
+
     public String getCategoryById(String categoryId)
     {
-        if (mIsCN)
+        boolean isCN = getCurrentLanguage();
+        if (isCN)
         {
             for (Map<String, String> entry : mCategoryCNList)
             {
@@ -118,7 +128,8 @@ public class CategoryManager
 
     public String getSubcategoryById(String subcategoryId)
     {
-        if (mIsCN)
+        boolean isCN = getCurrentLanguage();
+        if (isCN)
         {
             for (List<Map<String, String>> list : mSubcategoryCNList)
             {
@@ -225,7 +236,7 @@ public class CategoryManager
                         }
                         HashMap<String, String> hs_s_c = new HashMap<String, String>();
                         hs_s_c.put(KEY_SUBCATEGORY_ID, subcategory_id);
-                        hs_s_c.put(KEY_CATEGORY_STRING_CN, subcategory_cn);
+                        hs_s_c.put(KEY_SUBCATEGORY_STRING_CN, subcategory_cn);
                         HashMap<String, String> hs_s_u = new HashMap<String, String>();
                         hs_s_u.put(KEY_SUBCATEGORY_ID, subcategory_id);
                         hs_s_u.put(KEY_SUBCATEGORY_STRING_US, subcategory_us);

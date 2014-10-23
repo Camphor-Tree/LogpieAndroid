@@ -44,7 +44,7 @@ public class CategoryPickerDialog extends DialogFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mCategoryManager = CategoryManager.getInstance(getActivity(), LanguageHelper.sIsChinese);
+        mCategoryManager = CategoryManager.getInstance(getActivity());
         mGroupData = mCategoryManager.getCategoryList();
         mChildData = mCategoryManager.getSubcategoryList();
     }
