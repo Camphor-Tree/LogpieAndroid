@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -61,8 +63,25 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
             Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_settings, parent, false);
+        // Setup all the setting unit
         setupSettingUnit(view);
+        // Setup logout button
+        setupLogoutButton(view);
         return view;
+    }
+
+    private void setupLogoutButton(View parent)
+    {
+        Button logoutButton = (Button) parent.findViewById(R.id.settings_logout);
+        logoutButton.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mUser.logout();
+                ActivityOpenHelper.restartApplication(mContext);
+            }
+        });
     }
 
     private static class SettingUnit

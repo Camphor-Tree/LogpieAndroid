@@ -210,5 +210,15 @@
 			android:layout_centerVertical="true" >
 		</TextView>
 	</RelativeLayout>
+	
+	
+
+        <Button
+            android:id="@+id/settings_logout"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="12dp" />
+
 
 </RelativeLayout>

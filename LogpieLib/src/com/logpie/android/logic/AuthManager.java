@@ -155,7 +155,6 @@ public class AuthManager
         {
             return;
         }
-
         mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_UID);
         mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_EMAIL);
         mStorage.delete(DataLevel.USER_LVL, AuthManager.KEY_NICKNAME);

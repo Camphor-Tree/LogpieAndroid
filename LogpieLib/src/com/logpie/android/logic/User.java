@@ -231,6 +231,15 @@ public abstract class User
         }
     }
 
+    public void logout()
+    {
+        cleanUserProfile();
+        if (mAuthManager != null)
+        {
+            mAuthManager.clearAccount();
+        }
+    }
+
     public void changePassword()
     {
 
@@ -269,13 +278,16 @@ public abstract class User
         return mUserProfile;
     }
 
-    public void cleanUserProfile()
+    private void cleanUserProfile()
     {
-        mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_ID);
-        mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_NICKNAME);
-        mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_GENDER);
-        mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_EMAIL);
-        mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_CITY);
+        if (mDataStorage != null)
+        {
+            mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_ID);
+            mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_NICKNAME);
+            mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_GENDER);
+            mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_EMAIL);
+            mDataStorage.delete(DataLevel.USER_LVL, KEY_USER_CITY);
+        }
         mUserProfile = null;
     }
 
