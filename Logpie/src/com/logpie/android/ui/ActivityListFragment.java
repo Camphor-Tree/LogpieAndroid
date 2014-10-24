@@ -185,12 +185,15 @@ public class ActivityListFragment extends ListFragment
     @Override
     public void onListItemClick(final ListView listView, View view, int position, long id)
     {
-        LogpieActivity activity = ((ActivityAdapter) getListAdapter()).getItem(position);
-        if (activity != null)
+        if (mArrayAdapter != null)
         {
-            ActivityOpenHelper.openActivityAndPassParameter(mActivity,
-                    LogpieActivityDetailActivity.class,
-                    LogpieActivityDetailActivity.KEY_DETAIL_ACTIVITY, activity);
+            LogpieActivity activity = ((ActivityAdapter) mArrayAdapter).getItem(position);
+            if (activity != null)
+            {
+                ActivityOpenHelper.openActivityAndPassParameter(mActivity,
+                        LogpieActivityDetailActivity.class,
+                        LogpieActivityDetailActivity.KEY_DETAIL_ACTIVITY, activity);
+            }
         }
 
     }
@@ -327,22 +330,21 @@ public class ActivityListFragment extends ListFragment
 
             if (tab.equals(nearby))
             {
-                ActivityListFragment.this.mActivityManager.getNearbyActivityList(mUser, null, null,
+                mActivityManager.getNearbyActivityList(mUser, null, null,
                         ActivityManager.MODE_INITIAL,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(city))
             {
-                ActivityListFragment.this.mActivityManager.getActivityListByCity(mUser,
-                        ActivityManager.MODE_INITIAL, mCity,
+                mActivityManager.getActivityListByCity(mUser, ActivityManager.MODE_INITIAL, mCity,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(category))
             {
-                ActivityListFragment.this.mActivityManager.getActivityListByCategory(mUser,
-                        ActivityManager.MODE_INITIAL, mCategory, mSubcategory,
+                mActivityManager.getActivityListByCategory(mUser, ActivityManager.MODE_INITIAL,
+                        mCategory, mSubcategory,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }

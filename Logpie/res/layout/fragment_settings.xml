@@ -218,6 +218,8 @@
             android:layout_width="fill_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
+            android:background="#EDEDED"
+            android:alpha="0.8"
             android:layout_marginBottom="12dp" />
 
 

@@ -76,6 +76,7 @@ public class LanguageHelper
     public final static String KEY_SYSTEM_LANGUAGE_SETTING_LABEL = "settings_system_language_setting_label";
     public final static String KEY_SYSTEM_VERSION_SETTING_LABEL = "settings_system_version_setting_label";
     public final static String KEY_SYSTEM_ABOUT_SETTING_LABEL = "settings_system_about_setting_label";
+    public final static String KEY_LOGOUT_LABEL = "settings_logout_label";
 
     // For dialog edit text hint
     public final static String KEY_SETTING_NICKNAME_DIALOG_HINT = "settings_nickname_dialog_hint";
@@ -237,6 +238,8 @@ public class LanguageHelper
         case KEY_SYSTEM_ABOUT_SETTING_LABEL:
             return switchLanguage(R.string.settings_label_system_about_cn,
                     R.string.settings_label_system_about_us);
+        case KEY_LOGOUT_LABEL:
+            return switchLanguage(R.string.settings_logout_cn, R.string.settings_logout_us);
 
             // Setting Page nickname Dialog edit text hint
         case KEY_SETTING_NICKNAME_DIALOG_HINT:

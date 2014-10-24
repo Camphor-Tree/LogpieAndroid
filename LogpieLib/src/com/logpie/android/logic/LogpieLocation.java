@@ -184,8 +184,22 @@ public class LogpieLocation implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeDouble(mLatitude.doubleValue());
-        dest.writeDouble(mLongitude.doubleValue());
+        if (mLatitude != null)
+        {
+            dest.writeDouble(mLatitude.doubleValue());
+        }
+        else
+        {
+            dest.writeValue(null);
+        }
+        if (mLongitude != null)
+        {
+            dest.writeDouble(mLongitude.doubleValue());
+        }
+        else
+        {
+            dest.writeValue(null);
+        }
         dest.writeString(mAddress);
         dest.writeString(mCity);
         dest.writeString(mCityId);
@@ -193,8 +207,17 @@ public class LogpieLocation implements Parcelable
 
     private LogpieLocation(Parcel in)
     {
-        mLatitude = Double.valueOf(in.readDouble());
-        mLongitude = Double.valueOf(in.readDouble());
+        Object lat = in.readValue(ClassLoader.getSystemClassLoader());
+        if (lat instanceof Double)
+        {
+            mLatitude = (Double) lat;
+        }
+
+        Object lon = in.readValue(ClassLoader.getSystemClassLoader());
+        if (lat instanceof Double)
+        {
+            mLongitude = (Double) lon;
+        }
         mAddress = in.readString();
         mCity = in.readString();
         mCityId = in.readString();

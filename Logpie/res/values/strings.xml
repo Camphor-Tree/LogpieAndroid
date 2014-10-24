@@ -99,6 +99,8 @@
 	<string name="settings_label_system_version_us">Version</string>
 	<string name="settings_label_system_about_cn">关于 Logpie</string>
 	<string name="settings_label_system_about_us">About Logpie</string>
+	<string name="settings_logout_cn">退出登录</string>
+	<string name="settings_logout_us">Logout</string>
 	<!-- Settings dialog edit text hint -->
 	<string name="settings_dialog_user_nickname_hint_cn">输入一个好记的昵称</string>
 	<string name="settings_dialog_user_nickname_hint_us">Enter a name easy to remember</string>

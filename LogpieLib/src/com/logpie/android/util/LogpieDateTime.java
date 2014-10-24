@@ -181,6 +181,7 @@ public class LogpieDateTime implements Parcelable
         dest.writeInt(mDay);
         dest.writeInt(mHour);
         dest.writeInt(mMinute);
+        dest.writeSerializable(mDate);
     }
 
     private LogpieDateTime(Parcel in)
@@ -190,5 +191,6 @@ public class LogpieDateTime implements Parcelable
         mDay = in.readInt();
         mHour = in.readInt();
         mMinute = in.readInt();
+        mDate = (Date) in.readSerializable();
     }
 }

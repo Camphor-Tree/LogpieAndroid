@@ -73,6 +73,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
     private void setupLogoutButton(View parent)
     {
         Button logoutButton = (Button) parent.findViewById(R.id.settings_logout);
+        logoutButton.setText(LanguageHelper.getId(LanguageHelper.KEY_LOGOUT_LABEL, mContext));
         logoutButton.setOnClickListener(new OnClickListener()
         {
             @Override

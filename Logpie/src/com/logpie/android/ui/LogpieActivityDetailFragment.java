@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.logpie.android.R;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.ui.base.LogpieBaseFragment;
+import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
 
 /**
@@ -75,9 +76,27 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         // Set activity descryption
         mUIHolder.mActivityDescryptionTextView.setText(mLogpieActivity.getDescription());
         // Set the activity time
-        String startTime = mLogpieActivity.getStartTime().getDateTimeString();
-        String endTime = mLogpieActivity.getEndTime().getDateTimeString();
-        mUIHolder.mActivityTimeTextView.setText(startTime + " ~ " + endTime);
+        String startTimeString;
+        LogpieDateTime startLogpieDateTime = mLogpieActivity.getStartTime();
+        if (startLogpieDateTime != null)
+        {
+            startTimeString = startLogpieDateTime.getDateTimeString();
+        }
+        else
+        {
+            startTimeString = "-";
+        }
+        String endTimeString;
+        LogpieDateTime endLogpieDateTime = mLogpieActivity.getEndTime();
+        if (endLogpieDateTime != null)
+        {
+            endTimeString = endLogpieDateTime.getDateTimeString();
+        }
+        else
+        {
+            endTimeString = "-";
+        }
+        mUIHolder.mActivityTimeTextView.setText(startTimeString + " ~ " + endTimeString);
         // Set the activity location
         mUIHolder.mActivityLocationTextView.setText(mLogpieActivity.getLocation().getAddress());
         // Set the activity count like

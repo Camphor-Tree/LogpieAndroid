@@ -366,30 +366,39 @@ public class LogpieActivity implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(mActivityID);
+        dest.writeString(mUserAvatar);
         dest.writeString(mUserID);
         dest.writeString(mUserName);
         dest.writeString(mDescription);
+        dest.writeString(mCategoryId);
+        dest.writeString(mCategoryString);
+        dest.writeString(mSubCategoryId);
+        dest.writeString(mSubCategoryString);
+        dest.writeParcelable(mLocation, flags);
         dest.writeParcelable(mStartTime, flags);
         dest.writeParcelable(mEndTime, flags);
         dest.writeParcelable(mCreateTime, flags);
         dest.writeInt(mCountLike);
         dest.writeInt(mCountDislike);
-        dest.writeParcelable(mLocation, flags);
-
     }
 
     private LogpieActivity(Parcel in)
     {
         mActivityID = in.readString();
+        mUserAvatar = in.readString();
         mUserID = in.readString();
         mUserName = in.readString();
         mDescription = in.readString();
+        mCategoryId = in.readString();
+        mCategoryString = in.readString();
+        mSubCategoryId = in.readString();
+        mSubCategoryString = in.readString();
+        mLocation = in.readParcelable(getClass().getClassLoader());
         mStartTime = in.readParcelable(getClass().getClassLoader());
         mEndTime = in.readParcelable(getClass().getClassLoader());
         mCreateTime = in.readParcelable(getClass().getClassLoader());
         mCountLike = in.readInt();
         mCountDislike = in.readInt();
-        mLocation = in.readParcelable(getClass().getClassLoader());
     }
 
     public Map<String, String> getCreateAcitivtyKeyValues()
