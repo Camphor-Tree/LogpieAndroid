@@ -311,7 +311,7 @@ public abstract class User
 
     }
 
-    public void commentOrganization(Organization organization, Comment comment)
+    public void commentOrganization(Organization organization, CommentManager comment)
     {
 
     }
@@ -343,7 +343,7 @@ public abstract class User
     {
     }
 
-    public void commentLogpieActivity(LogpieActivity logpieActivity, Comment comment)
+    public void commentLogpieActivity(LogpieActivity logpieActivity, CommentManager comment)
     {
     }
 
@@ -359,7 +359,7 @@ public abstract class User
     {
     }
 
-    public void reportLogpieActivity(LogpieActivity logpieActivity, Comment comment)
+    public void reportLogpieActivity(LogpieActivity logpieActivity, CommentManager comment)
     {
     }
 

@@ -598,7 +598,7 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
         private TextView mCategoryTextView;
     }
 
-    class CreateActivityTask extends AsyncTask<Object, Object, Object>
+    private class CreateActivityTask extends AsyncTask<Object, Object, Object>
     {
         @Override
         protected Object doInBackground(Object... params)

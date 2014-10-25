@@ -47,7 +47,7 @@ public class LogpieActivity implements Parcelable
     private LogpieDateTime mEndTime;
     private int mCountLike;
     private int mCountDislike;
-    private List<Comment> mComments;
+    private List<CommentManager> mComments;
 
     /**
      * This is used to create a new activity
@@ -89,14 +89,14 @@ public class LogpieActivity implements Parcelable
         mSubCategoryString = null;
         mCountLike = 0;
         mCountDislike = 0;
-        mComments = new ArrayList<Comment>();
+        mComments = new ArrayList<CommentManager>();
     }
 
     public LogpieActivity(String aid, String uid, String userName, String userAvatar,
             String description, LogpieLocation location, LogpieDateTime startTime,
             LogpieDateTime endTime, LogpieDateTime createTime, String categoryId, String category,
             String subCategoryId, String subCategory, int countLike, int countDislike,
-            List<Comment> comments)
+            List<CommentManager> comments)
     {
         mActivityID = aid;
         mUserID = uid;
@@ -113,7 +113,7 @@ public class LogpieActivity implements Parcelable
         mSubCategoryString = subCategory;
         mCountLike = countLike;
         mCountDislike = countDislike;
-        mComments = new ArrayList<Comment>(comments);
+        mComments = new ArrayList<CommentManager>(comments);
     }
 
     public static LogpieActivity activityJSONHelper(JSONObject data, Context context)
@@ -159,7 +159,7 @@ public class LogpieActivity implements Parcelable
                     .getString(ResponseKeys.KEY_COUNT_LIKE)) : 0;
             int countDislike = data.has(ResponseKeys.KEY_COUNT_DISLIKE) ? Integer.valueOf(data
                     .getString(ResponseKeys.KEY_COUNT_DISLIKE)) : 0;
-            List<Comment> comments = new ArrayList<Comment>();
+            List<CommentManager> comments = new ArrayList<CommentManager>();
             if (data.has(ResponseKeys.KEY_COMMENT))
             {
                 // TODO: build comments
@@ -333,12 +333,12 @@ public class LogpieActivity implements Parcelable
         this.mCountDislike = mCountDislike;
     }
 
-    public List<Comment> getComments()
+    public List<CommentManager> getComments()
     {
         return mComments;
     }
 
-    public void setComments(List<Comment> mComments)
+    public void setComments(List<CommentManager> mComments)
     {
         this.mComments = mComments;
     }

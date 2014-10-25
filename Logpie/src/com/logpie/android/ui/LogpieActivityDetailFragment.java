@@ -1,18 +1,28 @@
 package com.logpie.android.ui;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.logpie.android.R;
+import com.logpie.android.logic.ActivityManager;
+import com.logpie.android.logic.CommentManager;
 import com.logpie.android.logic.LogpieActivity;
+import com.logpie.android.logic.NormalUser;
+import com.logpie.android.logic.User;
 import com.logpie.android.ui.base.LogpieBaseFragment;
+import com.logpie.android.ui.helper.LogpieToastHelper;
 import com.logpie.android.util.LogpieDateTime;
 import com.logpie.android.util.LogpieLog;
 
@@ -30,12 +40,18 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
     private Activity mActivity;
     private LogpieActivity mLogpieActivity;
     private DetailActivityUIHolder mUIHolder;
+    private ActivityManager mActivityManager;
+    private CommentManager mCommentManager;
+    private User mUser;
 
     @Override
     public void handleOnCreate(Bundle savedInstanceState)
     {
         mActivity = getActivity();
         mLogpieActivity = getDetailActivity();
+        mActivityManager = ActivityManager.getInstance(mActivity.getApplicationContext());
+        mCommentManager = CommentManager.getInstance(mActivity.getApplicationContext());
+        mUser = NormalUser.getInstance(mActivity.getApplicationContext());
     }
 
     @Override
@@ -46,6 +62,7 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         // Set up the UI components, store them in mUIHolder
         setUpUIHolder(view);
         setupView();
+        setupCommentButton();
 
         return view;
     }
@@ -66,6 +83,34 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
             throw new IllegalArgumentException(
                     "Must pass a LogpieActivity instance to this fragment!");
         }
+    }
+
+    private void setupCommentButton()
+    {
+        mUIHolder.mCommentButton.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String comment = mUIHolder.mCommentEditText.getText().toString();
+                if (comment != null)
+                {
+                    // TODO should check the comment content if legal.
+                    comment = comment.trim();
+                }
+                if (TextUtils.isEmpty(comment.trim()))
+                {
+                    LogpieToastHelper.showShortMessage(mActivity, "Comment cannot be null");
+                    return;
+                }
+
+                // Lock the edit text and button
+                disableCommentView();
+
+                AddCommentTask addCommentTask = new AddCommentTask();
+                addCommentTask.execute(comment);
+            }
+        });
     }
 
     private void setupView()
@@ -127,6 +172,9 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         mUIHolder.mActivityCommentsLinearLayout = (LinearLayout) view
                 .findViewById(R.id.linearlayout_detail_activity_comments);
 
+        mUIHolder.mCommentEditText = (EditText) view.findViewById(R.id.edittext_comment);
+        mUIHolder.mCommentButton = (Button) view.findViewById(R.id.button_comment);
+
     }
 
     private static class DetailActivityUIHolder
@@ -139,5 +187,63 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         TextView mActivityCountLikeTextView;
         TextView mActivityCountDislikeTextView;
         LinearLayout mActivityCommentsLinearLayout;
+
+        EditText mCommentEditText;
+        Button mCommentButton;
+    }
+
+    private class AddCommentTask extends AsyncTask<String, Object, Boolean>
+    {
+
+        @Override
+        protected Boolean doInBackground(String... comment)
+        {
+            if (mUser == null || mUser.getUserProfile() == null)
+            {
+                LogpieLog.e(TAG, "User or user profile is null");
+                return false;
+            }
+            if (mLogpieActivity == null)
+            {
+                LogpieLog.e(TAG, "Activity is null");
+                return false;
+            }
+
+            if (comment == null)
+            {
+                LogpieLog.e(TAG, "Comment is null");
+                return false;
+            }
+            return mCommentManager.writeComment(mUser.getUserProfile().getUserId(),
+                    mLogpieActivity.getActivityID(), comment[0]);
+        }
+
+        protected void onPostExecute(Boolean success)
+        {
+            if (success.booleanValue())
+            {
+                LogpieLog.d(TAG, "Add comment success");
+                enableCommentView();
+            }
+            else
+            {
+                LogpieLog.d(TAG, "Add comment fail");
+                enableCommentView();
+            }
+
+        }
+
+    }
+
+    private void disableCommentView()
+    {
+        mUIHolder.mCommentEditText.setEnabled(false);
+        mUIHolder.mCommentButton.setClickable(false);
+    }
+
+    private void enableCommentView()
+    {
+        mUIHolder.mCommentEditText.setEnabled(true);
+        mUIHolder.mCommentButton.setClickable(true);
     }
 }
