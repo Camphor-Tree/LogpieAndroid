@@ -27,13 +27,11 @@ public class ActivityManager
     private static final String TAG = ActivityManager.class.getName();
     // Each request will just request 25 records.
     private static final int MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL = 25;
-    public static final int MODE_INITIAL = 0;
+    public static final int MODE_REFRESH = 0;
     public static final int MODE_LOAD_MORE = 1;
-    public static final int MODE_REFRESH_MORE = 2;
 
     private static ActivityManager sActivityManager;
     private Context mContext;
-    private long mTopActivityID;
     private long mBottomActivityID;
 
     private ActivityManager(Context context)
@@ -150,6 +148,7 @@ public class ActivityManager
                 else
                 {
                     UserProfile profile = user.getUserProfile();
+                    // TODO: change it to city id
                     city = profile.getUserCity();
                     if (city == null)
                     {
@@ -287,9 +286,9 @@ public class ActivityManager
     {
         switch (mode)
         {
-        case 0:
+        case MODE_REFRESH:
             break;
-        case 1:
+        case MODE_LOAD_MORE:
             if (mBottomActivityID > 0)
             {
                 Map<String, String> map = new HashMap<String, String>();
@@ -299,18 +298,6 @@ public class ActivityManager
             else
             {
                 LogpieLog.e(TAG, "Cannot find the bottom activity ID. Should switch to Mode 0.");
-            }
-            break;
-        case 2:
-            if (mTopActivityID > 0)
-            {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put((RequestKeys.KEY_MORE_THAN), String.valueOf(mTopActivityID));
-                constraints.put(RequestKeys.KEY_AID, map);
-            }
-            else
-            {
-                LogpieLog.e(TAG, "Cannot find the top activity ID. Should switch to Mode 0.");
             }
             break;
         default:

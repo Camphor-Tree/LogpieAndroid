@@ -30,6 +30,7 @@ import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.LogpieLocation;
 import com.logpie.android.ui.base.LogpieBaseFragment;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.ui.helper.LogpieColorHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper;
 import com.logpie.android.ui.helper.LogpieDialogHelper.LogpieDatePickerDialogCallback;
 import com.logpie.android.ui.helper.LogpieDialogHelper.LogpieTimePickerDialogCallback;
@@ -344,7 +345,7 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
             String city = data.getStringExtra(CityPickerDialog.KEY_CITY);
             if (!TextUtils.isEmpty(city))
             {
-                mUiHolder.mCityTextView.setText(city);
+                mUiHolder.mCityTag.setText(city);
                 mLogpieActivity.setCity(mContext, city);
             }
             else
@@ -360,15 +361,18 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
             String categoryString = data.getStringExtra(CategoryPickerDialog.KEY_CATEGORY_STRING);
             String subCategoryString = data
                     .getStringExtra(CategoryPickerDialog.KEY_SUBCATEGORY_STRING);
+
             if (!TextUtils.isEmpty(categoryId) && !TextUtils.isEmpty(categoryString))
             {
-                if (subCategoryString == null || subCategoryString.equals(""))
+
+                mUiHolder.mCategoryTag.setText(categoryString);
+                int color = LogpieColorHelper.getColorByCategoryTag(categoryId);
+                mUiHolder.mCategoryTag.setBackgroundResource(color);
+
+                if (subCategoryString != null && !subCategoryString.equals(""))
                 {
-                    mUiHolder.mCategoryTextView.setText(categoryString);
-                }
-                else
-                {
-                    mUiHolder.mCategoryTextView.setText(categoryString + ": " + subCategoryString);
+                    mUiHolder.mSubcategoryTag.setText(subCategoryString);
+                    mUiHolder.mSubcategoryTag.setBackgroundResource(color);
                 }
                 mLogpieActivity.setCategoryId(categoryId);
                 mLogpieActivity.setSubCategoryId(subCategoryId);
@@ -438,13 +442,18 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
 
         mUiHolder.mCityTextView = (TextView) parentView
                 .findViewById(R.id.create_activity_city_text_view);
-
         mUiHolder.mCityTextView.setText(LanguageHelper.getString(
                 LanguageHelper.KEY_CREATE_ACTIVTY_CITY_LABEL, mContext));
+        mUiHolder.mCityTag = (TextView) parentView.findViewById(R.id.create_activity_city_tag);
+
         mUiHolder.mCategoryTextView = (TextView) parentView
                 .findViewById(R.id.create_activity_category_text_view);
         mUiHolder.mCategoryTextView.setText(LanguageHelper.getString(
                 LanguageHelper.KEY_CREATE_ACTIVTY_CATEGORY_LABEL, mContext));
+        mUiHolder.mCategoryTag = (TextView) parentView
+                .findViewById(R.id.create_activity_category_tag);
+        mUiHolder.mSubcategoryTag = (TextView) parentView
+                .findViewById(R.id.create_activity_subcategory_tag);
 
     }
 
@@ -595,10 +604,13 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
         private EditText mEndTimeEditText;
 
         private TextView mCityTextView;
+        private TextView mCityTag;
         private TextView mCategoryTextView;
+        private TextView mCategoryTag;
+        private TextView mSubcategoryTag;
     }
 
-    private class CreateActivityTask extends AsyncTask<Object, Object, Object>
+    class CreateActivityTask extends AsyncTask<Object, Object, Object>
     {
         @Override
         protected Object doInBackground(Object... params)

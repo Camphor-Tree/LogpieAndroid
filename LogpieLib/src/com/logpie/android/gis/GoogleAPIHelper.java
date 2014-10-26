@@ -60,17 +60,29 @@ public class GoogleAPIHelper
 
         try
         {
-            if (TextUtils.equals(result.getString("status"), "OK"))
+            if (result != null && TextUtils.equals(result.getString("status"), "OK"))
             {
                 JSONArray resultArray = result.getJSONArray("results");
                 // Google will return a bunch of results as candidates. We
                 // default pick the first one.
-                JSONObject singleResult = resultArray.getJSONObject(0);
-                JSONObject geometry = singleResult.getJSONObject("geometry");
-                JSONObject location = geometry.getJSONObject("location");
-                Double lat = location.getDouble("lat");
-                Double lon = location.getDouble("lng");
-                return new LogpieLocation(context, lat, lon, address, city);
+                if (resultArray != null)
+                {
+                    JSONObject singleResult = resultArray.getJSONObject(0);
+                    if (singleResult != null)
+                    {
+                        JSONObject geometry = singleResult.getJSONObject("geometry");
+                        if (geometry != null)
+                        {
+                            JSONObject location = geometry.getJSONObject("location");
+                            if (location != null)
+                            {
+                                Double lat = location.getDouble("lat");
+                                Double lon = location.getDouble("lng");
+                                return new LogpieLocation(context, lat, lon, address, city);
+                            }
+                        }
+                    }
+                }
             }
             else
             {

@@ -163,12 +163,24 @@
 				</TextView>
 
 				<TextView
+					android:id="@+id/create_activity_city_tag"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="12dp"
+					android:layout_marginTop="4dp"
+					android:layout_toRightOf="@id/create_activity_city_text_view"
+					android:paddingLeft="4dp"
+					android:paddingRight="4dp"
+					android:textSize="18sp" />
+
+				<TextView
 					android:id="@+id/create_activity_category_text_view"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_alignParentLeft="true"
 					android:layout_below="@id/create_activity_city_text_view"
 					android:layout_marginLeft="8dp"
+					android:layout_marginTop="4dp"
 					android:clickable="true"
 					android:drawableLeft="@drawable/ic_action_category"
 					android:drawablePadding="16dp"
@@ -177,6 +189,30 @@
 					android:singleLine="true"
 					android:textSize="18sp" >
 				</TextView>
+
+				<TextView
+					android:id="@+id/create_activity_category_tag"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/create_activity_city_text_view"
+					android:layout_marginLeft="12dp"
+					android:layout_marginTop="12dp"
+					android:layout_toRightOf="@id/create_activity_category_text_view"
+					android:paddingLeft="4dp"
+					android:paddingRight="4dp"
+					android:textColor="#FFFFFF" />
+
+				<TextView
+					android:id="@+id/create_activity_subcategory_tag"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/create_activity_city_text_view"
+					android:layout_marginLeft="8dp"
+					android:layout_marginTop="12dp"
+					android:layout_toRightOf="@id/create_activity_category_tag"
+					android:paddingLeft="4dp"
+					android:paddingRight="4dp"
+					android:textColor="#FFFFFF" />
 			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>

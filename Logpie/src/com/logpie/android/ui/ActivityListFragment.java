@@ -57,7 +57,7 @@ public class ActivityListFragment extends ListFragment
 
     private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
-    private User mUser;
+    private User user;
     private String mCity;
     private String mCategory;
     private String mSubcategory;
@@ -71,7 +71,7 @@ public class ActivityListFragment extends ListFragment
         // Set option menu visible
         setHasOptionsMenu(true);
         mActivity = getActivity();
-        mUser = NormalUser.getInstance(mActivity);
+        user = NormalUser.getInstance(getActivity());
         mActivityManager = ActivityManager.getInstance(mActivity);
 
         ActionBar bar = getActivity().getActionBar();
@@ -131,14 +131,7 @@ public class ActivityListFragment extends ListFragment
             @Override
             public void onRefresh()
             {
-                try
-                {
-                    Thread.sleep(2000);
-
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
+                new FetchItemsTask().execute(mTabName);
             }
         }, mTabName);
 
@@ -330,21 +323,22 @@ public class ActivityListFragment extends ListFragment
 
             if (tab.equals(nearby))
             {
-                mActivityManager.getNearbyActivityList(mUser, null, null,
-                        ActivityManager.MODE_INITIAL,
+                ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null, null,
+                        ActivityManager.MODE_REFRESH,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(city))
             {
-                mActivityManager.getActivityListByCity(mUser, ActivityManager.MODE_INITIAL, mCity,
+                ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
+                        ActivityManager.MODE_REFRESH, mCity,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
             else if (tab.equals(category))
             {
-                mActivityManager.getActivityListByCategory(mUser, ActivityManager.MODE_INITIAL,
-                        mCategory, mSubcategory,
+                ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
+                        ActivityManager.MODE_REFRESH, mCategory, mSubcategory,
                         ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                 callback));
             }
