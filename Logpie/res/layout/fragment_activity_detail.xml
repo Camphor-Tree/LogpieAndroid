@@ -6,10 +6,6 @@
 	android:paddingTop="@dimen/activity_horizontal_margin"
 	tools:context="com.logpie.android.LogpieActivityDetailActivity$LogpieActivityDetailFragment" >
 
-	<ScrollView
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" >
-
 		<LinearLayout
 			android:id="@+id/ll_activity_detail"
 			android:layout_width="fill_parent"
@@ -180,14 +176,14 @@
 				</LinearLayout>
 			</LinearLayout>
 
-			<LinearLayout
-				android:id="@+id/linearlayout_detail_activity_comments"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical" >
-			</LinearLayout>
+
+				<ListView
+				    android:id="@id/android:list"
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent">
+				</ListView>
 		</LinearLayout>
-	</ScrollView>
+
 
 	<LinearLayout
 		android:id="@+id/linearlayout_comment"

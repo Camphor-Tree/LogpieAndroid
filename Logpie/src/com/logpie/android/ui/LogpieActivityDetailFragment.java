@@ -1,5 +1,7 @@
 package com.logpie.android.ui;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,14 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.logpie.android.R;
 import com.logpie.android.logic.ActivityManager;
+import com.logpie.android.logic.Comment;
 import com.logpie.android.logic.CommentManager;
 import com.logpie.android.logic.LogpieActivity;
 import com.logpie.android.logic.NormalUser;
@@ -63,8 +67,16 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         setUpUIHolder(view);
         setupView();
         setupCommentButton();
+        clearCommentView();
+
+        loadCommentView();
 
         return view;
+    }
+
+    private void loadCommentView()
+    {
+        new LoadCommentTask().execute();
     }
 
     private LogpieActivity getDetailActivity()
@@ -169,9 +181,8 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
                 .findViewById(R.id.textview_detail_activity_count_like);
         mUIHolder.mActivityCountDislikeTextView = (TextView) view
                 .findViewById(R.id.textview_detail_activity_count_dislike);
-        mUIHolder.mActivityCommentsLinearLayout = (LinearLayout) view
-                .findViewById(R.id.linearlayout_detail_activity_comments);
 
+        mUIHolder.mCommentListView = (ListView) view.findViewById(android.R.id.list);
         mUIHolder.mCommentEditText = (EditText) view.findViewById(R.id.edittext_comment);
         mUIHolder.mCommentButton = (Button) view.findViewById(R.id.button_comment);
 
@@ -186,10 +197,76 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
         TextView mActivityLocationTextView;
         TextView mActivityCountLikeTextView;
         TextView mActivityCountDislikeTextView;
-        LinearLayout mActivityCommentsLinearLayout;
 
+        ListView mCommentListView;
         EditText mCommentEditText;
         Button mCommentButton;
+
+    }
+
+    private void disableCommentView()
+    {
+        mUIHolder.mCommentEditText.setEnabled(false);
+        mUIHolder.mCommentButton.setClickable(false);
+    }
+
+    private void enableCommentView()
+    {
+        mUIHolder.mCommentEditText.setEnabled(true);
+        mUIHolder.mCommentButton.setClickable(true);
+    }
+
+    private class CommentAdapter extends ArrayAdapter<Comment>
+    {
+        public CommentAdapter(ArrayList<Comment> comments)
+        {
+            super(getActivity(), 0, comments);
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup parent)
+        {
+            if (view == null)
+            {
+                view = getActivity().getLayoutInflater().inflate(
+                        R.layout.fragment_activity_comment_item, null);
+            }
+
+            Comment comment = getItem(position);
+            LogpieLog.d(TAG, "Initialize the UI...");
+            /**
+             * set UI of each activity part
+             */
+            TextView userNameTextView = (TextView) view.findViewById(R.id.comment_user_name);
+            String userName = new String(comment.getUserName() + ":");
+            userNameTextView.setText(userName);
+            TextView contentTextView = (TextView) view.findViewById(R.id.comment_content);
+            contentTextView.setText(comment.getContent());
+
+            return view;
+        }
+    }
+
+    private class LoadCommentTask extends AsyncTask<Void, Void, ArrayList<Comment>>
+    {
+        @Override
+        protected ArrayList<Comment> doInBackground(Void... params)
+        {
+            return mCommentManager.loadCommentsForActivity(mLogpieActivity.getActivityID());
+        }
+
+        protected void onPostExecute(ArrayList<Comment> commentList)
+        {
+            if (commentList == null)
+            {
+                LogpieToastHelper.showShortMessage(mActivity,
+                        "Currently there is no commnet for this activity");
+                return;
+            }
+            CommentAdapter commentAdapter = new CommentAdapter(commentList);
+            mUIHolder.mCommentListView.setAdapter(commentAdapter);
+        }
+
     }
 
     private class AddCommentTask extends AsyncTask<String, Object, Boolean>
@@ -224,26 +301,21 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
             {
                 LogpieLog.d(TAG, "Add comment success");
                 enableCommentView();
+                loadCommentView();
             }
             else
             {
                 LogpieLog.d(TAG, "Add comment fail");
                 enableCommentView();
             }
+            clearCommentView();
 
         }
-
     }
 
-    private void disableCommentView()
+    private void clearCommentView()
     {
-        mUIHolder.mCommentEditText.setEnabled(false);
-        mUIHolder.mCommentButton.setClickable(false);
-    }
-
-    private void enableCommentView()
-    {
-        mUIHolder.mCommentEditText.setEnabled(true);
-        mUIHolder.mCommentButton.setClickable(true);
+        mUIHolder.mCommentEditText.setText("");
+        mUIHolder.mCommentEditText.clearFocus();
     }
 }

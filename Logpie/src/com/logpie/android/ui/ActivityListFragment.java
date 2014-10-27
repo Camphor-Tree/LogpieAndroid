@@ -138,7 +138,7 @@ public class ActivityListFragment extends ListFragment
         return v;
     }
 
-    void setupAdapter(ArrayAdapter adapter)
+    void setupAdapter(ArrayAdapter<LogpieActivity> adapter)
     {
         if (getActivity() == null || mListView == null)
         {

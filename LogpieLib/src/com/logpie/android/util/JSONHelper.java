@@ -79,8 +79,8 @@ public class JSONHelper
         return array;
     }
 
-    public static JSONArray buildConstraintKeyValue(Map<String, Map<String, String>> constraints)
-            throws JSONException
+    public static JSONArray buildConstraintKeyValue(Map<String, Map<String, String>> constraints,
+            Map<String, String> tableLinkConstraint) throws JSONException
     {
         if (constraints.isEmpty())
         {
@@ -116,6 +116,21 @@ public class JSONHelper
             o.put(RequestKeys.KEY_CONSTRAINT_OPERATOR, operator);
             o.put(RequestKeys.KEY_CONSTRAINT_VALUE, value);
             array.put(o);
+        }
+
+        if (tableLinkConstraint != null && tableLinkConstraint.size() > 0)
+        {
+            Set<String> tableLinkKeySet = tableLinkConstraint.keySet();
+            for (String key : tableLinkKeySet)
+            {
+                JSONObject tableLinkObject = new JSONObject();
+                tableLinkObject.put(RequestKeys.KEY_CONSTRAINT_COLUMN, key);
+                tableLinkObject.put(RequestKeys.KEY_CONSTRAINT_OPERATOR, RequestKeys.KEY_EQUAL);
+                tableLinkObject.put(RequestKeys.KEY_CONSTRAINT_LINK_COLUMN,
+                        tableLinkConstraint.get(key));
+                array.put(tableLinkObject);
+            }
+
         }
         return array;
     }

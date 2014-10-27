@@ -93,7 +93,7 @@ public class ActivityManager
 
             switchMode(mode, constraints);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints);
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints, null);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
@@ -164,7 +164,7 @@ public class ActivityManager
 
             switchMode(mode, constraints);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints);
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints, null);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
@@ -227,7 +227,7 @@ public class ActivityManager
 
             switchMode(mode, constraints);
 
-            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints);
+            JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints, null);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
 
             postData.put(RequestKeys.KEY_LIMIT_NUMBER,
