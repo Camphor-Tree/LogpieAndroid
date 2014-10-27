@@ -19,6 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -77,7 +79,8 @@ public class ActivityListFragment extends ListFragment
         ActionBar bar = getActivity().getActionBar();
         mTabName = bar.getSelectedTab().getText().toString();
 
-        new FetchItemsTask().execute(mTabName);
+        new FetchItemsTask().execute(new String[] { mTabName,
+                String.valueOf(ActivityManager.MODE_REFRESH) });
     }
 
     @Override
@@ -131,9 +134,32 @@ public class ActivityListFragment extends ListFragment
             @Override
             public void onRefresh()
             {
-                new FetchItemsTask().execute(mTabName);
+                new FetchItemsTask().execute(new String[] { mTabName,
+                        String.valueOf(ActivityManager.MODE_REFRESH) });
             }
         }, mTabName);
+
+        mListView.setOnScrollListener(new OnScrollListener()
+        {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState)
+            {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                    int totalItemCount)
+            {
+                if (mListView.getLastVisiblePosition() == totalItemCount)
+                {
+                    new FetchItemsTask().execute(new String[] { mTabName,
+                            String.valueOf(ActivityManager.MODE_LOAD_MORE) });
+                }
+            }
+        });
 
         return v;
     }
@@ -301,6 +327,7 @@ public class ActivityListFragment extends ListFragment
         protected ArrayList<LogpieActivity> doInBackground(String... params)
         {
             String tab = params[0];
+            String mode = params[1];
 
             ActivityCallback callback = new ActivityCallback()
             {
@@ -323,24 +350,54 @@ public class ActivityListFragment extends ListFragment
 
             if (tab.equals(nearby))
             {
-                ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null, null,
-                        ActivityManager.MODE_REFRESH,
-                        ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
-                                callback));
+                if (mode.equals(ActivityManager.MODE_REFRESH))
+                {
+                    ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null,
+                            null, ActivityManager.MODE_REFRESH,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+                }
+                else if (mode.equals(ActivityManager.MODE_LOAD_MORE))
+                {
+                    ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null,
+                            null, ActivityManager.MODE_LOAD_MORE,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+                }
             }
             else if (tab.equals(city))
             {
-                ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
-                        ActivityManager.MODE_REFRESH, mCity,
-                        ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
-                                callback));
+                if (mode.equals(ActivityManager.MODE_REFRESH))
+                {
+                    ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
+                            ActivityManager.MODE_REFRESH, mCity,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+                }
+                else if (mode.equals(ActivityManager.MODE_LOAD_MORE))
+                {
+                    ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
+                            ActivityManager.MODE_LOAD_MORE, mCity,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+                }
             }
             else if (tab.equals(category))
             {
-                ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
-                        ActivityManager.MODE_REFRESH, mCategory, mSubcategory,
-                        ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
-                                callback));
+                if (mode.equals(ActivityManager.MODE_REFRESH))
+                {
+                    ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
+                            ActivityManager.MODE_REFRESH, mCategory, mSubcategory,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+                }
+                else if (mode.equals(ActivityManager.MODE_LOAD_MORE))
+                {
+                    ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
+                            ActivityManager.MODE_LOAD_MORE, mCategory, mSubcategory,
+                            ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
+                                    callback));
+                }
             }
             else
             {
