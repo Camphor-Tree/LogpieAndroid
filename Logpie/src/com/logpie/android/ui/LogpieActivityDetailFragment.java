@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -184,6 +185,9 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
 
         mUIHolder.mCommentListView = (ListView) view.findViewById(android.R.id.list);
         mUIHolder.mCommentEditText = (EditText) view.findViewById(R.id.edittext_comment);
+        // Show keyboard when user clicks the edittext
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mUIHolder.mCommentButton = (Button) view.findViewById(R.id.button_comment);
 
     }
@@ -233,12 +237,12 @@ public class LogpieActivityDetailFragment extends LogpieBaseFragment
             }
 
             Comment comment = getItem(position);
-            LogpieLog.d(TAG, "Initialize the UI...");
             /**
              * set UI of each activity part
              */
             TextView userNameTextView = (TextView) view.findViewById(R.id.comment_user_name);
             String userName = new String(comment.getUserName() + ":");
+            LogpieLog.d(TAG, userName);
             userNameTextView.setText(userName);
             TextView contentTextView = (TextView) view.findViewById(R.id.comment_content);
             contentTextView.setText(comment.getContent());

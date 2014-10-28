@@ -6,184 +6,183 @@
 	android:paddingTop="@dimen/activity_horizontal_margin"
 	tools:context="com.logpie.android.LogpieActivityDetailActivity$LogpieActivityDetailFragment" >
 
+	<LinearLayout
+		android:id="@+id/ll_activity_detail"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@null"
+		android:orientation="vertical" >
+
 		<LinearLayout
-			android:id="@+id/ll_activity_detail"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:background="@null" >
+			android:layout_marginBottom="8dp"
+			android:orientation="vertical" >
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="60dp" >
+
+				<ImageView
+					android:id="@+id/imageview_activity_detail_user_icon"
+					android:layout_width="60dp"
+					android:layout_height="60dp"
+					android:layout_alignParentLeft="true"
+					android:layout_centerVertical="true"
+					android:layout_marginLeft="8dp"
+					android:src="@drawable/ic_user_avatar_test" />
+
+				<TextView
+					android:id="@+id/textview_activity_detail_user_name"
+					android:layout_width="wrap_content"
+					android:layout_height="24dp"
+					android:layout_marginLeft="16dp"
+					android:layout_marginTop="8dp"
+					android:layout_toRightOf="@id/imageview_activity_detail_user_icon"
+					android:text="我来测试7个字"
+					android:textColor="#003366"
+					android:textSize="18sp" />
+
+				<TextView
+					android:id="@+id/activity_list_create_time"
+					android:layout_width="wrap_content"
+					android:layout_height="16dp"
+					android:layout_below="@id/textview_activity_detail_user_name"
+					android:layout_marginLeft="8dp"
+					android:layout_toRightOf="@id/imageview_activity_detail_user_icon"
+					android:fontFamily="微软雅黑"
+					android:textColor="#D3D3D3" />
+			</RelativeLayout>
 
 			<LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:orientation="vertical" >
+				android:orientation="horizontal" >
 
-				<LinearLayout
-					android:layout_width="fill_parent"
-					android:layout_height="60dp"
-					android:baselineAligned="false"
-					android:orientation="horizontal" >
-
-					<TextView
-						android:id="@+id/empty"
-						android:layout_width="15dp"
-						android:layout_height="40dp"
-						android:layout_marginTop="20dp"
-						android:fontFamily="微软雅黑"
-						android:gravity="center"
-						android:textSize="16sp" />
-
-					<ImageView
-						android:id="@+id/imageview_activity_detail_user_icon"
-						android:layout_width="60dp"
-						android:layout_height="60dp"
-						android:layout_gravity="center"
-						android:src="@drawable/test_user_icon_1" />
-
-					<TextView
-						android:id="@+id/textview_activity_detail_user_name"
-						android:layout_width="fill_parent"
-						android:layout_height="40dp"
-						android:layout_marginTop="20dp"
-						android:fontFamily="微软雅黑"
-						android:gravity="center_vertical|left"
-						android:layout_marginLeft="24dp"
-						android:text="我来测试7个字"
-						android:textSize="18sp" />
-				</LinearLayout>
-
-				<LinearLayout
-					android:layout_width="fill_parent"
+				<TextView
+					android:id="@+id/textview_activity_detail_description"
+					android:layout_width="0dip"
 					android:layout_height="wrap_content"
-					android:orientation="horizontal" >
-
-					<TextView
-						android:id="@+id/textview_activity_detail_description"
-						android:layout_width="0dip"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:baselineAligned="false"
-						android:fontFamily="微软雅黑"
-						android:gravity="center_vertical"
-						android:maxLines="7"
-						android:minLines="3"
-						android:paddingBottom="5dp"
-						android:paddingLeft="15dp"
-						android:paddingRight="15dp"
-						android:paddingTop="5dp"
-						android:text="今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧"
-						android:textColor="@color/Gray"
-						android:textSize="18sp" />
-				</LinearLayout>
-
-				<LinearLayout
-					android:layout_width="fill_parent"
-					android:layout_height="28dp"
+					android:layout_marginTop="8dp"
+					android:layout_weight="1"
 					android:baselineAligned="false"
-					android:orientation="horizontal" >
-
-					<ImageView
-						android:layout_width="32dp"
-						android:layout_height="32dp"
-						android:layout_gravity="center"
-						android:layout_marginLeft="5dp"
-						android:src="@drawable/ic_action_time" />
-
-					<TextView
-						android:id="@+id/textview_activity_detail_time"
-						android:layout_width="0dip"
-						android:layout_height="32dp"
-						android:layout_weight="1"
-						android:fontFamily="微软雅黑"
-						android:gravity="center_vertical|left"
-						android:lines="1"
-						android:paddingLeft="10dp"
-						android:text="2013-06-07 18:00~ 2013-08-21 24:00"
-						android:textSize="18sp" />
-				</LinearLayout>
-
-				<LinearLayout
-					android:layout_width="fill_parent"
-					android:layout_height="32dp"
-					android:orientation="horizontal" >
-
-					<ImageView
-						android:layout_width="32dp"
-						android:layout_height="32dp"
-						android:layout_gravity="center"
-						android:layout_marginLeft="5dp"
-						android:src="@drawable/ic_action_place" />
-
-					<TextView
-						android:id="@+id/textivew_detail_activity_location"
-						android:layout_width="0dip"
-						android:layout_height="32dp"
-						android:layout_weight="1"
-						android:fontFamily="微软雅黑"
-						android:gravity="center_vertical|left"
-						android:lines="1"
-						android:paddingLeft="10dp"
-						android:text="森林公园"
-						android:textSize="18sp" />
-				</LinearLayout>
-
-				<LinearLayout
-					android:layout_width="fill_parent"
-					android:layout_height="32dp"
-					android:gravity="center_vertical|center_horizontal"
-					android:orientation="horizontal"
-					android:paddingLeft="5dp" >
-
-					<ImageButton
-						android:id="@+id/imagebutton_detail_activity_like"
-						android:layout_width="50dp"
-						android:layout_height="32dp"
-						android:layout_gravity="center"
-						android:layout_weight="1"
-						android:alpha="0.5"
-						android:background="@null"
-						android:src="@drawable/ic_action_good" />
-
-					<TextView
-						android:id="@+id/textview_detail_activity_count_like"
-						android:layout_width="wrap_content"
-						android:layout_height="fill_parent"
-						android:fontFamily="微软雅黑"
-						android:gravity="center"
-						android:lines="1"
-						android:text="50"
-						android:textSize="18sp" />
-
-					<ImageButton
-						android:id="@+id/imagebutton_detail_activity_dislike"
-						android:layout_width="50dp"
-						android:layout_height="32dp"
-						android:layout_gravity="center"
-						android:layout_weight="1"
-						android:alpha="0.5"
-						android:background="@null"
-						android:src="@drawable/ic_action_bad" />
-
-					<TextView
-						android:id="@+id/textview_detail_activity_count_dislike"
-						android:layout_width="wrap_content"
-						android:layout_height="fill_parent"
-						android:fontFamily="微软雅黑"
-						android:gravity="center"
-						android:lines="1"
-						android:text="50"
-						android:textSize="18sp" />
-				</LinearLayout>
+					android:fontFamily="微软雅黑"
+					android:gravity="center_vertical"
+					android:maxLines="7"
+					android:minLines="3"
+					android:paddingBottom="4dp"
+					android:paddingLeft="16dp"
+					android:paddingRight="16dp"
+					android:paddingTop="4dp"
+					android:text="今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧。今天是个好日子~ 出来春游吧"
+					android:textColor="@color/Gray"
+					android:textSize="18sp" />
 			</LinearLayout>
 
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="32dp"
+				android:orientation="horizontal" >
 
-				<ListView
-				    android:id="@id/android:list"
-				    android:layout_width="fill_parent"
-				    android:layout_height="fill_parent">
-				</ListView>
+				<ImageView
+					android:layout_width="28dp"
+					android:layout_height="28dp"
+					android:layout_gravity="center"
+					android:layout_marginLeft="8dp"
+					android:src="@drawable/ic_action_time" />
+
+				<TextView
+					android:id="@+id/textview_activity_detail_time"
+					android:layout_width="0dp"
+					android:layout_height="32dp"
+					android:layout_marginLeft="8dp"
+					android:layout_weight="1"
+					android:fontFamily="微软雅黑"
+					android:gravity="center_vertical|left"
+					android:lines="1"
+					android:text="2013-06-07 18:00~ 2013-08-21 24:00"
+					android:textSize="16sp" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="32dp"
+				android:orientation="horizontal" >
+
+				<ImageView
+					android:layout_width="32dp"
+					android:layout_height="32dp"
+					android:layout_gravity="center"
+					android:layout_marginLeft="8dp"
+					android:src="@drawable/ic_action_place" />
+
+				<TextView
+					android:id="@+id/textivew_detail_activity_location"
+					android:layout_width="0dp"
+					android:layout_height="32dp"
+					android:layout_marginLeft="8dp"
+					android:layout_weight="1"
+					android:fontFamily="微软雅黑"
+					android:gravity="center_vertical|left"
+					android:lines="1"
+					android:text="森林公园"
+					android:textSize="16sp" />
+			</LinearLayout>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="32dp" >
+
+				<ImageView
+					android:id="@+id/imagebutton_detail_activity_like"
+					android:layout_width="32dp"
+					android:layout_height="32dp"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="8dp"
+					android:src="@drawable/ic_action_good" />
+
+				<TextView
+					android:id="@+id/textview_detail_activity_count_like"
+					android:layout_width="wrap_content"
+					android:layout_height="20dp"
+					android:layout_marginBottom="2dp"
+					android:layout_marginRight="8dp"
+					android:layout_marginTop="2dp"
+					android:layout_toRightOf="@id/imagebutton_detail_activity_like"
+					android:fontFamily="微软雅黑"
+					android:lines="1" />
+
+				<ImageView
+					android:id="@+id/imagebutton_detail_activity_dislike"
+					android:layout_width="32dp"
+					android:layout_height="32dp"
+					android:layout_marginLeft="36dp"
+					android:layout_marginRight="8dp"
+					android:layout_toRightOf="@id/textview_detail_activity_count_like"
+					android:src="@drawable/ic_action_bad" />
+
+				<TextView
+					android:id="@+id/textview_detail_activity_count_dislike"
+					android:layout_width="wrap_content"
+					android:layout_height="20dp"
+					android:layout_marginBottom="2dp"
+					android:layout_marginRight="8dp"
+					android:layout_marginTop="2dp"
+					android:layout_toRightOf="@id/imagebutton_detail_activity_dislike"
+					android:fontFamily="微软雅黑"
+					android:lines="1" />
+			</RelativeLayout>
 		</LinearLayout>
 
+		<ListView
+			android:id="@id/android:list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp" >
+		</ListView>
+	</LinearLayout>
 
 	<LinearLayout
 		android:id="@+id/linearlayout_comment"
@@ -201,10 +200,10 @@
 			android:layout_width="0dip"
 			android:layout_height="48dp"
 			android:layout_weight="1"
+			android:background="#00000000"
+			android:baselineAligned="false"
 			android:drawableLeft="@drawable/ic_action_edit"
 			android:hint="请输入您的评论"
-			android:baselineAligned="false"
-			android:background="#00000000"
 			android:maxLines="1"
 			android:scrollHorizontally="true" />
 
@@ -215,7 +214,7 @@
 			android:background="@null"
 			android:text="评论"
 			android:textColor="#565656"
-			android:textSize="21sp" />
+			android:textSize="18sp" />
 	</LinearLayout>
 
 </RelativeLayout>
