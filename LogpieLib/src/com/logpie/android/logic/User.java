@@ -123,12 +123,12 @@ public abstract class User
         connection.initialize(ServiceURL.AuthenticationService, AuthType.NoAuth, mContext);
         try
         {
-            AuthRegData.put("auth_type", "REGISTER");
-            AuthRegData.put("register_email", userEmail);
-            AuthRegData.put("register_password", userPassword);
-            AuthRegData.put("register_nickname", userName);
-            AuthRegData.put("register_city", city);
-
+            AuthRegData.put(RequestKeys.KEY_REQUEST_TYPE, "REGISTER");
+            AuthRegData.put(RequestKeys.KEY_EMAIL, userEmail);
+            AuthRegData.put(RequestKeys.KEY_PASSWORD, userPassword);
+            AuthRegData.put(RequestKeys.KEY_NICKNAME, userName);
+            AuthRegData.put(RequestKeys.KEY_CITY, city);
+            AuthRegData.put(RequestKeys.KEY_REQUEST_ID, UUID.randomUUID().toString());
             connection.setRequestData(AuthRegData);
         } catch (JSONException e)
         {

@@ -49,6 +49,10 @@
             android:theme="@style/LogpieBaseTheme"
             android:screenOrientation="portrait">
         </activity>
+        
+        <meta-data 
+            android:name="com.logpie.version"
+            android:value="1.0.0 alpha" />
 		
 		
 	</application>

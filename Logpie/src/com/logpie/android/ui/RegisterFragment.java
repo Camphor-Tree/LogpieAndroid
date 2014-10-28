@@ -13,11 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.logpie.android.R;
-import com.logpie.android.datastorage.DataStorage;
 import com.logpie.android.gis.GISManager;
 import com.logpie.android.logic.LogpieLocation;
 import com.logpie.android.logic.NormalUser;
+import com.logpie.android.ui.helper.ActivityOpenHelper;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.ui.helper.LogpieToastHelper;
 import com.logpie.android.util.LogpieCallback;
 import com.logpie.android.util.LogpieLog;
 
@@ -135,7 +136,7 @@ public class RegisterFragment extends Fragment
         public void run()
         {
             location = GISManager.getInstance(getActivity()).getCurrentLocation();
-            NormalUser user = NormalUser.getInstance(mActivity.getApplicationContext());
+            final NormalUser user = NormalUser.getInstance(mActivity.getApplicationContext());
             final String email = mEmail.getText().toString();
             final String password = mPassword.getText().toString();
             final String name = mNickname.getText().toString();
@@ -156,33 +157,53 @@ public class RegisterFragment extends Fragment
                 @Override
                 public void onSuccess(Bundle result)
                 {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("email", email);
-                    bundle.putString("nickname", name);
-                    bundle.putString("city", nonNullCity);
 
-                    // Store the data into SQLite
-                    DataStorage.getInstance(getActivity()).registerUser(bundle,
-                            new LogpieCallback()
+                    LogpieCallback callback = new LogpieCallback()
+                    {
+
+                        @Override
+                        public void onSuccess(Bundle result)
+                        {
+                            ActivityOpenHelper.openActivityAndFinishPreviousActivity(mActivity,
+                                    SquareActivity.class);
+                        }
+
+                        @Override
+                        public void onError(Bundle errorMessage)
+                        {
+                            LogpieLog.e(TAG, "Login error!");
+                            if (errorMessage != null)
                             {
-                                @Override
-                                public void onSuccess(Bundle bundle)
-                                {
-                                    LogpieLog.d(TAG, bundle.toString());
-                                }
+                                LogpieLog.d(TAG,
+                                        "Login error! error message is " + errorMessage.toString());
+                            }
 
-                                @Override
-                                public void onError(Bundle bundle)
-                                {
-                                    LogpieLog.e(TAG, "Failed to register in Android SQLite");
-                                }
-                            });
+                        }
+                    };
+                    user.login(email, password, callback);
+                    /*
+                     * Bundle bundle = new Bundle(); bundle.putString("email",
+                     * email); bundle.putString("nickname", name);
+                     * bundle.putString("city", nonNullCity);
+                     * 
+                     * // Store the data into SQLite
+                     * DataStorage.getInstance(getActivity
+                     * ()).registerUser(bundle, new LogpieCallback() {
+                     * 
+                     * @Override public void onSuccess(Bundle bundle) {
+                     * LogpieLog.d(TAG, bundle.toString()); }
+                     * 
+                     * @Override public void onError(Bundle bundle) {
+                     * LogpieLog.e(TAG, "Failed to register in Android SQLite");
+                     * } });
+                     */
                 }
 
                 @Override
                 public void onError(Bundle errorMessagge)
                 {
-                    // TODO Auto-generated method stub
+                    LogpieToastHelper.showShortMessage(mActivity,
+                            "Register fail, please try later!");
                 }
 
             };

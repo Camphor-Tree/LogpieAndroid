@@ -171,7 +171,7 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                 R.id.settings_system_version_label_text_view,
                 R.id.settings_system_version_text_view,
                 LanguageHelper.KEY_SYSTEM_VERSION_SETTING_LABEL, TextView.class);
-        mSystemVersionUnit.setTextValue(BuildInfo.VERSION);
+        mSystemVersionUnit.setTextValue(BuildInfo.getLogpieVersion(mContext));
     }
 
     private void setupSystemLanguageUnit(View view)
