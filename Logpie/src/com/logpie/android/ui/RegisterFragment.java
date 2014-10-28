@@ -104,15 +104,8 @@ public class RegisterFragment extends Fragment
                 }
                 else
                 {
-                    if (mThread == null)
-                    {
-                        mThread = new Thread(runnable);
-                        mThread.start();
-                    }
-                    else
-                    {
-                        LogpieLog.d(TAG, "Cannot create a new thread.");
-                    }
+                    mThread = new Thread(runnable);
+                    mThread.start();
                     /*
                      * Fragment loginFrag = new LoginFragment();
                      * FragmentTransaction transaction =

@@ -144,7 +144,7 @@ public class LogpieLocation implements Parcelable
 
     public String getCityById(String cityId)
     {
-        String city = CityManager.getInstance(mContext).getCityById(cityId);
+        String city = CityManager.getInstance(mContext).getCityNameFromId(cityId);
         if (city == null || city.equals(""))
         {
             LogpieLog.e(TAG, "Cannot get the city name by using id " + cityId);
@@ -154,7 +154,7 @@ public class LogpieLocation implements Parcelable
 
     public String getCityId(String city)
     {
-        String cityId = CityManager.getInstance(mContext).getCityId(city);
+        String cityId = CityManager.getInstance(mContext).getCityIdFromName(city);
         if (cityId == null || cityId.equals(""))
         {
             LogpieLog.e(TAG, "Cannot get the city id by using the name " + city);

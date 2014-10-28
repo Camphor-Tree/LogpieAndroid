@@ -1,8 +1,11 @@
 package com.logpie.android.ui;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -201,6 +204,37 @@ public class LogpieSettingsFragment extends LogpieBaseFragment
                 R.id.settings_user_city_label_text_view, R.id.settings_user_city_text_view,
                 LanguageHelper.KEY_USER_CITY_SETTING_LABEL, TextView.class);
         mUserCityUnit.setTextValue(mUser.getUserProfile().getUserCity());
+
+        CityPickerDialog.setupCityPicker(mUserCityUnit.mLayout, LogpieSettingsFragment.this,
+                (FragmentActivity) mContext);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode != Activity.RESULT_OK)
+        {
+            LogpieLog.e(TAG, "Error or cancel from City");
+            return;
+        }
+        if (requestCode == LogpieDialogHelper.REQUEST_CODE_CITY_DIALOG)
+        {
+            String city = data.getStringExtra(CityPickerDialog.KEY_CITY);
+            if (!TextUtils.isEmpty(city))
+            {
+                TextView cityTextView = (TextView) mUserCityUnit.mContent;
+                cityTextView.setText(city);
+                mUser.updateProfile(RequestKeys.KEY_CITY, city);
+            }
+            else
+            {
+                LogpieLog.e(TAG, "Error, the city choose is empty!");
+            }
+        }
+        else
+        {
+            LogpieLog.e(TAG, "Unknown requestCode! something is wrong!");
+        }
     }
 
     private void setupGenderUnit(View view)

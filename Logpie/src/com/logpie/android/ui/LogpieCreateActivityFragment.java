@@ -210,7 +210,8 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
 
     private void setupCityPicker()
     {
-        setupCityPicker(mUiHolder.mCityTextView, (FragmentActivity) mContext);
+        CityPickerDialog.setupCityPicker(mUiHolder.mCityTextView,
+                LogpieCreateActivityFragment.this, (FragmentActivity) mContext);
     }
 
     private void setupDatePicker()
@@ -293,24 +294,6 @@ public class LogpieCreateActivityFragment extends LogpieBaseFragment
                             }
                         });
 
-            }
-        });
-    }
-
-    private void setupCityPicker(final View view, final FragmentActivity activity)
-    {
-        view.setOnClickListener(new View.OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v)
-            {
-                FragmentManager fm = activity.getSupportFragmentManager();
-
-                DialogFragment dialog = new CityPickerDialog();
-                dialog.setTargetFragment(LogpieCreateActivityFragment.this,
-                        LogpieDialogHelper.REQUEST_CODE_CITY_DIALOG);
-                dialog.show(fm, LogpieDialogHelper.KEY_CITY_PICKER_DIALOG);
             }
         });
     }

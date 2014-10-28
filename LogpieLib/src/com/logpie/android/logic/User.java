@@ -69,7 +69,10 @@ public abstract class User
                     String uid = responseJSON.getString(ResponseKeys.KEY_UID);
                     String nickName = responseJSON.getString(ResponseKeys.KEY_NICKNAME);
                     String gender = responseJSON.getString(ResponseKeys.KEY_GENDER);
-                    String city = responseJSON.getString(ResponseKeys.KEY_CITY);
+                    String city_id = responseJSON.getString(ResponseKeys.KEY_CITY);
+                    // The server side will only return the city id. Client side
+                    // need to transfer the city_id to name
+                    String city = CityManager.getInstance(mContext).getCityNameFromId(city_id);
                     boolean genderBoolean = Boolean.getBoolean(gender);
                     boolean addAccountSuccess = mAuthManager.addAccount(new LogpieAccount(uid,
                             email, nickName, accessToken, refreshToken));
@@ -127,7 +130,16 @@ public abstract class User
             AuthRegData.put(RequestKeys.KEY_EMAIL, userEmail);
             AuthRegData.put(RequestKeys.KEY_PASSWORD, userPassword);
             AuthRegData.put(RequestKeys.KEY_NICKNAME, userName);
-            AuthRegData.put(RequestKeys.KEY_CITY, city);
+            String city_id = CityManager.getInstance(mContext).getCityIdFromName(city);
+            // If the city_id cannot found, then leave it empty
+            if (!TextUtils.isEmpty(city_id))
+            {
+                AuthRegData.put(RequestKeys.KEY_CITY, city_id);
+            }
+            else
+            {
+                // AuthRegData.put(RequestKeys.KEY_CITY, "");
+            }
             AuthRegData.put(RequestKeys.KEY_REQUEST_ID, UUID.randomUUID().toString());
             connection.setRequestData(AuthRegData);
         } catch (JSONException e)
@@ -384,7 +396,15 @@ public abstract class User
         try
         {
             updateKeyValueJSON.put(RequestKeys.KEY_UPDATE_COLUMN, key);
-            updateKeyValueJSON.put(RequestKeys.KEY_UPDATE_VALUE, value);
+            if (TextUtils.equals(key, RequestKeys.KEY_CITY))
+            {
+                updateKeyValueJSON.put(RequestKeys.KEY_UPDATE_VALUE,
+                        CityManager.getInstance(mContext).getCityIdFromName(value));
+            }
+            else
+            {
+                updateKeyValueJSON.put(RequestKeys.KEY_UPDATE_VALUE, value);
+            }
         } catch (JSONException e)
         {
             LogpieLog.e(TAG, "JSONException happened when build the update JSON.", e);

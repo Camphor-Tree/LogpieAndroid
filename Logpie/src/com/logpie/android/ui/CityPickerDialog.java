@@ -14,6 +14,9 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -23,6 +26,7 @@ import android.widget.SimpleExpandableListAdapter;
 import com.logpie.android.R;
 import com.logpie.android.logic.CityManager;
 import com.logpie.android.ui.helper.LanguageHelper;
+import com.logpie.android.ui.helper.LogpieDialogHelper;
 import com.logpie.android.util.LogpieLog;
 
 public class CityPickerDialog extends DialogFragment
@@ -132,5 +136,24 @@ public class CityPickerDialog extends DialogFragment
         i.putExtra(KEY_CITY_ID, cityID);
         i.putExtra(KEY_CITY, city);
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);
+    }
+
+    public static void setupCityPicker(final View view, final Fragment targetFragment,
+            final FragmentActivity activity)
+    {
+        view.setOnClickListener(new View.OnClickListener()
+        {
+
+            @Override
+            public void onClick(View v)
+            {
+                FragmentManager fm = activity.getSupportFragmentManager();
+
+                DialogFragment dialog = new CityPickerDialog();
+                dialog.setTargetFragment(targetFragment,
+                        LogpieDialogHelper.REQUEST_CODE_CITY_DIALOG);
+                dialog.show(fm, LogpieDialogHelper.KEY_CITY_PICKER_DIALOG);
+            }
+        });
     }
 }

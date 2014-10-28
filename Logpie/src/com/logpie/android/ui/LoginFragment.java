@@ -115,8 +115,8 @@ public class LoginFragment extends LogpieBaseFragment
             @Override
             public void onClick(View v)
             {
-                mEmail.setText("a7197901-e@logpie.com");
-                mPassword.setText("123456");
+                mEmail.setText("yilei11@1.dd");
+                mPassword.setText("12345678");
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
 
