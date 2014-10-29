@@ -67,7 +67,7 @@ public class MetricService extends IntentService
             metricJSON.put("company", "logpie");
             metricJSON.put("platform", BuildInfo.PLATFORM);
             metricJSON.put("application", BuildInfo.APPLICATION);
-            metricJSON.put("software_version", BuildInfo.VERSION);
+            metricJSON.put("software_version", BuildInfo.getLogpieVersion(this));
             metricJSON.put("environment", BuildInfo.ENVIRONMENT);
             metricJSON.put("mobile_device", "true");
             metricJSON.put("OS_type", BuildInfo.OS_TYPE);
