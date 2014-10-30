@@ -493,13 +493,13 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
             int speed = INIT_SCROLL_SPEED;
             while (true)
             {
-                // The increase the speed when approaching the top
-                topMargin = topMargin + speed;
                 if (topMargin <= mHideHeaderHeight)
                 {
                     topMargin = mHideHeaderHeight;
                     break;
                 }
+                // The increase the speed when approaching the top
+                topMargin = topMargin + speed;
                 publishProgress(topMargin);
                 // More approaching the top margin, then reduce the
                 // accelerate_speed, but the speed should still increase.
@@ -522,7 +522,8 @@ public class LogpieRefreshLayout extends LinearLayout implements OnTouchListener
         @Override
         protected void onPostExecute(Integer topMargin)
         {
-            mHeaderLayoutParams.topMargin = topMargin;
+            // Just hide the header.
+            mHeaderLayoutParams.topMargin = mHideHeaderHeight;
             mHeader.setLayoutParams(mHeaderLayoutParams);
             currentStatus = STATUS_REFRESH_FINISHED;
         }
