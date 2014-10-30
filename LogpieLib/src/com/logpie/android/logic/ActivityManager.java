@@ -26,13 +26,12 @@ public class ActivityManager
 {
     private static final String TAG = ActivityManager.class.getName();
     // Each request will just request 25 records.
-    private static final int MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL = 25;
+    private static final int MAXIMUM_ACTIVITY_RECORD_PER_SERVICE_CALL = 3;
     public static final int MODE_REFRESH = 0;
     public static final int MODE_LOAD_MORE = 1;
 
     private static ActivityManager sActivityManager;
     private Context mContext;
-    private long mBottomActivityID;
 
     private ActivityManager(Context context)
     {
@@ -57,7 +56,7 @@ public class ActivityManager
      * @return
      */
     public void getNearbyActivityList(User user, String lat, String lon, int mode,
-            LogpieCallback callback)
+            long lastActivityId, LogpieCallback callback)
     {
         JSONObject postData = new JSONObject();
 
@@ -91,7 +90,7 @@ public class ActivityManager
             map_lon.put(RequestKeys.KEY_EQUAL, lon);
             constraints.put(RequestKeys.KEY_LONGITUDE, map_lon);
 
-            switchMode(mode, constraints);
+            switchMode(postData, mode, lastActivityId, constraints);
 
             JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints, null);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
@@ -119,7 +118,8 @@ public class ActivityManager
         }
     }
 
-    public void getActivityListByCity(User user, int mode, String city, LogpieCallback callback)
+    public void getActivityListByCity(User user, int mode, long lastActivityId, String city,
+            LogpieCallback callback)
     {
         JSONObject postData = new JSONObject();
 
@@ -140,29 +140,14 @@ public class ActivityManager
 
             if (city == null)
             {
-                if (user.getUserProfile() == null)
-                {
-                    LogpieLog.e(TAG, "Cannot find the profile when trying to get the city");
-                    return;
-                }
-                else
-                {
-                    UserProfile profile = user.getUserProfile();
-                    // TODO: change it to city id
-                    city = profile.getUserCity();
-                    if (city == null)
-                    {
-                        LogpieLog.e(TAG, "Cannot find the city from the user profile.");
-                        return;
-                    }
-
-                }
+                LogpieLog.e(TAG, "Cannot find the profile when trying to get the city");
+                return;
             }
 
             map.put(RequestKeys.KEY_EQUAL, city);
             constraints.put(RequestKeys.KEY_CITY, map);
 
-            switchMode(mode, constraints);
+            switchMode(postData, mode, lastActivityId, constraints);
 
             JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints, null);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
@@ -188,8 +173,8 @@ public class ActivityManager
         }
     }
 
-    public void getActivityListByCategory(User user, int mode, String category, String subCategory,
-            LogpieCallback callback)
+    public void getActivityListByCategory(User user, int mode, long lastActivityId,
+            String category, String subCategory, LogpieCallback callback)
     {
         JSONObject postData = new JSONObject();
 
@@ -225,7 +210,7 @@ public class ActivityManager
                 constraints.put(RequestKeys.KEY_SUBCATEGORY, map_s);
             }
 
-            switchMode(mode, constraints);
+            switchMode(postData, mode, lastActivityId, constraints);
 
             JSONArray constraintKeyValue = JSONHelper.buildConstraintKeyValue(constraints, null);
             postData.put(RequestKeys.KEY_CONSTRAINT_KEYVALUE_PAIR, constraintKeyValue);
@@ -282,17 +267,19 @@ public class ActivityManager
         connection.send(callback);
     }
 
-    private void switchMode(int mode, Map<String, Map<String, String>> constraints)
+    private void switchMode(JSONObject postData, int mode, long lastActivityId,
+            Map<String, Map<String, String>> constraints) throws JSONException
     {
         switch (mode)
         {
         case MODE_REFRESH:
+            postData.put(RequestKeys.KEY_REQUEST_MODE, RequestKeys.MODE_REFRESH);
             break;
         case MODE_LOAD_MORE:
-            if (mBottomActivityID > 0)
+            if (lastActivityId > 0)
             {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put((RequestKeys.KEY_LESS_THAN), String.valueOf(mBottomActivityID));
+                map.put((RequestKeys.KEY_LESS_THAN), String.valueOf(lastActivityId));
                 constraints.put(RequestKeys.KEY_AID, map);
             }
             else

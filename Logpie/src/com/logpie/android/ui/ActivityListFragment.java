@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.logpie.android.R;
@@ -53,9 +54,11 @@ public class ActivityListFragment extends ListFragment
 
     private Activity mActivity;
     private LogpieRefreshLayout mRefreshableView;
+    private View mLoadMoreView;
     private ListView mListView;
     private ActivityAdapter mArrayAdapter;
     private Button mButton;
+    private ProgressBar mProgressBar;
 
     private ActivityManager mActivityManager;
     private ArrayList<LogpieActivity> mActivityList;
@@ -64,6 +67,7 @@ public class ActivityListFragment extends ListFragment
     private String mCategory;
     private String mSubcategory;
     private String mTabName;
+    private int mLastVisibleIndex;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -90,13 +94,19 @@ public class ActivityListFragment extends ListFragment
             LogpieLog.e(TAG, "Inflator or ViewGroup is null! It is impossible.");
             return null;
         }
+
         LogpieLog.i(TAG, "Starting handleOnCreateView() in ActivityListFragment");
         View v = inflater.inflate(R.layout.fragment_activity_list, parent, false);
+        mLoadMoreView = inflater.inflate(R.layout.layout_load_more_view, null);
 
         mRefreshableView = (LogpieRefreshLayout) v.findViewById(R.id.refreshable_view);
         mListView = (ListView) v.findViewById(android.R.id.list);
         TextView empty = (TextView) v.findViewById(R.id.activity_empty_text);
         empty.setText(LanguageHelper.getId(LanguageHelper.KEY_ACTIVITY_EMPTY, getActivity()));
+
+        mProgressBar = (ProgressBar) mLoadMoreView.findViewById(R.id.progressBar1);
+        mListView.addFooterView(mLoadMoreView);
+
         mArrayAdapter = new ActivityAdapter(mActivityList);
 
         mButton = (Button) v.findViewById(R.id.picker_button);
@@ -144,19 +154,36 @@ public class ActivityListFragment extends ListFragment
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState)
             {
-                // TODO Auto-generated method stub
-
+                LogpieLog.d(TAG, "last visible index: " + mLastVisibleIndex);
+                LogpieLog.d(TAG, "count: " + mListView.getAdapter().getCount());
+                // Check if it is at the bottom of the whole page
+                // Index is starting from 0; Count is starting from 1;
+                if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+                        && mLastVisibleIndex == mListView.getAdapter().getCount() - 1)
+                {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    // The last position is progress bar, so the last activity
+                    // should be lastPosition - 1;
+                    int pos = mListView.getLastVisiblePosition() - 1;
+                    LogpieActivity lastActivity = (LogpieActivity) mListView.getAdapter().getItem(
+                            pos);
+                    String lastActivityId = lastActivity.getActivityID();
+                    new FetchItemsTask().execute(new String[] { mTabName,
+                            String.valueOf(ActivityManager.MODE_LOAD_MORE), lastActivityId });
+                }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                     int totalItemCount)
             {
-                if (mListView.getLastVisiblePosition() == totalItemCount)
+
+                if (mProgressBar.getVisibility() == View.GONE)
                 {
-                    new FetchItemsTask().execute(new String[] { mTabName,
-                            String.valueOf(ActivityManager.MODE_LOAD_MORE) });
+                    mProgressBar.setVisibility(View.VISIBLE);
                 }
+                mLastVisibleIndex = firstVisibleItem + visibleItemCount - 1;
+
             }
         });
 
@@ -318,17 +345,32 @@ public class ActivityListFragment extends ListFragment
 
     private class FetchItemsTask extends AsyncTask<String, Void, ArrayList<LogpieActivity>>
     {
-        ArrayList<LogpieActivity> mList = new ArrayList<LogpieActivity>();
+        private String mMode;
+        private ArrayList<LogpieActivity> mList = new ArrayList<LogpieActivity>();
 
         @Override
         protected ArrayList<LogpieActivity> doInBackground(String... params)
         {
             String tab = params[0];
-            String mode = null;
 
-            if (params.length == 2)
+            long lastActivityId = 0;
+
+            if (params.length > 1)
             {
-                mode = params[1];
+                mMode = params[1];
+                if (mMode.equals(String.valueOf(ActivityManager.MODE_LOAD_MORE)))
+                {
+                    if (params.length == 3)
+                    {
+                        lastActivityId = Long.valueOf(params[2]);
+                    }
+                    else
+                    {
+                        LogpieLog
+                                .e(TAG,
+                                        "cannot find the last activity id when mode is LOAD_MORE_ACTIVITY.");
+                    }
+                }
             }
 
             ActivityCallback callback = new ActivityCallback()
@@ -352,51 +394,52 @@ public class ActivityListFragment extends ListFragment
 
             if (tab.equals(nearby))
             {
-                if (mode != null && mode.equals(ActivityManager.MODE_LOAD_MORE))
+                if (mMode != null && mMode.equals(String.valueOf(ActivityManager.MODE_LOAD_MORE)))
                 {
                     ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null,
-                            null, ActivityManager.MODE_LOAD_MORE,
+                            null, ActivityManager.MODE_LOAD_MORE, lastActivityId,
                             ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                     callback));
                 }
                 else
                 {
                     ActivityListFragment.this.mActivityManager.getNearbyActivityList(user, null,
-                            null, ActivityManager.MODE_REFRESH,
+                            null, ActivityManager.MODE_REFRESH, lastActivityId,
                             ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                     callback));
                 }
             }
             else if (tab.equals(city))
             {
-                if (mode != null && mode.equals(ActivityManager.MODE_LOAD_MORE))
+                if (mMode != null && mMode.equals(String.valueOf(ActivityManager.MODE_LOAD_MORE)))
                 {
                     ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
-                            ActivityManager.MODE_LOAD_MORE, mCity,
+                            ActivityManager.MODE_LOAD_MORE, lastActivityId, mCity,
                             ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                     callback));
                 }
                 else
                 {
                     ActivityListFragment.this.mActivityManager.getActivityListByCity(user,
-                            ActivityManager.MODE_REFRESH, mCity,
+                            ActivityManager.MODE_REFRESH, lastActivityId, mCity,
                             ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                     callback));
                 }
             }
             else if (tab.equals(category))
             {
-                if (mode != null && mode.equals(ActivityManager.MODE_LOAD_MORE))
+                if (mMode != null && mMode.equals(String.valueOf(ActivityManager.MODE_LOAD_MORE)))
                 {
                     ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
-                            ActivityManager.MODE_LOAD_MORE, mCategory, mSubcategory,
+                            ActivityManager.MODE_LOAD_MORE, lastActivityId, mCategory,
+                            mSubcategory,
                             ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                     callback));
                 }
                 else
                 {
                     ActivityListFragment.this.mActivityManager.getActivityListByCategory(user,
-                            ActivityManager.MODE_REFRESH, mCategory, mSubcategory,
+                            ActivityManager.MODE_REFRESH, lastActivityId, mCategory, mSubcategory,
                             ActivityListFragment.this.mActivityManager.new ActivityCallbackAdapter(
                                     callback));
                 }
@@ -412,15 +455,33 @@ public class ActivityListFragment extends ListFragment
         protected void onPostExecute(ArrayList<LogpieActivity> items)
         {
             LogpieLog.d(TAG, "Starting onPostExecute....");
-            if (ActivityListFragment.this.mActivityList == null)
+            if (mMode != null && mMode.equals(String.valueOf(ActivityManager.MODE_LOAD_MORE)))
             {
-                ActivityListFragment.this.mActivityList = new ArrayList<LogpieActivity>();
+                if (ActivityListFragment.this.mActivityList == null)
+                {
+                    LogpieLog.e(TAG, "The original activity list is null.");
+                    return;
+                }
+                LogpieLog.d(TAG, "Load more...");
+                mArrayAdapter.addAll(items);
+                // Hide progress bar
+                mProgressBar.setVisibility(View.GONE);
+                // Update the data of array adapter
+                mArrayAdapter.notifyDataSetChanged();
+                LogpieLog.d(TAG, "Finished Async Task of Load More.");
             }
-            ActivityListFragment.this.mActivityList = items;
-            mArrayAdapter = new ActivityAdapter(mActivityList);
+            else
+            {
+                if (ActivityListFragment.this.mActivityList == null)
+                {
+                    ActivityListFragment.this.mActivityList = new ArrayList<LogpieActivity>();
+                }
+                ActivityListFragment.this.mActivityList = items;
+                mArrayAdapter = new ActivityAdapter(mActivityList);
 
-            setupAdapter(mArrayAdapter);
-            LogpieLog.d(TAG, "Finished Async Task.");
+                setupAdapter(mArrayAdapter);
+                LogpieLog.d(TAG, "Finished Async Task of Refreh.");
+            }
         }
 
     }
