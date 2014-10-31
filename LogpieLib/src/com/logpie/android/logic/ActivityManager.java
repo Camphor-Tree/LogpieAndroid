@@ -33,9 +33,14 @@ public class ActivityManager
     private static ActivityManager sActivityManager;
     private Context mContext;
 
+    // Cache for storing the last city or category that the user pick
+    private String mCityCache;
+    private String[] mCategoryCache;
+
     private ActivityManager(Context context)
     {
         mContext = context;
+        mCategoryCache = new String[2];
     }
 
     public synchronized static ActivityManager getInstance(Context context)
@@ -140,8 +145,35 @@ public class ActivityManager
 
             if (city == null)
             {
-                LogpieLog.e(TAG, "Cannot find the profile when trying to get the city");
-                return;
+                if (mCityCache != null && !mCityCache.equals(""))
+                {
+                    city = mCityCache;
+                }
+                else if (user.getUserProfile() != null)
+                {
+                    UserProfile profile = user.getUserProfile();
+                    String cityName = profile.getUserCity();
+                    if (cityName == null)
+                    {
+                        LogpieLog
+                                .e(TAG,
+                                        "Cannot find the city name when trying to get the city from user profile");
+                        return;
+                    }
+                    else
+                    {
+                        city = CityManager.getInstance(mContext).getCityIdFromName(cityName);
+                    }
+                }
+                else
+                {
+                    LogpieLog.e(TAG, "Cannot find the profile when trying to get the city");
+                    return;
+                }
+            }
+            else
+            {
+                mCityCache = city;
             }
 
             map.put(RequestKeys.KEY_EQUAL, city);
@@ -197,8 +229,23 @@ public class ActivityManager
 
             if (category == null)
             {
-                LogpieLog.e(TAG, "Cannot find the category");
-                return;
+                if (mCategoryCache[0] == null)
+                {
+                    LogpieLog.e(TAG, "Cannot find the category");
+                    return;
+                }
+                else
+                {
+                    category = mCategoryCache[0];
+                    if (mCategoryCache[1] != null)
+                    {
+                        subCategory = mCategoryCache[1];
+                    }
+                }
+            }
+            else
+            {
+                mCategoryCache[0] = category;
             }
 
             map_c.put(RequestKeys.KEY_EQUAL, category);
@@ -206,6 +253,7 @@ public class ActivityManager
 
             if (subCategory != null)
             {
+                mCategoryCache[1] = subCategory;
                 map_s.put(RequestKeys.KEY_EQUAL, subCategory);
                 constraints.put(RequestKeys.KEY_SUBCATEGORY, map_s);
             }
