@@ -79,6 +79,7 @@ public class ActivityListFragment extends ListFragment
         mActivity = getActivity();
         user = NormalUser.getInstance(getActivity());
         mActivityManager = ActivityManager.getInstance(mActivity);
+        mActivityList = new ArrayList<LogpieActivity>();
 
         ActionBar bar = getActivity().getActionBar();
         mTabName = bar.getSelectedTab().getText().toString();
@@ -153,22 +154,39 @@ public class ActivityListFragment extends ListFragment
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState)
             {
-                if (mListView.getFooterViewsCount() == 0)
-                {
-                    mListView.addFooterView(mLoadMoreView);
-                }
-
                 // Check if it is at the bottom of the whole page
                 // Index is starting from 0; Count is starting from 1;
                 if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
                         && mLastVisibleIndex == mListView.getAdapter().getCount() - 1)
                 {
-                    mProgressBar.setVisibility(View.VISIBLE);
+                    LogpieLog.d(TAG, "List count: " + mListView.getCount());
+                    LogpieLog.d(TAG, "Footer count: " + mListView.getFooterViewsCount());
+                    LogpieLog.d(TAG, "Adapter count:" + mListView.getAdapter().getCount());
+
+                    if (mListView.getFooterViewsCount() == 0)
+                    {
+                        mListView.addFooterView(mLoadMoreView, null, false);
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+
+                    LogpieLog.d(TAG, "List count: " + mListView.getCount());
+                    LogpieLog.d(TAG, "Footer count: " + mListView.getFooterViewsCount());
+                    LogpieLog.d(TAG, "Adapter count:" + mListView.getAdapter().getCount());
+
                     // The last position is progress bar, so the last activity
                     // should be lastPosition - 1;
-                    int pos = mListView.getLastVisiblePosition() - 1;
+
+                    int pos = mListView.getLastVisiblePosition();
+                    LogpieLog.d(TAG, "pos: " + pos);
+
                     LogpieActivity lastActivity = (LogpieActivity) mListView.getAdapter().getItem(
                             pos);
+                    if (lastActivity == null)
+                    {
+                        LogpieLog.e(TAG, "Cannot get the last activity.");
+                        mProgressBar.setVisibility(View.GONE);
+                        return;
+                    }
                     String lastActivityId = lastActivity.getActivityID();
                     new FetchItemsTask().execute(new String[] { mTabName,
                             String.valueOf(ActivityManager.MODE_LOAD_MORE), lastActivityId });
@@ -179,7 +197,6 @@ public class ActivityListFragment extends ListFragment
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                     int totalItemCount)
             {
-
                 if (mProgressBar.getVisibility() == View.GONE)
                 {
                     mProgressBar.setVisibility(View.VISIBLE);
@@ -194,7 +211,7 @@ public class ActivityListFragment extends ListFragment
 
     void setupAdapter(ArrayAdapter<LogpieActivity> adapter)
     {
-        if (getActivity() == null || mListView == null)
+        if (mListView == null)
         {
             return;
         }
@@ -202,14 +219,13 @@ public class ActivityListFragment extends ListFragment
         {
             LogpieLog.d(TAG, "List is not null!");
             mListView.setAdapter(adapter);
-            mListView.removeFooterView(mLoadMoreView);
         }
         else
         {
             LogpieLog.d(TAG, "List is null!");
             mListView.setAdapter(null);
         }
-
+        mListView.removeFooterView(mLoadMoreView);
     }
 
     @Override
@@ -286,11 +302,11 @@ public class ActivityListFragment extends ListFragment
             if (v == null)
             {
                 v = getActivity().getLayoutInflater().inflate(R.layout.fragment_activity_list_item,
-                        parent, false);
+                        null);
             }
 
             LogpieActivity activity = getItem(position);
-            LogpieLog.d(TAG, "Initialize the UI...");
+
             /**
              * set UI of each activity part
              */
@@ -470,7 +486,7 @@ public class ActivityListFragment extends ListFragment
                 mArrayAdapter.addAll(items);
 
                 // Hide progress bar
-                mProgressBar.setVisibility(View.GONE);
+                mListView.removeFooterView(mLoadMoreView);
                 // Update the data of array adapter
                 mArrayAdapter.notifyDataSetChanged();
                 LogpieLog.d(TAG, "Finished Async Task of Load More.");
@@ -482,13 +498,13 @@ public class ActivityListFragment extends ListFragment
                     ActivityListFragment.this.mActivityList = new ArrayList<LogpieActivity>();
                 }
                 ActivityListFragment.this.mActivityList = items;
-                mArrayAdapter = new ActivityAdapter(items);
 
+                mArrayAdapter = new ActivityAdapter(items);
                 setupAdapter(mArrayAdapter);
+
                 LogpieLog.d(TAG, "Finished Async Task of Refreh.");
             }
         }
-
     }
 
 }
